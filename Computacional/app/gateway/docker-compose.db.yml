@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: unbot-postgres
+    environment:
+      POSTGRES_DB: unbot_delivery
+      POSTGRES_USER: unbot
+      POSTGRES_PASSWORD: unbot_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - unbot_postgres_data:/var/lib/postgresql/data
+      - ../database/001_extensions.up.sql:/docker-entrypoint-initdb.d/001_extensions.sql:ro
+      - ../database/010_users.up.sql:/docker-entrypoint-initdb.d/010_users.sql:ro
+      - ../database/020_restaurants.up.sql:/docker-entrypoint-initdb.d/020_restaurants.sql:ro
+      - ../database/030_products.up.sql:/docker-entrypoint-initdb.d/030_products.sql:ro
+      - ../database/040_orders.up.sql:/docker-entrypoint-initdb.d/040_orders.sql:ro
+      - ../database/050_order_items.up.sql:/docker-entrypoint-initdb.d/050_order_items.sql:ro
+      - ../database/seeds/001_sample_data.sql:/docker-entrypoint-initdb.d/100_seed_sample_data.sql:ro
+      - ../database/seeds/002_orders_data.sql:/docker-entrypoint-initdb.d/101_seed_orders_data.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unbot -d unbot_delivery"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  unbot_postgres_data:

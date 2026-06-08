@@ -1,0 +1,79 @@
+# docker-compose.test.yml
+# Ambiente de testes (CI/CD)
+# Uso: podman compose -f docker-compose.test.yml up --abort-on-container-exit
+
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: unbot-postgres-test
+    environment:
+      POSTGRES_DB: unbot_delivery_test
+      POSTGRES_USER: unbot_test
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./database/001_extensions.up.sql:/docker-entrypoint-initdb.d/001_extensions.sql:ro
+      - ./database/010_users.up.sql:/docker-entrypoint-initdb.d/010_users.sql:ro
+      - ./database/020_restaurants.up.sql:/docker-entrypoint-initdb.d/020_restaurants.sql:ro
+      - ./database/030_products.up.sql:/docker-entrypoint-initdb.d/030_products.sql:ro
+      - ./database/040_orders.up.sql:/docker-entrypoint-initdb.d/040_orders.sql:ro
+      - ./database/050_order_items.up.sql:/docker-entrypoint-initdb.d/050_order_items.sql:ro
+      - ./database/seeds/001_sample_data.sql:/docker-entrypoint-initdb.d/100_seed_sample_data.sql:ro
+      - ./database/seeds/002_orders_data.sql:/docker-entrypoint-initdb.d/101_seed_orders_data.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unbot_test -d unbot_delivery_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - unbot-test
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  gateway-test:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: unbot-gateway-test
+    environment:
+      HTTP_ADDR: 0.0.0.0:8080
+      DATABASE_URL: postgres://unbot_test:test_password@postgres-test:5432/unbot_delivery_test?sslmode=disable
+      MQTT_HOST: mqtt-test
+      MQTT_PORT: "1883"
+      MQTT_USER: test_user
+      MQTT_PASSWORD: test_password
+      MQTT_CLIENT_ID: unbot-gateway-test
+      MQTT_COMMAND_TOPIC: robot/commands
+      MQTT_STATUS_TOPIC: robot/status
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    networks:
+      - unbot-test
+    command: ["sh", "-c", "sleep 2 && /app/unbot-gateway"]
+
+  # Container para executar testes
+  test-runner:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: unbot-test-runner
+    environment:
+      DATABASE_URL: postgres://unbot_test:test_password@postgres-test:5432/unbot_delivery_test?sslmode=disable
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      gateway-test:
+        condition: service_started
+    networks:
+      - unbot-test
+    working_dir: /src
+    volumes:
+      - ./gateway:/src:ro
+    command: ["go", "test", "-v", "./..."]
+
+networks:
+  unbot-test:
+    name: unbot-test-network
+    driver: bridge

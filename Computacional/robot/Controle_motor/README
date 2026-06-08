@@ -1,0 +1,457 @@
+# Simulação de Controle PID para Motor DC
+
+Este projeto implementa uma simulação de controle de velocidade de um motor DC utilizando um controlador PID em C++. O objetivo é estudar conceitos de controle em malha fechada, modelagem simplificada de motores, resposta dinâmica do sistema e visualização gráfica da resposta do controlador.
+
+O sistema foi desenvolvido para rodar no VSCode utilizando WSL (Ubuntu no Windows), compilação com `g++` e visualização dos resultados com Python (`matplotlib` e `pandas`).
+
+---
+
+# Estrutura do Projeto
+
+```text
+Controle_motor/
+│
+├── cpp/
+│   ├── main.cpp
+│   ├── pid.cpp
+│   ├── pid.h
+│   ├── motor.cpp
+│   ├── motor.h
+│   ├── encoder_sim.cpp
+│   ├── encoder_sim.h
+│   ├── cinematica.cpp
+│   ├── cinematica.h
+│   └── config.h
+│
+├── python/
+│   └── plot_pid.py
+│
+├── data/
+│   └── pid_log.csv
+│
+└── README.md
+```
+
+---
+
+# Objetivo do Projeto
+
+O sistema simula:
+
+- Um motor DC simplificado
+- Um encoder virtual
+- Um controlador PID
+- Controle de velocidade em malha fechada
+- Geração de logs
+- Plotagem gráfica da resposta temporal do sistema
+
+---
+
+# Requisitos
+
+Antes de executar o projeto, é necessário instalar:
+
+## 1. VSCode
+
+Baixe:
+
+https://code.visualstudio.com/
+
+---
+
+# 2. WSL (Windows Subsystem for Linux)
+
+Abra o PowerShell como administrador e execute:
+
+```powershell
+wsl --install
+```
+
+Depois reinicie o computador.
+
+---
+
+# 3. Ubuntu no WSL
+
+Após reiniciar:
+
+- Abra o Ubuntu
+- Crie usuário e senha
+
+---
+
+# 4. Instalar ferramentas de compilação
+
+Dentro do Ubuntu (WSL), execute:
+
+```bash
+sudo apt update
+sudo apt install build-essential python3 python3-pip python3-venv -y
+```
+
+Isso instala:
+
+- g++
+- gcc
+- make
+- python
+- pip
+
+---
+
+# 5. Abrir o projeto no VSCode usando WSL
+
+No terminal Ubuntu:
+
+```bash
+cd /mnt/c/Users/SEU_USUARIO/OneDrive/Área\ de\ Trabalho/Controle_motor
+code .
+```
+
+IMPORTANTE:
+
+Substitua `SEU_USUARIO` pelo nome do seu usuário do Windows.
+
+---
+
+# 6. Instalar extensões do VSCode
+
+Instale:
+
+- C/C++
+- Python
+- WSL
+
+---
+
+# Configuração do Ambiente Python
+
+Entre na pasta do projeto:
+
+```bash
+cd /mnt/c/Users/SEU_USUARIO/OneDrive/Área\ de\ Trabalho/Controle_motor
+```
+
+---
+
+# Criar ambiente virtual Python
+
+```bash
+python3 -m venv .venv
+```
+
+---
+
+# Ativar ambiente virtual
+
+```bash
+source .venv/bin/activate
+```
+
+Após ativar, deverá aparecer algo como:
+
+```text
+(.venv)
+```
+
+no terminal.
+
+---
+
+# Instalar bibliotecas Python
+
+```bash
+pip install matplotlib pandas
+```
+
+---
+
+# Compilando o Projeto
+
+Entre na pasta `cpp`:
+
+```bash
+cd cpp
+```
+
+Compile o projeto:
+
+```bash
+g++ *.cpp -o simulador
+```
+
+Se tudo estiver correto, será gerado:
+
+```text
+simulador
+```
+
+---
+
+# Executando a Simulação
+
+Ainda dentro da pasta `cpp`:
+
+```bash
+./simulador
+```
+
+O programa irá:
+
+- Executar a simulação do motor
+- Aplicar o controle PID
+- Gerar um arquivo CSV com os dados da simulação
+
+O arquivo será salvo em:
+
+```text
+data/pid_log.csv
+```
+
+---
+
+# Gerando os Gráficos
+
+Volte para a raiz do projeto:
+
+```bash
+cd ..
+```
+
+Entre na pasta Python:
+
+```bash
+cd python
+```
+
+Execute:
+
+```bash
+python3 plot_pid.py
+```
+
+Isso irá gerar gráficos contendo:
+
+- Resposta do PID
+- Velocidade do motor
+- Referência
+- Erro do sistema
+- PWM aplicado
+
+---
+
+# Explicação dos Arquivos
+
+## main.cpp
+
+Executa a simulação principal.
+
+Responsável por:
+
+- Loop temporal
+- Atualização do motor
+- Aplicação do PID
+- Geração do log
+
+---
+
+# pid.cpp / pid.h
+
+Implementam o controlador PID.
+
+Inclui:
+
+- Controle proporcional
+- Integral
+- Derivativo
+- Saturação
+- Anti-windup
+
+---
+
+# motor.cpp / motor.h
+
+Modelam o motor DC simplificado.
+
+Inclui:
+
+- Torque
+- Atrito
+- Aceleração
+- Velocidade
+
+---
+
+# encoder_sim.cpp
+
+Simula encoder incremental com ruído.
+
+---
+
+# config.h
+
+Parâmetros gerais do sistema:
+
+- dt
+- ganhos PID
+- atrito
+- torque
+- limites PWM
+
+---
+
+# plot_pid.py
+
+Script Python para gerar os gráficos.
+
+Usa:
+
+- pandas
+- matplotlib
+
+---
+
+# Ajustando o PID
+
+Os ganhos normalmente ficam em:
+
+```cpp
+Kp
+Ki
+Kd
+```
+
+Exemplo:
+
+```cpp
+Kp = 10.0;
+Ki = 0.2;
+Kd = 0.0;
+```
+
+---
+
+# Estratégia Recomendada de Tuning
+
+## 1. Ajustar apenas Kp
+
+Comece com:
+
+```cpp
+Ki = 0;
+Kd = 0;
+```
+
+Aumente o Kp gradualmente até:
+
+- o sistema responder,
+- mas sem oscilar violentamente.
+
+---
+
+# 2. Adicionar Ki
+
+Use pequenos valores:
+
+```cpp
+Ki = 0.1
+Ki = 0.2
+```
+
+Objetivo:
+- remover erro estacionário.
+
+---
+
+# 3. Adicionar Kd (opcional)
+
+Usado apenas se houver muito overshoot.
+
+---
+
+# Possíveis Problemas
+
+## g++ não encontrado
+
+Instale:
+
+```bash
+sudo apt install build-essential
+```
+
+---
+
+# pandas ou matplotlib não encontrados
+
+Ative o ambiente virtual:
+
+```bash
+source .venv/bin/activate
+```
+
+Depois:
+
+```bash
+pip install matplotlib pandas
+```
+
+---
+
+# VSCode não reconhece includes C++
+
+Certifique-se de que o projeto foi aberto pelo WSL:
+
+```bash
+code .
+```
+
+executado dentro do Ubuntu.
+
+---
+
+# Problemas de Instabilidade
+
+Se o sistema explodir:
+
+- reduza Kp
+- reduza Ki
+- aumente atrito
+- confira sinais do erro
+- confira saturação do PWM
+
+---
+
+# Conceitos Estudados
+
+Este projeto envolve:
+
+- Controle PID
+- Sistemas em malha fechada
+- Modelagem de motores DC
+- Controle de velocidade
+- Encoder incremental
+- Sistemas discretos
+- Estabilidade
+- Anti-windup
+- Simulação física
+- Robótica móvel
+
+---
+
+# Futuras Melhorias
+
+O sistema pode ser expandido para:
+
+- Controle diferencial de robôs móveis
+- Controle de posição
+- ROS2
+- Comunicação serial
+- ESP32
+- Encoder real
+- Navegação autônoma
+- SLAM
+- Filtro de Kalman
+- Controle robusto
+- Controle em tempo real
+
+---
