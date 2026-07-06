@@ -42,16 +42,22 @@ func main() {
 	)
 
 	// ── MQTT client ───────────────────────────────────────────────────────
-	mqtt := mqttclient.NewClient(cfg, log)
-	if err := mqtt.Connect(); err != nil {
+	mqttCfg := mqttclient.NewClient(cfg, log)
+
+	// RobotState is shared between the MQTT telemetry handler and the
+	// GET /api/robot/telemetry endpoint — no additional sync needed.
+	robotState := &api.RobotState{}
+	mqttCfg.SetRobotState(robotState)
+
+	if err := mqttCfg.Connect(); err != nil {
 		log.Warn("MQTT connect failed (continuing without MQTT)", "error", err)
 		// Continue without MQTT - HTTP API will still work
 	}
 
 	// ── Service layer ─────────────────────────────────────────────────────
-	otpSvc := services.NewOTPService(mqtt)
-	orderSvc := services.NewOrderService(otpSvc, mqtt, log)
-	wakeSvc := services.NewWakeDisplayService(otpSvc, mqtt, log) // NEW
+	otpSvc := services.NewOTPService(mqttCfg)
+	orderSvc := services.NewOrderService(otpSvc, mqttCfg, log)
+	wakeSvc := services.NewWakeDisplayService(otpSvc, mqttCfg, log)
 
 	// ── Database / catalog ────────────────────────────────────────────────
 	dbCtx, dbCancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -73,7 +79,7 @@ func main() {
 	ordersSvc := orders.NewService(ordersRepo, orderItemsSvc, log)
 
 	// ── HTTP server ───────────────────────────────────────────────────────
-	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc)
+	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState)
 	srv.Start()
 
 	log.Info("gateway ready",
@@ -89,6 +95,8 @@ func main() {
 			"POST  /api/validate-code",
 			"POST  /api/orders/{id}/dispatch",
 			"POST  /api/orders/{id}/wake-display",
+			"POST  /api/robot/estop",
+			"GET   /api/robot/telemetry",
 		},
 	)
 
@@ -106,6 +114,6 @@ func main() {
 		log.Error("HTTP shutdown error", "error", err)
 	}
 
-	mqtt.Disconnect()
+	mqttCfg.Disconnect()
 	log.Info("gateway stopped cleanly")
 }

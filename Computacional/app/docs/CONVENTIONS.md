@@ -44,6 +44,30 @@ if (strncmp(_pendingOrderId, orderId, sizeof(_pendingOrderId)) != 0) { displayMg
 
 ---
 
+## Edge daemon (Python / asyncio) — runs on the onboard x86 notebook
+
+### No database credentials, ever
+
+The edge daemon must never import a Postgres/PostGIS driver, hold a connection string, or receive one via environment variable, config file, or MQTT payload. Every piece of data that must reach PostGIS travels exclusively through the `robot/telemetry` and `robot/status/heartbeat` MQTT topics, consumed by the Go gateway. This is enforced by code review, not by runtime checks — if a PR to `edge_daemon/` imports `asyncpg`, `psycopg`, or similar, reject it regardless of justification. **This invariant is unaffected by the Raspberry Pi → x86 notebook hardware change** — it is a security boundary, not a hardware constraint.
+
+### Stub mode — unchanged by the hardware pivot
+
+`edge_daemon`'s existing `rclpy` import check at startup still governs stub vs. full mode. On the onboard x86 notebook (full ROS 2 desktop distro installed), this resolves to full mode automatically — no code change required. Developer laptops without ROS 2 installed continue to run in stub mode exactly as before. Do not add hardware-specific branches (e.g. `if platform == 'raspberry_pi'`) — the daemon should remain agnostic to the underlying compute platform.
+
+### Monotonic timestamps on telemetry payloads
+
+Each `robot/telemetry` publish must carry a timestamp derived from a single monotonic source read once per publish cycle, not re-derived per field. Out-of-order delivery is tolerated at the transport layer (QoS 0), but the payload's own timestamp must be trustworthy enough to reconstruct delivery order on replay.
+
+### Telemetry publish frequency
+
+Publish `robot/telemetry` at 1 Hz during `NAVIGATING` state. Do not increase this without first confirming Mosquitto broker CPU and the Go gateway's batch-insert throughput can absorb it — see the Go gateway telemetry ingestion pattern below before changing this constant.
+
+### Battery telemetry — scope `battery_percent` explicitly
+
+The onboard x86 notebook has its own battery, separate from the robot's traction/chassis battery. `robot_telemetry.battery_percent` refers to the **robot's main traction battery** — this is the operationally relevant value for delivery range and E-stop decisions. If notebook compute battery state needs tracking (e.g., to anticipate a compute shutdown independent of robot mobility), publish it as a **separate field**, never overloaded into `battery_percent`.
+
+---
+
 ## Go gateway
 
 ### Dependency injection via constructor parameters
@@ -79,9 +103,88 @@ The mutex in `OTPService` protects only the in-memory store mutation. Release it
 
 `cmd/gateway/main.go` performs only: load config → construct MQTT client → construct services → construct server → start → block on signal → shutdown. No request handling, no domain logic.
 
+### Telemetry MQTT subscriber — mandatory producer/consumer separation
+
+The Paho `OnMessage` callback bound to `robot/telemetry` and `robot/status/heartbeat` must **never** perform a synchronous database write. It performs exactly one action: a non-blocking send into a buffered channel.
+
+```go
+// CORRECT — Paho callback stays non-blocking, drop-oldest on overflow
+func (s *TelemetryIngestService) onTelemetryMessage(client mqtt.Client, msg mqtt.Message) {
+    var pt TelemetryPoint
+    if err := json.Unmarshal(msg.Payload(), &pt); err != nil {
+        s.log.Warn("malformed telemetry payload", "err", err)
+        return
+    }
+    select {
+    case s.telemetryChan <- pt:
+    default:
+        s.droppedCounter.Add(1) // buffer full — record and move on, never block
+    }
+}
+
+// WRONG — blocks the Paho read loop on every message
+func (s *TelemetryIngestService) onTelemetryMessage(client mqtt.Client, msg mqtt.Message) {
+    var pt TelemetryPoint
+    json.Unmarshal(msg.Payload(), &pt)
+    s.db.Exec(ctx, "INSERT INTO robot_telemetry (...) VALUES (...)", ...) // ← NEVER
+}
+```
+
+The channel is drained by a dedicated worker goroutine (started once at service construction, not per-message) that batches inserts:
+
+```go
+// CORRECT — batching worker, owned by the service, independent of Paho
+func (s *TelemetryIngestService) runBatcher(ctx context.Context) {
+    const batchSize = 50
+    const flushInterval = 2 * time.Second
+
+    batch := make([]TelemetryPoint, 0, batchSize)
+    ticker := time.NewTicker(flushInterval)
+    defer ticker.Stop()
+
+    flush := func() {
+        if len(batch) == 0 {
+            return
+        }
+        if err := s.repo.InsertBatch(ctx, batch); err != nil {
+            s.log.Error("telemetry batch insert failed", "err", err, "size", len(batch))
+        }
+        batch = batch[:0]
+    }
+
+    for {
+        select {
+        case pt := <-s.telemetryChan:
+            batch = append(batch, pt)
+            if len(batch) >= batchSize {
+                flush()
+            }
+        case <-ticker.C:
+            flush()
+        case <-ctx.Done():
+            flush()
+            return
+        }
+    }
+}
+```
+
+The channel buffer size, batch size, and flush interval are named constants, not magic numbers, and are tuned against the 1 Hz publish rate defined in the edge daemon convention above. If you change the publish frequency, revisit these constants together.
+
+### `campus_restrictions` writes — REST path only, never from the MQTT subscriber
+
+There is no code path from `TelemetryIngestService` (or any MQTT `OnMessage` handler) into the `campus_restrictions` table. All writes to this table originate from `internal/api/operator_restrictions.go` handlers, gated by staff auth middleware, following the same handler → service → typed error pattern as every other REST endpoint. If a future feature needs the robot to report a detected obstacle, it lands in a new, separate `reported_obstacles` table — never directly in `campus_restrictions`.
+
+### PostGIS conventions
+
+- All geometry columns use `SRID 4326` (WGS 84 lat/lon) — never mix SRIDs across tables.
+- Every geometry column has a `GIST` index. A `campus_restrictions` or `robot_telemetry` query without one will silently degrade to a sequential scan as the table grows — this is not optional.
+- Batch inserts use multi-row `INSERT` or `pgx.CopyFrom`, never a loop of single-row `Exec` calls from Go — this is the direct consequence of the telemetry batching pattern above.
+- Delivery status transitions are enforced one-way at the schema level with a `CHECK` constraint or a trigger, mirroring the `OTPRecord.Consumed` one-way invariant already established for OTP codes.
+
 ---
 
-## Flutter (Dart)
+## Flutter (Dart) — mobile app (`mobile/`)
 
 ### `ValueNotifier` — always swap, never mutate
 
@@ -139,9 +242,68 @@ All widget-layer color references must use `AC.primary(context)`, `AC.card(conte
 
 ---
 
+## Flutter (Dart) — operator route (`mobile/lib/operator/`) (NEW — folded into mobile/ as tech debt)
+
+**This is technical debt, deliberately accepted for the 2-week milestone. See ARCHITECTURE.md → "Known Technical Debt" for the full rationale and extraction plan.** The rules below exist specifically to keep that future extraction mechanical rather than a rewrite.
+
+### Directory isolation is mandatory
+
+All operator code lives under `mobile/lib/operator/` — screens, controllers, API client, models. Nothing outside this directory imports from it except the single hidden route registration in the app's router. Nothing inside this directory imports the customer-facing `ValueNotifier` globals (`activeOrdersNotifier`, `userStateNotifier`, `pastOrdersNotifier`) or customer screens.
+
+```dart
+// CORRECT — operator/ has its own isolated state
+// mobile/lib/operator/state/operator_state.dart
+final activeDeliveriesNotifier = ValueNotifier<List<DeliverySnapshot>>([]);
+final staffAuthTokenNotifier = ValueNotifier<String?>(null);
+
+// WRONG — reaching into customer-facing state from operator/
+import 'package:unbot/state/order_state.dart'; // ← NEVER inside operator/
+```
+
+### Entry point — non-discoverable, not customer-navigable
+
+The operator route is reachable via a hidden trigger (recommended: long-press on a low-traffic element, or a deep link path not linked from any customer-facing button) — never a visible item in the customer bottom navigation or menu. **This is UX hygiene only.** The actual access control is the staff `Bearer` token required by every `/api/operator/*` call — see PROTOCOL.md. Do not treat the hidden entry point as a security measure; assume any sufficiently motivated party can find and reach this route.
+
+### Staff auth token — never hardcoded, prompted and stored per session
+
+The operator route prompts for staff credentials on entry and exchanges them for a Bearer token via the Gateway's auth flow. The token lives in `operator/`-scoped state (`staffAuthTokenNotifier` or equivalent), not in a compile-time constant, not committed to version control.
+
+### Tile source — self-hosted only, never public OSM tile servers in a running build
+
+`flutter_map`'s `TileLayer.urlTemplate` must point at the self-hosted tile cache (ARCHITECTURE.md → "Self-hosted tile cache"), scoped to the UnB campus bounding box. Pointing this at `tile.openstreetmap.org` directly is a policy violation under sustained/production use and a demo-day outage risk (rate limiting). This applies to local development too — developers pull from the same cache or a locally seeded subset, not the public server.
+
+### Robot marker — interpolate, never snap
+
+Telemetry arrives in discrete ticks. Setting the marker's `LatLng` directly on each tick produces visible teleportation. Use `AnimatedMapController` (or an equivalent tween) to animate the marker smoothly across the interval between the previous and current telemetry point.
+
+```dart
+// CORRECT — smooth interpolation between telemetry ticks
+void _onTelemetryUpdate(LatLng newPosition) {
+  final tween = LatLngTween(begin: _currentMarkerPosition, end: newPosition);
+  _markerAnimController.reset();
+  _markerAnimController.forward();
+  // listener updates _currentMarkerPosition from tween.evaluate() each frame
+}
+
+// WRONG — visible jump on every tick
+void _onTelemetryUpdate(LatLng newPosition) {
+  setState(() => _currentMarkerPosition = newPosition); // teleports
+}
+```
+
+### Live updates via WebSocket, not polling
+
+The operator route subscribes to `GET /api/operator/ws/telemetry` (WebSocket) for live delivery/telemetry updates. REST polling is reserved for one-shot loads (initial delivery list, telemetry replay history) — not for the live map view, which must reflect state changes within the batching worker's flush interval, not a poll cycle.
+
+### Campus zone editing — form-based, not map-drawn
+
+`campus_restrictions` CRUD is a form (name, `restriction_type`, WKT/GeoJSON text field, `active_hours`), not interactive polygon drawing on the map. `flutter_map`'s drawing/editing tooling is not mature enough to justify the effort at this phase. Complex zone geometry is authored in QGIS and imported via a migration script.
+
+---
+
 ## MQTT topics — single source of truth
 
-Topic strings are defined **once** in `gateway/internal/services/otp.go` (`TopicUnlock`, `TopicNavigate`, `TopicDisplayQR`) and **once** in `hardware/esp32-lock/src/main.cpp` (`TOPIC_DISPLAY_QR`, `TOPIC_UNLOCK`, `TOPIC_HEARTBEAT`). Never hardcode a topic string at a call site. If a topic changes, update both files.
+Topic strings are defined **once** in `gateway/internal/services/otp.go` (`TopicUnlock`, `TopicNavigate`, `TopicDisplayQR`, `TopicTelemetry`), **once** in `hardware/esp32-lock/src/main.cpp` (`TOPIC_DISPLAY_QR`, `TOPIC_UNLOCK`, `TOPIC_HEARTBEAT`), and **once** in `edge_daemon/topics.py` (`Topics.NAVIGATE`, `Topics.TELEMETRY`, etc.). Never hardcode a topic string at a call site. If a topic changes, update all three files.
 
 ---
 
@@ -149,10 +311,11 @@ Topic strings are defined **once** in `gateway/internal/services/otp.go` (`Topic
 
 | File | Status |
 |---|---|
-| `gateway/.env` | `.gitignore`'d — copy from `.env.example` |
+| `gateway/.env` | `.gitignore`'d — copy from `.env.example`. **This is the only file in the entire monorepo permitted to contain a PostGIS connection string.** |
 | `hardware/esp32-lock/include/secrets.h` | `.gitignore`'d — copy from `secrets.h.example` |
+| `edge_daemon/.env` | `.gitignore`'d — MQTT credentials only. Must never contain a `DATABASE_URL`, `PG*` variable, or any database credential, by convention and by code review. |
 
-The `.example` files are the only credential artifacts that enter git. Production credentials are injected via environment variables (systemd `EnvironmentFile`) or NVS on the ESP32.
+The `.example` files are the only credential artifacts that enter git. Production credentials are injected via environment variables (systemd `EnvironmentFile` on the onboard notebook, or NVS on the ESP32). **Staff auth tokens for the `operator/` route are never hardcoded in the Flutter source** — see the operator-route conventions above.
 
 ---
 
@@ -167,6 +330,11 @@ All service tests use the `mockPublisher` pattern from `otp_test.go`. Tests must
 - MQTT publish failure
 - Concurrent access (run with `-race`)
 
+Telemetry ingestion tests additionally cover:
+- Batch flush on size threshold vs. time threshold
+- Channel-full drop behavior does not block the caller (test with a stalled/mock repo)
+- Malformed payload is logged and skipped, does not crash the batcher
+
 ### Flutter — no widget tests for screens with platform channels
 
-`MobileScannerController` and camera APIs cannot be tested in a widget test environment. Test business logic (controllers, state helpers) as pure unit tests. Screen tests are manual / integration only.
+`MobileScannerController` and camera APIs cannot be tested in a widget test environment. Test business logic (controllers, state helpers) as pure unit tests. Screen tests are manual / integration only. This applies to customer-facing `mobile/` screens. `operator/` screens have no camera dependency and their map/telemetry-replay logic should be unit tested where feasible (tween math, batching/reconnect logic) independent of `flutter_map`'s own rendering.
