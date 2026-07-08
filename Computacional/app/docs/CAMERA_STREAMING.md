@@ -10,6 +10,7 @@ These assumptions are now the working contract until Computacao proves otherwise
 - The camera must also be consumed by ROS 2 for navigation/perception.
 - The C920 is connected to the notebook as a Linux V4L2 camera, assumed `/dev/video0`.
 - ROS 2 publishes the camera through `v4l2_camera` or `usb_cam`.
+- The physical V4L2 device belongs exclusively to the ROS 2 camera node.
 - The primary ROS topics are assumed to be:
   - `/camera/image_raw`
   - `/camera/image_raw/compressed`
@@ -37,6 +38,24 @@ C920 -> notebook camera driver -> /camera/image_raw or /camera/image_raw/compres
 ```
 
 The notebook should initiate outbound connections to the public relay when possible. Do not assume a phone or evaluator device can open an inbound connection to the notebook on campus Wi-Fi.
+
+## Critical Linux/V4L2 rule
+
+Do not run two independent processes against `/dev/video0`.
+
+Most Linux V4L2 camera devices, including typical C920 setups, do not reliably allow multiple simultaneous readers. If `v4l2_camera` or `usb_cam` owns `/dev/video0` and a second MJPEG/WebRTC process also tries to open `/dev/video0`, the second process may fail with:
+
+```text
+Device or resource busy
+```
+
+Rule:
+
+```text
+/dev/video0 -> ROS 2 camera node -> /camera/image_raw/compressed -> app video bridge
+```
+
+The app-facing video bridge must consume the ROS 2 compressed image topic or a deliberate ROS-derived restream. It must not compete with the ROS 2 camera node for the physical camera device.
 
 ## Gateway contract
 
@@ -128,13 +147,40 @@ Suggested camera-driver direction:
 C920 -> v4l2_camera or usb_cam -> ROS image topics
 ```
 
+We provide a starter launch file for the C920:
+
+```text
+Computacional/app/edge_daemon/ros2_camera/launch/c920_camera.launch.py
+```
+
+It assumes `v4l2_camera`, `/dev/video0`, 1280x720 at 30 FPS, and the ROS namespace `/camera`. Computacao should copy/adapt it into their ROS workspace if their simulation/robot launch stack needs a different device path, frame id, or resolution.
+
 Suggested app-video direction:
 
 ```text
-ROS compressed image topic or /dev/video0 -> WebRTC publisher -> public relay
+ROS compressed image topic -> WebRTC publisher -> public relay
 ```
 
-The WebRTC publisher may read directly from `/dev/video0` or from a ROS compressed image topic. Reading from the ROS compressed topic keeps navigation and operator video aligned, but may add CPU overhead. Direct `/dev/video0` capture may be simpler but must not starve the ROS camera node.
+The WebRTC publisher should read from `/camera/image_raw/compressed` or from a local restream derived from that ROS topic. It must not read `/dev/video0` directly while the ROS 2 camera node is running.
+
+## Suggested media server shortcut
+
+Do not build WebRTC signaling from scratch for the demo.
+
+Recommended candidates:
+
+- MediaMTX (formerly rtsp-simple-server)
+- go2rtc
+
+Both can run on the notebook or on a small public relay host and provide WebRTC-oriented serving/signaling without us writing the signaling layer ourselves.
+
+Suggested shape:
+
+```text
+/camera/image_raw/compressed -> small ROS bridge/restream -> MediaMTX/go2rtc -> WebRTC -> Flutter operator
+```
+
+If MediaMTX/go2rtc runs on the notebook, remote access still needs a reachable public endpoint, VPN, tunnel, or relay. Because the demo device will not be on the same LAN, prefer a public relay or an outbound connection from the notebook to the relay.
 
 ## Operator app behavior
 
