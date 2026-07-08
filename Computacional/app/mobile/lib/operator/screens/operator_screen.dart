@@ -54,9 +54,11 @@ class _OperatorScreenState extends State<OperatorScreen>
   final _svc = OperatorService();
 
   RobotTelemetry? _telemetry;
+  RobotCameraConfig? _cameraConfig;
   bool _loading = true;
   bool _estopInProgress = false;
   String? _errorMsg;
+  String? _cameraError;
   DateTime? _lastUpdated;
   Timer? _pollTimer;
 
@@ -76,6 +78,7 @@ class _OperatorScreenState extends State<OperatorScreen>
     );
 
     _fetchTelemetry();
+    _fetchCameraConfig();
     _pollTimer = Timer.periodic(_kPollInterval, (_) => _fetchTelemetry());
   }
 
@@ -103,6 +106,20 @@ class _OperatorScreenState extends State<OperatorScreen>
           _lastUpdated = DateTime.now();
         case TelemetryError(:final message):
           _errorMsg = message;
+      }
+    });
+  }
+
+  Future<void> _fetchCameraConfig() async {
+    final result = await _svc.fetchCameraConfig();
+    if (!mounted) return;
+    setState(() {
+      switch (result) {
+        case CameraConfigOk(:final config):
+          _cameraConfig = config;
+          _cameraError = null;
+        case CameraConfigError(:final message):
+          _cameraError = message;
       }
     });
   }
@@ -193,6 +210,8 @@ class _OperatorScreenState extends State<OperatorScreen>
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 _buildStateCard(),
+                const SizedBox(height: 14),
+                _buildCameraCard(),
                 const SizedBox(height: 14),
                 _buildTelemetryGrid(),
                 const SizedBox(height: 14),
@@ -361,6 +380,95 @@ class _OperatorScreenState extends State<OperatorScreen>
   }
 
   // ── Telemetry Grid ────────────────────────────────────────────────────────
+
+  Widget _buildCameraCard() {
+    final config = _cameraConfig;
+    final kind = config?.streamKind.toLowerCase() ?? '';
+    final canRenderInline = config != null &&
+        config.available &&
+        (kind == 'mjpeg' || kind == 'http' || kind == 'jpeg');
+
+    return AppCard(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Icon(Icons.videocam_rounded, color: AppColors.accent, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              config?.label ?? 'Camera do robo',
+              style: GoogleFonts.spaceGrotesk(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AC.primary(context)),
+            ),
+          ),
+          _CameraStatusChip(
+            available: config?.available == true,
+            error: _cameraError,
+          ),
+        ]),
+        const SizedBox(height: 10),
+        if (_cameraError != null)
+          _CameraMessage(
+            icon: Icons.cloud_off_rounded,
+            text: _cameraError!,
+            color: Colors.orange,
+          )
+        else if (config == null)
+          _CameraMessage(
+            icon: Icons.hourglass_empty_rounded,
+            text: 'Carregando configuracao de video...',
+            color: AC.muted(context),
+          )
+        else if (!config.available)
+          _CameraMessage(
+            icon: Icons.videocam_off_rounded,
+            text:
+                'Stream ainda nao configurado no gateway. Defina ROBOT_CAMERA_STREAM_URL.',
+            color: AC.muted(context),
+          )
+        else if (canRenderInline)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                config.streamUrl,
+                fit: BoxFit.cover,
+                gaplessPlayback: true,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return _CameraMessage(
+                    icon: Icons.sync_rounded,
+                    text: 'Conectando ao stream...',
+                    color: AppColors.accent,
+                  );
+                },
+                errorBuilder: (_, __, ___) => _CameraMessage(
+                  icon: Icons.error_outline_rounded,
+                  text: 'Nao foi possivel renderizar o stream HTTP/MJPEG.',
+                  color: Colors.orange,
+                ),
+              ),
+            ),
+          )
+        else
+          _CameraMessage(
+            icon: Icons.settings_input_antenna_rounded,
+            text:
+                'Stream ${config.streamKind} configurado. Viewer dedicado sera necessario.',
+            color: AppColors.accent,
+          ),
+        if (config != null && config.available) ...[
+          const SizedBox(height: 8),
+          Text(
+            '${config.streamKind} | alvo ${config.latencyTargetMs} ms',
+            style: GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context)),
+          ),
+        ],
+      ]),
+    );
+  }
 
   Widget _buildTelemetryGrid() {
     final t = _telemetry;
@@ -647,6 +755,76 @@ class _OperatorScreenState extends State<OperatorScreen>
 }
 
 // ─── METRIC CARD ─────────────────────────────────────────────────────────────
+
+class _CameraStatusChip extends StatelessWidget {
+  final bool available;
+  final String? error;
+
+  const _CameraStatusChip({required this.available, this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = error != null
+        ? Colors.orange
+        : available
+            ? AppColors.teal
+            : AC.muted(context);
+    final label = error != null
+        ? 'Erro'
+        : available
+            ? 'Ao vivo'
+            : 'Pendente';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.dmSans(
+            fontSize: 10, fontWeight: FontWeight.w700, color: color),
+      ),
+    );
+  }
+}
+
+class _CameraMessage extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  const _CameraMessage({
+    required this.icon,
+    required this.text,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withValues(alpha: 0.18)),
+      ),
+      child: Row(children: [
+        Icon(icon, color: color, size: 18),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.dmSans(
+                fontSize: 12, color: AC.primary(context), height: 1.35),
+          ),
+        ),
+      ]),
+    );
+  }
+}
 
 class _MetricCard extends StatelessWidget {
   final IconData icon;
