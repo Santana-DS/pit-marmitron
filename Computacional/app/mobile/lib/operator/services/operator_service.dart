@@ -66,6 +66,47 @@ final class TelemetryError extends TelemetryResult {
   const TelemetryError(this.message);
 }
 
+// Camera stream config.
+sealed class CameraConfigResult {
+  const CameraConfigResult();
+}
+
+final class CameraConfigOk extends CameraConfigResult {
+  final RobotCameraConfig config;
+  const CameraConfigOk(this.config);
+}
+
+final class CameraConfigError extends CameraConfigResult {
+  final String message;
+  const CameraConfigError(this.message);
+}
+
+class RobotCameraConfig {
+  final bool available;
+  final String streamUrl;
+  final String streamKind;
+  final String label;
+  final int latencyTargetMs;
+
+  const RobotCameraConfig({
+    required this.available,
+    required this.streamUrl,
+    required this.streamKind,
+    required this.label,
+    required this.latencyTargetMs,
+  });
+
+  factory RobotCameraConfig.fromJson(Map<String, dynamic> json) {
+    return RobotCameraConfig(
+      available: json['available'] as bool? ?? false,
+      streamUrl: json['stream_url'] as String? ?? '',
+      streamKind: json['stream_kind'] as String? ?? 'unset',
+      label: json['label'] as String? ?? 'Robot camera',
+      latencyTargetMs: json['latency_target_ms'] as int? ?? 500,
+    );
+  }
+}
+
 // ─── OPERATOR SERVICE ────────────────────────────────────────────────────────
 
 class OperatorService {
@@ -144,6 +185,29 @@ class OperatorService {
     } on Exception catch (e) {
       debugPrint('[OperatorService] fetchTelemetry error: $e');
       return const TelemetryError('Erro de conexão.');
+    }
+  }
+
+  Future<CameraConfigResult> fetchCameraConfig() async {
+    final url = Uri.parse('$_base/api/robot/camera');
+    try {
+      final response = await http.get(url).timeout(_kTimeout);
+      if (response.statusCode == 200) {
+        final json = _tryParseJson(response.body);
+        if (json == null) {
+          return const CameraConfigError('Resposta inválida do servidor.');
+        }
+        return CameraConfigOk(RobotCameraConfig.fromJson(json));
+      }
+
+      final body = _tryParseJson(response.body);
+      return CameraConfigError(
+          body?['error'] as String? ?? 'Erro ${response.statusCode}');
+    } on TimeoutException {
+      return const CameraConfigError('Tempo de resposta excedido.');
+    } on Exception catch (e) {
+      debugPrint('[OperatorService] fetchCameraConfig error: $e');
+      return const CameraConfigError('Erro de conexão.');
     }
   }
 
