@@ -1,9 +1,8 @@
 // internal/api/server.go
 //
-// CHANGES IN THIS REVISION (Phase 1.5):
-//   - NewServer accepts *services.WakeDisplayService as a fourth parameter.
-//   - routes() registers "POST /api/orders/{id}/wake-display".
-//     All other logic is unchanged.
+// CHANGES IN THIS REVISION (Phase 1):
+//   - GET /api/waypoints registered via listWaypointsHandler().
+//     All other routes and wiring are unchanged.
 package api
 
 import (
@@ -14,6 +13,7 @@ import (
 	"time"
 
 	"unbot-gateway/internal/catalog"
+	"unbot-gateway/internal/mqtt"
 	"unbot-gateway/internal/orders"
 	"unbot-gateway/internal/services"
 )
@@ -25,7 +25,6 @@ type Server struct {
 	server *http.Server
 }
 
-// NewServer constructs the server and registers all routes.
 func NewServer(
 	addr string,
 	log *slog.Logger,
@@ -34,13 +33,15 @@ func NewServer(
 	wakeSvc *services.WakeDisplayService,
 	catalogSvc *catalog.Service,
 	ordersSvc *orders.Service,
+	mqttClient *mqtt.Client,
+	robotState *RobotState,
 ) *Server {
 	s := &Server{
 		addr: addr,
 		log:  log,
 		mux:  http.NewServeMux(),
 	}
-	s.routes(otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc)
+	s.routes(otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttClient, robotState)
 	s.server = &http.Server{
 		Addr:         addr,
 		Handler:      s.corsMiddleware(s.mux),
@@ -65,45 +66,48 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-// corsMiddleware adds CORS headers to allow cross-origin requests
 func (s *Server) corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Allow requests from any origin (for development)
-		// In production, you should restrict this to specific origins
 		origin := r.Header.Get("Origin")
 		if origin != "" {
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 		} else {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 		}
-
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Max-Age", "3600")
-
-		// Handle preflight requests
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
 
-// routes registers all HTTP handlers.
 func (s *Server) routes(
 	otpSvc *services.OTPService,
 	orderSvc *services.OrderService,
 	wakeSvc *services.WakeDisplayService,
 	catalogSvc *catalog.Service,
 	ordersSvc *orders.Service,
+	mqttClient *mqtt.Client,
+	robotState *RobotState,
 ) {
 	s.mux.HandleFunc("GET /health", s.handleHealth)
 	s.mux.HandleFunc("POST /api/validate-code", s.validateCodeHandler(otpSvc))
 	s.mux.HandleFunc("POST /api/orders/{id}/dispatch", s.dispatchHandler(orderSvc))
 	s.mux.HandleFunc("POST /api/orders/{id}/wake-display", s.wakeDisplayHandler(wakeSvc))
+
+	// Phase 1: waypoint registry endpoint
+	s.mux.HandleFunc("GET /api/waypoints", s.listWaypointsHandler())
+
+	// Operator endpoints
+	if mqttClient != nil {
+		s.mux.HandleFunc("POST /api/robot/estop", s.estopHandler(mqttClient))
+	}
+	s.mux.HandleFunc("GET /api/robot/telemetry", s.telemetryHandler(robotState))
 
 	if catalogSvc != nil {
 		s.mux.HandleFunc("GET /api/restaurants", s.listRestaurantsHandler(catalogSvc))
@@ -120,8 +124,6 @@ func (s *Server) routes(
 	}
 }
 
-// ── Health handler ────────────────────────────────────────────────────────────
-
 type healthResponse struct {
 	Status  string `json:"status"`
 	Version string `json:"version"`
@@ -132,6 +134,6 @@ func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(healthResponse{
 		Status:  "ok",
-		Version: "2.1.0",
+		Version: "3.0.0", // bumped for Phase 1
 	})
 }

@@ -27,18 +27,34 @@ import (
 // Single source of truth for every MQTT topic the gateway touches.
 // ESP32 firmware and the Pi telemetry node must use these exact strings.
 const (
-	TopicTelemetry      = "robot/telemetry"
-	TopicHeartbeat      = "robot/status/heartbeat"
-	TopicNavigate       = "robot/commands/navigate"
-	TopicUnlock         = "robot/commands/unlock"
+	TopicTelemetry = "robot/telemetry"
+	TopicHeartbeat = "robot/status/heartbeat"
+	TopicNavigate  = "robot/commands/navigate"
+	TopicUnlock    = "robot/commands/unlock"
+	TopicEstop     = "robot/commands/estop"
 )
 
 // Client is the gateway's MQTT facade.
 // Use NewClient to construct; call Connect before publishing.
+// Call SetRobotState to wire telemetry storage before connecting.
 type Client struct {
-	inner paho.Client
-	cfg   *config.Config
-	log   *slog.Logger
+	inner      paho.Client
+	cfg        *config.Config
+	log        *slog.Logger
+	robotState robotStateStore // optional; set via SetRobotState
+}
+
+// robotStateStore is satisfied by *api.RobotState.
+// Defined as a local interface to avoid an import cycle (api → mqtt → api).
+type robotStateStore interface {
+	Store(payload []byte)
+}
+
+// SetRobotState wires a RobotState store so incoming telemetry payloads
+// are persisted and made available via GET /api/robot/telemetry.
+// Must be called before Connect().
+func (c *Client) SetRobotState(rs robotStateStore) {
+	c.robotState = rs
 }
 
 // NewClient builds a configured paho client but does not connect.
@@ -108,6 +124,17 @@ func (c *Client) Publish(topic string, payload []byte) error {
 	return token.Error()
 }
 
+// PublishQoS2 sends a message at QoS 2 (exactly-once delivery).
+// Used exclusively for safety-critical commands such as ESTOP so the
+// broker guarantees the robot receives the command exactly once.
+func (c *Client) PublishQoS2(topic string, payload []byte) error {
+	token := c.inner.Publish(topic, 2, false, payload)
+	if !token.WaitTimeout(5 * time.Second) {
+		return fmt.Errorf("MQTT QoS2 publish timed out on topic %q", topic)
+	}
+	return token.Error()
+}
+
 // ── Lifecycle callbacks ───────────────────────────────────────────────────────
 
 func (c *Client) onConnect(client paho.Client) {
@@ -150,9 +177,11 @@ func (c *Client) subscribe(topic string, qos byte, handler paho.MessageHandler) 
 func (c *Client) handleTelemetry(_ paho.Client, msg paho.Message) {
 	c.log.Info("telemetry received",
 		"topic", msg.Topic(),
-		"payload", string(msg.Payload()),
+		"bytes", len(msg.Payload()),
 	)
-	// TODO(services): parse into TelemetrySnapshot, broadcast via WebSocket.
+	if c.robotState != nil {
+		c.robotState.Store(msg.Payload())
+	}
 }
 
 func (c *Client) handleHeartbeat(_ paho.Client, msg paho.Message) {

@@ -1,153 +1,161 @@
 // =============================================================================
-// src/display_manager.h
-//
-// UnBot Delivery — OLED Display + QR Code Subsystem (v3.0)
-// -----------------------------------------------------------------------------
-// RESPONSIBILITIES:
-//   Owns the Adafruit_SSD1306 driver object and every rendering function.
-//   main.cpp never touches the display directly — it calls this API only.
-//
-// HARDWARE:
-//   SSD1306 128×64 OLED over I2C.
-//   ESP32 default I2C pins: SDA = GPIO 21, SCL = GPIO 22.
-//   I2C address 0x3C is the standard for 128×64 modules; 0x3D for 128×32.
-//   No reset pin needed when the module's RST is wired to ESP32 EN (common).
-//
-// QR CODE MATH (version 1, ECC level M):
-//   Matrix size   : 21 × 21 modules
-//   Buffer size   : qrcode_getBufferSize(1) = 70 bytes  (stack, not heap)
-//   Pixel scale   : 3  →  21 × 3 = 63 px per side
-//   Display        : 128 × 64
-//   Horizontal offset: (128 - 63) / 2 = 32 px  → centered
-//   Vertical offset  : (64  - 63) / 2 =  0 px  → flush top (1px margin at bottom)
-//
-//   A 4-digit OTP ("0000"–"9999") encodes comfortably at QR version 1 / ECC M.
-//   If you ever encode a full URL, bump QR_VERSION to 3 and recheck the scale.
-//
-// RAM BUDGET:
-//   QR uint8_t buffer : 70 B   (stack-local in showQrCode)
-//   SSD1306 framebuf  : 1024 B (heap, allocated once in begin())
-//   No dynamic strings, no String objects anywhere in this file.
+// display_manager.h
+// MARMITRON 3000 — Display Subsystem
+// ST7789V · 320×240 LANDSCAPE · TFT_eSPI
 // =============================================================================
 
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <Arduino.h>
+#include <TFT_eSPI.h>
+#include <qrcode.h>
 
-// =============================================================================
-// Hardware constants — change only these if you rewire the board.
-// =============================================================================
+// ── Logo asset ────────────────────────────────────────────────────────────────
+static constexpr uint16_t LOGO_W = 200;
+static constexpr uint16_t LOGO_H = 200;
+extern const uint16_t marmitron_logo[40000];
 
-// I2C pins — ESP32 hardware defaults. Change if you use custom I2C bus.
-static constexpr uint8_t OLED_SDA_PIN = 21;
-static constexpr uint8_t OLED_SCL_PIN = 22;
+// ── Panel ─────────────────────────────────────────────────────────────────────
+static constexpr uint16_t PANEL_W = 320;
+static constexpr uint16_t PANEL_H = 240;
 
-// I2C address: 0x3C for 128×64, 0x3D for some 128×32 variants.
-static constexpr uint8_t OLED_I2C_ADDR = 0x3C;
+// ── Backlight ─────────────────────────────────────────────────────────────────
+static constexpr uint8_t  PIN_BL        = 32;
+static constexpr uint8_t  BL_CHANNEL    = 0;
+static constexpr uint8_t  BL_RESOLUTION = 8;
+static constexpr uint32_t BL_FREQ_HZ    = 5000;
 
-// OLED dimensions in pixels.
-static constexpr uint8_t OLED_WIDTH  = 128;
-static constexpr uint8_t OLED_HEIGHT = 64;
+// ── Palette ───────────────────────────────────────────────────────────────────
+static constexpr uint16_t C_BLACK   = 0x0000;
+static constexpr uint16_t C_WHITE   = 0xFFFF;
+static constexpr uint16_t C_GREEN   = 0x07E0;
+static constexpr uint16_t C_RED     = 0xF800;
+static constexpr uint16_t C_CYAN    = 0x07FF;
+static constexpr uint16_t C_AMBER   = 0xFDC0;
+static constexpr uint16_t C_GREY    = 0x4208;
+static constexpr uint16_t C_DKGREY  = 0x2104;
+static constexpr uint16_t C_MIDGREY = 0x8410;  // subtitle text
 
-// QR Code generation parameters.
-// Version 1 = 21×21 modules. Supports up to 16 alphanumeric chars at ECC M.
-// A 4-digit numeric OTP fits with headroom.
-static constexpr uint8_t QR_VERSION    = 1;
-static constexpr uint8_t QR_ECC_LEVEL  = 1;  // ECC_LOW=0, ECC_MEDIUM=1, ECC_QUARTILE=2, ECC_HIGH=3
-static constexpr uint8_t QR_MODULE_PX  = 3;  // Pixel scale per module (3 → 63×63 px)
+// UnB brand gradient colours (RGB565, computed from official hex values)
+// UnB Green #007934 → 0x03C6    White → 0xFFFF    UnB Blue #0033A0 → 0x0194
+static constexpr uint16_t C_UNB_GREEN = 0x03C6;
+static constexpr uint16_t C_UNB_BLUE  = 0x0194;
 
-// Derived offsets — compile-time constants, no runtime math.
-// 21 modules × 3 px/module = 63 px
-static constexpr uint8_t QR_RENDER_PX  = 21 * QR_MODULE_PX;  // 63
-static constexpr uint8_t QR_OFFSET_X   = (OLED_WIDTH  - QR_RENDER_PX) / 2;  // 32
-static constexpr uint8_t QR_OFFSET_Y   = (OLED_HEIGHT - QR_RENDER_PX) / 2;  //  0
+// ── QR — landscape split layout ───────────────────────────────────────────────
+// Left zone (0..219): 10px quiet margin + 200px QR + 10px quiet margin = 220px
+// Right zone (220..319): 100px — four stacked Font7 OTP digits
+static constexpr uint8_t  QR_VERSION = 2;
+static constexpr uint8_t  QR_ECC     = 1;
+static constexpr uint8_t  QR_MODULES = 25;
+static constexpr uint8_t  QR_MOD_PX  = 8;
+static constexpr uint16_t QR_SIDE    = QR_MODULES * QR_MOD_PX;  // 200
+static constexpr uint16_t QR_QUIET   = 10;
+static constexpr uint16_t QR_LEFT    = QR_QUIET;
+static constexpr uint16_t QR_TOP     = (PANEL_H - QR_SIDE) / 2;  // 20
+static constexpr uint16_t OTP_COL_X  = QR_SIDE + QR_QUIET * 2;   // 220
+static constexpr uint16_t OTP_COL_W  = PANEL_W - OTP_COL_X;      // 100
 
-// =============================================================================
-// DisplayManager
+// ── Cart animation ────────────────────────────────────────────────────────────
+static constexpr uint16_t CART_W     = 70;
+static constexpr uint16_t CART_H     = 50;
+// CART_Y chosen so cart bottom (y = CART_Y + CART_H) = TRACK_Y exactly.
+// TRACK_Y = 178, so CART_Y = 178 - 50 = 128.
+static constexpr uint16_t TRACK_Y    = 178;
+static constexpr uint16_t TRACK_H    = 8;
+static constexpr int16_t  CART_Y     = (int16_t)(TRACK_Y - CART_H);  // 128
+static constexpr int16_t  CART_SPEED = 4;   // px per tick at 30ms → ~133 px/s
+
+// ── Unlock sprite — centralizado no topo ──────────────────────────────────────
+static constexpr uint16_t SPR_UNL_W   = 120;
+static constexpr uint16_t SPR_UNL_H   = 120;
+static constexpr int16_t  SPR_UNL_X   = (PANEL_W - SPR_UNL_W) / 2;  // 100 (Centro exato)
+static constexpr int16_t  SPR_UNL_Y   = 5;                          // Colado no topo
+static constexpr int16_t  UNL_CIRC_CX = SPR_UNL_W / 2;              // 60
+static constexpr int16_t  UNL_CIRC_CY = SPR_UNL_H / 2;              // 60
+static constexpr int16_t  UNL_CIRC_R  = 45;                         // Bola um pouco menor
+static constexpr uint16_t RING_TARGET = 55;                         // Limite do anel
+static constexpr uint16_t RING_STEP   = 4;
+static constexpr uint16_t ABERTO_CX   = PANEL_W / 2;                // 160
+
+// ── Boot sprite — covers centre 160×160 around the logo ──────────────────────
+// Logo is 150×150; we give it 5px breathing room each side → 160×160.
+// Pushed to (80, 45) so logo TFT coords = (85, 50).
+// Using the sprite for boot lets the halo draw behind the logo cleanly.
+// 160×160×2 = 51 200 bytes.
+static constexpr uint16_t SPR_BOOT_W = 180;
+static constexpr uint16_t SPR_BOOT_H = 180;
+static constexpr int16_t  SPR_BOOT_X = (PANEL_W - SPR_BOOT_W) / 2;
+static constexpr int16_t  SPR_BOOT_Y = (PANEL_H - SPR_BOOT_H) / 2 - 15; // Subimos um pouco para dar espaço ao texto
+
+// ── Screen modes ──────────────────────────────────────────────────────────────
+enum class ScreenMode : uint8_t {
+    NONE,
+    BOOTING,
+    IDLE,
+    QR_CODE,
+    UNLOCK_SUCCESS,
+    ERROR_FAULT,
+};
+
 // =============================================================================
 class DisplayManager {
 public:
-    // -------------------------------------------------------------------------
-    // begin()
-    // Initialises the I2C bus on SDA/SCL pins and the SSD1306 driver.
-    // Must be called once from setup() before any other method.
-    // Returns false if the display is not detected on the I2C bus — allows
-    // main.cpp to log the fault and continue (robot can still operate without
-    // the display; unlock still works via OTP validation).
-    // -------------------------------------------------------------------------
     bool begin();
 
-    // -------------------------------------------------------------------------
-    // showQrCode(otp)
-    // Generates a QR Code matrix for the 4-char OTP string and renders it
-    // centered on the display.
-    //
-    //   otp — must be exactly 4 ASCII digit characters ("0000"–"9999").
-    //          The caller (main.cpp MQTT callback) is responsible for
-    //          validating the length before calling this method.
-    //
-    // Rendering pipeline:
-    //   1. qrcode_initBytes()  — fills a 70-byte stack buffer with the matrix.
-    //   2. display.clearDisplay()
-    //   3. Nested loop over 21×21 modules → drawPixel() for each dark module,
-    //      scaled ×3 (3×3 filled rectangle per module).
-    //   4. Overlay status text: "CÓDIGO DO PEDIDO" (top) + orderId (bottom).
-    //      If orderId is empty the overlay lines are skipped.
-    //   5. display.display() — pushes the 1KB framebuffer to the SSD1306.
-    //
-    // Stack usage: ~70 bytes for the QR buffer + qrcode_t struct (~8 bytes).
-    // No heap allocation.
-    // -------------------------------------------------------------------------
-    void showQrCode(const char* otp, const char* orderId = "");
-
-    // -------------------------------------------------------------------------
-    // showUnlockSuccess(orderId)
-    // Clears the screen and renders the delivery-complete UI:
-    //   - Large ✓ icon (drawn as concentric rectangles — no bitmap needed).
-    //   - "ABERTO!" label.
-    //   - orderId in small text at the bottom.
-    // Called immediately on receiving robot/commands/unlock, before the GPIO
-    // actuator fires, so the customer sees feedback instantly.
-    // -------------------------------------------------------------------------
-    void showUnlockSuccess(const char* orderId = "");
-
-    // -------------------------------------------------------------------------
-    // showBooting()
-    // Startup screen: UnBot logo text + "Conectando..." status.
-    // Replaces the blank screen during the Wi-Fi/MQTT connection phase.
-    // -------------------------------------------------------------------------
+    // ── Screen entry points ───────────────────────────────────────────────────
     void showBooting();
+    void showIdle();
+    void showQrCode(const char* otp);
+    void showUnlockSuccess(const char* orderId);
+    void showError();
 
-    // -------------------------------------------------------------------------
-    // showConnected()
-    // Replaces the booting screen once MQTT reaches CS_MQTT_CONNECTED.
-    // Displays "UnBot Delivery" + "Aguardando pedido..." in idle state.
-    // -------------------------------------------------------------------------
-    void showConnected();
+    // ── Per-frame ticks ───────────────────────────────────────────────────────
+    // tickBooting()       call every 20 ms  — backlight breath
+    // tickIdle()          call every 30 ms  — cart animation
+    // tickUnlockSuccess() call every 16 ms  — ring expansion (self-terminates)
+    void tickBooting();
+    void tickIdle();
+    void tickUnlockSuccess();
 
-    // -------------------------------------------------------------------------
-    // showError(msg)
-    // Renders a one-line error string centred on the display.
-    // Used for I2C initialisation failure or JSON parse errors.
-    // msg is truncated to 21 chars (SSD1306 default font width at textSize 1).
-    // -------------------------------------------------------------------------
-    void showError(const char* msg);
-
-    // -------------------------------------------------------------------------
-    // isReady()
-    // Returns true if begin() succeeded. Guards all render calls from main.cpp.
-    // -------------------------------------------------------------------------
-    bool isReady() const { return _ready; }
+    void setBrightness(uint8_t v);
+    bool       isReady() const { return _ready; }
+    ScreenMode mode()    const { return _mode;  }
 
 private:
-    bool _ready = false;
+    bool       _ready = false;
+    ScreenMode _mode  = ScreenMode::NONE;
 
-    // Internal helper: draws a filled rectangle of QR_MODULE_PX × QR_MODULE_PX
-    // pixels at (x0, y0) in the framebuffer. Inlined for the hot render loop.
-    void _drawModule(uint8_t col, uint8_t row);
+    TFT_eSPI    _tft;
 
-    // Internal helper: centre-aligns a string on a given display row (pixel y).
-    // Uses font size 1 (6px wide per char) to compute the x offset.
-    void _drawCentredText(const char* text, uint8_t y, uint8_t textSize = 1);
+    // _sprMain is allocated to whichever size is needed on screen entry;
+    // createSprite() is called in each showX() — size changes are explicit.
+    // Max: SPR_UNL_W*H = 180×200 = 72 000 bytes.
+    // Boot sprite: 160×160 = 51 200 bytes.
+    // Only one is live at a time — we delete + recreate on mode change.
+    TFT_eSprite _sprMain = TFT_eSprite(&_tft);
+
+    // Cart sprite — always 70×50 = 7 000 bytes, alive from begin() onwards.
+    TFT_eSprite _sprCart = TFT_eSprite(&_tft);
+
+    // ── Boot breath ───────────────────────────────────────────────────────────
+    uint8_t  _breathIdx = 0;
+    bool     _breathUp  = true;
+    uint8_t  _breathLUT[32];
+
+    // ── Unlock ring ───────────────────────────────────────────────────────────
+    uint16_t _ringRadius = 0;
+
+    // ── Cart ──────────────────────────────────────────────────────────────────
+    int16_t _cartX = 0;
+
+    // ── Unlock Text Toggle ────────────────────────────────────────────────────
+    uint32_t _lastSubToggle = 0;
+    bool     _subAlt        = false;
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    void _fullBlack();
+    void _drawTrack();
+    void _drawCart();
+    void _drawCheckmark(TFT_eSprite& spr, int16_t cx, int16_t cy, int16_t r);
+    void _pushCartClipped();
 };
