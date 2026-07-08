@@ -1,4 +1,4 @@
-// lib/screens/operator/operator_screen.dart
+// lib/operator/screens/operator_screen.dart
 //
 // OPERATOR DASHBOARD
 // ──────────────────────────────────────────────────────────────────────────────
@@ -34,11 +34,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../theme/app_theme.dart';
 import '../../widgets/widgets.dart';
-import '../../models/robot_telemetry.dart';
-import '../../services/operator_service.dart';
-import '../../state/user_state.dart';
+import '../models/robot_telemetry.dart';
+import '../services/operator_service.dart';
 import '../../main.dart';
-import '../login_screen.dart';
+import '../../screens/login_screen.dart';
 
 // ─── Poll interval ─────────────────────────────────────────────────────────
 const _kPollInterval = Duration(seconds: 3);
@@ -138,8 +137,7 @@ class _OperatorScreenState extends State<OperatorScreen>
       case EstopMqttUnreachable(:final message):
         HapticFeedback.heavyImpact();
         _showBanner(
-          message:
-              '⚠️ $message\nO robô pode não ter recebido o comando!',
+          message: '⚠️ $message\nO robô pode não ter recebido o comando!',
           color: Colors.orange.shade800,
           icon: Icons.warning_rounded,
           duration: const Duration(seconds: 6),
@@ -174,8 +172,7 @@ class _OperatorScreenState extends State<OperatorScreen>
         ]),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
         duration: duration,
       ),
@@ -249,9 +246,8 @@ class _OperatorScreenState extends State<OperatorScreen>
                 color: AC.primary(context)),
           ),
           Text(
-            userStateNotifier.value.name,
-            style:
-                GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context)),
+            'Operador',
+            style: GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context)),
           ),
         ]),
       ]),
@@ -338,11 +334,11 @@ class _OperatorScreenState extends State<OperatorScreen>
         ),
         const SizedBox(width: 14),
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               'Estado do Robô',
-              style: GoogleFonts.dmSans(
-                  fontSize: 11, color: AC.muted(context)),
+              style: GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context)),
             ),
             const SizedBox(height: 2),
             Row(children: [
@@ -359,8 +355,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           ]),
         ),
         if (_errorMsg != null)
-          Icon(Icons.cloud_off_rounded,
-              color: AC.muted(context), size: 20),
+          Icon(Icons.cloud_off_rounded, color: AC.muted(context), size: 20),
       ]),
     );
   }
@@ -386,9 +381,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           child: _MetricCard(
             icon: Icons.speed_rounded,
             label: 'Velocidade',
-            value: t != null
-                ? '${t.speedKmh.toStringAsFixed(1)} km/h'
-                : '--',
+            value: t != null ? '${t.speedKmh.toStringAsFixed(1)} km/h' : '--',
             color: AppColors.accent,
           ),
         ),
@@ -410,9 +403,8 @@ class _OperatorScreenState extends State<OperatorScreen>
           child: _MetricCard(
             icon: Icons.straighten_rounded,
             label: 'Distância',
-            value: t != null
-                ? '${t.remainingMeters.toStringAsFixed(0)} m'
-                : '--',
+            value:
+                t != null ? '${t.remainingMeters.toStringAsFixed(0)} m' : '--',
             color: AppColors.teal,
           ),
         ),
@@ -435,8 +427,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           child: _MetricCard(
             icon: Icons.developer_board_rounded,
             label: 'CPU',
-            value:
-                t != null ? '${t.cpuPct.toStringAsFixed(0)}%' : '--',
+            value: t != null ? '${t.cpuPct.toStringAsFixed(0)}%' : '--',
             sub: t != null ? _usageBar(t.cpuPct, Colors.orange) : null,
             color: Colors.orange,
           ),
@@ -446,8 +437,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           child: _MetricCard(
             icon: Icons.memory_rounded,
             label: 'Memória',
-            value:
-                t != null ? '${t.memPct.toStringAsFixed(0)}%' : '--',
+            value: t != null ? '${t.memPct.toStringAsFixed(0)}%' : '--',
             sub: t != null ? _usageBar(t.memPct, AppColors.purple) : null,
             color: AppColors.purple,
           ),
@@ -463,13 +453,11 @@ class _OperatorScreenState extends State<OperatorScreen>
     return AppCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Icon(Icons.my_location_rounded,
-              size: 16, color: AC.muted(context)),
+          Icon(Icons.my_location_rounded, size: 16, color: AC.muted(context)),
           const SizedBox(width: 8),
           Text(
             'Posição (frame: ${pose.frame})',
-            style: GoogleFonts.dmSans(
-                fontSize: 12, color: AC.muted(context)),
+            style: GoogleFonts.dmSans(fontSize: 12, color: AC.muted(context)),
           ),
         ]),
         const SizedBox(height: 12),
@@ -478,9 +466,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           children: [
             _PoseValue(label: 'X', value: pose.x.toStringAsFixed(2)),
             _PoseValue(label: 'Y', value: pose.y.toStringAsFixed(2)),
-            _PoseValue(
-                label: 'θ (rad)',
-                value: pose.theta.toStringAsFixed(3)),
+            _PoseValue(label: 'θ (rad)', value: pose.theta.toStringAsFixed(3)),
           ],
         ),
       ]),
@@ -497,10 +483,11 @@ class _OperatorScreenState extends State<OperatorScreen>
         Icon(Icons.receipt_long_rounded, color: AppColors.accent, size: 20),
         const SizedBox(width: 10),
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Pedido em execução',
-                style: GoogleFonts.dmSans(
-                    fontSize: 11, color: AC.muted(context))),
+                style:
+                    GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context))),
             const SizedBox(height: 2),
             Text(
               _telemetry!.activeOrderId!,
@@ -549,8 +536,7 @@ class _OperatorScreenState extends State<OperatorScreen>
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Colors.white),
+                              strokeWidth: 2.5, color: Colors.white),
                         ),
                       )
                     : Row(
@@ -624,10 +610,7 @@ class _OperatorScreenState extends State<OperatorScreen>
       case RobotNavState.fault:
         return (color: Colors.red, icon: Icons.error_outline_rounded);
       case RobotNavState.unknown:
-        return (
-          color: AC.muted(context),
-          icon: Icons.help_outline_rounded
-        );
+        return (color: AC.muted(context), icon: Icons.help_outline_rounded);
     }
   }
 
@@ -694,15 +677,13 @@ class _MetricCard extends StatelessWidget {
           Icon(icon, size: 15, color: color),
           const SizedBox(width: 5),
           Text(label,
-              style: GoogleFonts.dmSans(
-                  fontSize: 11, color: AC.muted(context))),
+              style:
+                  GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context))),
         ]),
         const SizedBox(height: 8),
         Text(value,
             style: GoogleFonts.spaceGrotesk(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: color)),
+                fontSize: 20, fontWeight: FontWeight.w700, color: color)),
         if (sub != null) ...[
           const SizedBox(height: 6),
           sub!,
@@ -726,8 +707,8 @@ class _ProgressCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Progresso da entrega',
-                style: GoogleFonts.dmSans(
-                    fontSize: 12, color: AC.muted(context))),
+                style:
+                    GoogleFonts.dmSans(fontSize: 12, color: AC.muted(context))),
             Text('${progressPct.toStringAsFixed(0)}%',
                 style: GoogleFonts.spaceGrotesk(
                     fontSize: 13,
@@ -780,8 +761,8 @@ class _EstopConfirmDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: AC.card(context),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      icon: const Icon(Icons.warning_amber_rounded,
-          color: Colors.red, size: 40),
+      icon:
+          const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 40),
       title: Text(
         'Confirmar parada de emergência?',
         style: GoogleFonts.spaceGrotesk(
@@ -804,14 +785,14 @@ class _EstopConfirmDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.pop(context, false),
           child: Text('Cancelar',
-              style: GoogleFonts.dmSans(
-                  fontSize: 14, color: AC.muted(context))),
+              style:
+                  GoogleFonts.dmSans(fontSize: 14, color: AC.muted(context))),
         ),
         FilledButton(
           style: FilledButton.styleFrom(
             backgroundColor: Colors.red.shade700,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           onPressed: () {
             HapticFeedback.heavyImpact();

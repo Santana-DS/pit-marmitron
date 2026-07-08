@@ -1,4 +1,4 @@
-// lib/services/operator_service.dart
+// lib/operator/services/operator_service.dart
 //
 // HTTP client for operator-only endpoints:
 //   GET  /api/robot/telemetry   — latest telemetry snapshot from the gateway
@@ -12,7 +12,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import '../config/app_config.dart';
+import '../../config/app_config.dart';
 import '../models/robot_telemetry.dart';
 
 const Duration _kTimeout = Duration(seconds: 8);
@@ -32,7 +32,8 @@ final class EstopSent extends EstopResult {
 final class EstopMqttUnreachable extends EstopResult {
   final String message;
   const EstopMqttUnreachable(
-      {this.message = 'Broker MQTT inacessível. Robô pode não ter recebido o comando.'});
+      {this.message =
+          'Broker MQTT inacessível. Robô pode não ter recebido o comando.'});
 }
 
 /// Network-layer failure (timeout, no connectivity, unexpected error).
@@ -99,7 +100,8 @@ class OperatorService {
 
       final body = _tryParseJson(response.body);
       final detail = body?['error'] as String? ?? 'Unknown error';
-      debugPrint('[OperatorService] estop failed — HTTP ${response.statusCode}: $detail');
+      debugPrint(
+          '[OperatorService] estop failed — HTTP ${response.statusCode}: $detail');
 
       if (response.statusCode == 502) {
         return EstopMqttUnreachable(message: detail);
@@ -127,7 +129,9 @@ class OperatorService {
 
       if (response.statusCode == 200) {
         final json = _tryParseJson(response.body);
-        if (json == null) return const TelemetryError('Resposta inválida do servidor.');
+        if (json == null) {
+          return const TelemetryError('Resposta inválida do servidor.');
+        }
         return TelemetryOk(RobotTelemetry.fromJson(json));
       }
       if (response.statusCode == 204) return const TelemetryNotAvailable();

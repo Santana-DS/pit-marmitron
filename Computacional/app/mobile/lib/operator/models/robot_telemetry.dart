@@ -1,4 +1,4 @@
-// lib/models/robot_telemetry.dart
+// lib/operator/models/robot_telemetry.dart
 //
 // Data model for the robot/telemetry MQTT payload, polled by the gateway
 // via GET /api/robot/telemetry and consumed by the OperatorScreen.
@@ -106,12 +106,9 @@ class RobotTelemetry {
       navState: RobotNavState.fromString(json['nav_state'] as String?),
       activeOrderId: json['active_order_id'] as String?,
       pose: poseJson != null ? RobotPose.fromJson(poseJson) : null,
-      linearSpeedMps:
-          (velocityJson?['linear_mps'] as num?)?.toDouble() ?? 0.0,
-      batteryPercent:
-          (batteryJson?['percent'] as num?)?.toDouble() ?? 0.0,
-      remainingMeters:
-          (json['remaining_m'] as num?)?.toDouble() ?? 0.0,
+      linearSpeedMps: (velocityJson?['linear_mps'] as num?)?.toDouble() ?? 0.0,
+      batteryPercent: (batteryJson?['percent'] as num?)?.toDouble() ?? 0.0,
+      remainingMeters: (json['remaining_m'] as num?)?.toDouble() ?? 0.0,
       progressPct: (json['progress_pct'] as num?)?.toDouble() ?? 0.0,
       etaSeconds: (json['eta_seconds'] as num?)?.toDouble() ?? 0.0,
       cpuPct: (json['cpu_pct'] as num?)?.toDouble() ?? 0.0,
