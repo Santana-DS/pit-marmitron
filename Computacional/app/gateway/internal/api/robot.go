@@ -26,6 +26,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -171,11 +172,15 @@ func (s *Server) telemetryHandler(robotState *RobotState) http.HandlerFunc {
 }
 
 type cameraConfigResponse struct {
-	Available       bool   `json:"available"`
-	StreamURL       string `json:"stream_url"`
-	StreamKind      string `json:"stream_kind"`
-	Label           string `json:"label"`
-	LatencyTargetMS int    `json:"latency_target_ms"`
+	Available          bool     `json:"available"`
+	StreamURL          string   `json:"stream_url"`
+	StreamKind         string   `json:"stream_kind"`
+	SignalingURL       string   `json:"signaling_url"`
+	ICEServers         []string `json:"ice_servers"`
+	Label              string   `json:"label"`
+	LatencyTargetMS    int      `json:"latency_target_ms"`
+	ROSImageTopic      string   `json:"ros_image_topic"`
+	ROSCompressedTopic string   `json:"ros_compressed_topic"`
 }
 
 // GET /api/robot/camera
@@ -195,9 +200,11 @@ func (s *Server) cameraConfigHandler() http.HandlerFunc {
 		if streamKind == "" {
 			streamKind = "unset"
 		}
+		signalingURL := os.Getenv("ROBOT_CAMERA_SIGNALING_URL")
+		iceServers := splitCSVEnv("ROBOT_CAMERA_ICE_SERVERS")
 		label := os.Getenv("ROBOT_CAMERA_LABEL")
 		if label == "" {
-			label = "Robot camera"
+			label = "C920 front camera"
 		}
 		latencyTargetMS := 500
 		if raw := os.Getenv("ROBOT_CAMERA_LATENCY_TARGET_MS"); raw != "" {
@@ -205,13 +212,41 @@ func (s *Server) cameraConfigHandler() http.HandlerFunc {
 				latencyTargetMS = parsed
 			}
 		}
+		rosImageTopic := os.Getenv("ROBOT_CAMERA_ROS_IMAGE_TOPIC")
+		if rosImageTopic == "" {
+			rosImageTopic = "/camera/image_raw"
+		}
+		rosCompressedTopic := os.Getenv("ROBOT_CAMERA_ROS_COMPRESSED_TOPIC")
+		if rosCompressedTopic == "" {
+			rosCompressedTopic = "/camera/image_raw/compressed"
+		}
 
 		writeJSON(w, http.StatusOK, cameraConfigResponse{
-			Available:       streamURL != "",
-			StreamURL:       streamURL,
-			StreamKind:      streamKind,
-			Label:           label,
-			LatencyTargetMS: latencyTargetMS,
+			Available:          streamURL != "",
+			StreamURL:          streamURL,
+			StreamKind:         streamKind,
+			SignalingURL:       signalingURL,
+			ICEServers:         iceServers,
+			Label:              label,
+			LatencyTargetMS:    latencyTargetMS,
+			ROSImageTopic:      rosImageTopic,
+			ROSCompressedTopic: rosCompressedTopic,
 		})
 	}
+}
+
+func splitCSVEnv(key string) []string {
+	raw := os.Getenv(key)
+	if raw == "" {
+		return nil
+	}
+	parts := strings.Split(raw, ",")
+	values := make([]string, 0, len(parts))
+	for _, part := range parts {
+		value := strings.TrimSpace(part)
+		if value != "" {
+			values = append(values, value)
+		}
+	}
+	return values
 }
