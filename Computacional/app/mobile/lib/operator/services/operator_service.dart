@@ -31,16 +31,18 @@ final class EstopSent extends EstopResult {
 /// MQTT broker unreachable — robot may NOT have received the command.
 final class EstopMqttUnreachable extends EstopResult {
   final String message;
-  const EstopMqttUnreachable(
-      {this.message =
-          'Broker MQTT inacessível. Robô pode não ter recebido o comando.'});
+  const EstopMqttUnreachable({
+    this.message =
+        'Broker MQTT inacessível. Robô pode não ter recebido o comando.',
+  });
 }
 
 /// Network-layer failure (timeout, no connectivity, unexpected error).
 final class EstopNetworkError extends EstopResult {
   final String message;
-  const EstopNetworkError(
-      {this.message = 'Sem conexão com o servidor. Verifique sua internet.'});
+  const EstopNetworkError({
+    this.message = 'Sem conexão com o servidor. Verifique sua internet.',
+  });
 }
 
 // ─── TELEMETRY RESULT ────────────────────────────────────────────────────────
@@ -85,15 +87,23 @@ class RobotCameraConfig {
   final bool available;
   final String streamUrl;
   final String streamKind;
+  final String signalingUrl;
+  final List<String> iceServers;
   final String label;
   final int latencyTargetMs;
+  final String rosImageTopic;
+  final String rosCompressedTopic;
 
   const RobotCameraConfig({
     required this.available,
     required this.streamUrl,
     required this.streamKind,
+    required this.signalingUrl,
+    required this.iceServers,
     required this.label,
     required this.latencyTargetMs,
+    required this.rosImageTopic,
+    required this.rosCompressedTopic,
   });
 
   factory RobotCameraConfig.fromJson(Map<String, dynamic> json) {
@@ -101,8 +111,16 @@ class RobotCameraConfig {
       available: json['available'] as bool? ?? false,
       streamUrl: json['stream_url'] as String? ?? '',
       streamKind: json['stream_kind'] as String? ?? 'unset',
-      label: json['label'] as String? ?? 'Robot camera',
+      signalingUrl: json['signaling_url'] as String? ?? '',
+      iceServers: (json['ice_servers'] as List<dynamic>? ?? const [])
+          .whereType<String>()
+          .toList(),
+      label: json['label'] as String? ?? 'C920 front camera',
       latencyTargetMs: json['latency_target_ms'] as int? ?? 500,
+      rosImageTopic: json['ros_image_topic'] as String? ?? '/camera/image_raw',
+      rosCompressedTopic:
+          json['ros_compressed_topic'] as String? ??
+          '/camera/image_raw/compressed',
     );
   }
 }
@@ -142,7 +160,8 @@ class OperatorService {
       final body = _tryParseJson(response.body);
       final detail = body?['error'] as String? ?? 'Unknown error';
       debugPrint(
-          '[OperatorService] estop failed — HTTP ${response.statusCode}: $detail');
+        '[OperatorService] estop failed — HTTP ${response.statusCode}: $detail',
+      );
 
       if (response.statusCode == 502) {
         return EstopMqttUnreachable(message: detail);
@@ -151,7 +170,8 @@ class OperatorService {
     } on TimeoutException {
       debugPrint('[OperatorService] estop timed out');
       return const EstopNetworkError(
-          message: 'Tempo de resposta excedido. Tente novamente.');
+        message: 'Tempo de resposta excedido. Tente novamente.',
+      );
     } on Exception catch (e) {
       debugPrint('[OperatorService] estop error: $e');
       return const EstopNetworkError();
@@ -179,7 +199,8 @@ class OperatorService {
 
       final body = _tryParseJson(response.body);
       return TelemetryError(
-          body?['error'] as String? ?? 'Erro ${response.statusCode}');
+        body?['error'] as String? ?? 'Erro ${response.statusCode}',
+      );
     } on TimeoutException {
       return const TelemetryError('Tempo de resposta excedido.');
     } on Exception catch (e) {
@@ -202,7 +223,8 @@ class OperatorService {
 
       final body = _tryParseJson(response.body);
       return CameraConfigError(
-          body?['error'] as String? ?? 'Erro ${response.statusCode}');
+        body?['error'] as String? ?? 'Erro ${response.statusCode}',
+      );
     } on TimeoutException {
       return const CameraConfigError('Tempo de resposta excedido.');
     } on Exception catch (e) {
