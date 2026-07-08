@@ -224,29 +224,30 @@ class NavBridge:
 
         logger.info("Nav2 accepted goal for order %s", goal.order_id)
 
-        result_future = goal_handle.get_result_async()
-        result = self._wait_for_rclpy_future(result_future)
+        try:
+            result_future = goal_handle.get_result_async()
+            result = self._wait_for_rclpy_future(result_future)
 
-        if result.status == GoalStatus.STATUS_SUCCEEDED:
-            logger.info("Nav2 goal succeeded for order %s", goal.order_id)
-            loop.call_soon_threadsafe(
-                asyncio.ensure_future,
-                self._on_goal_succeeded(goal),
-            )
-        else:
-            logger.error(
-                "Nav2 goal failed for order %s (status=%d)",
-                goal.order_id,
-                result.status,
-            )
-            loop.call_soon_threadsafe(
-                asyncio.ensure_future,
-                self._state.trigger_fault(f"nav2_status_{result.status}"),
-            )
-
-        with self._goal_lock:
-            if self._current_goal_handle is goal_handle:
-                self._current_goal_handle = None
+            if result.status == GoalStatus.STATUS_SUCCEEDED:
+                logger.info("Nav2 goal succeeded for order %s", goal.order_id)
+                loop.call_soon_threadsafe(
+                    asyncio.ensure_future,
+                    self._on_goal_succeeded(goal),
+                )
+            else:
+                logger.error(
+                    "Nav2 goal failed for order %s (status=%d)",
+                    goal.order_id,
+                    result.status,
+                )
+                loop.call_soon_threadsafe(
+                    asyncio.ensure_future,
+                    self._state.trigger_fault(f"nav2_status_{result.status}"),
+                )
+        finally:
+            with self._goal_lock:
+                if self._current_goal_handle is goal_handle:
+                    self._current_goal_handle = None
 
     def _execute_goal_stub(self, goal: ActiveGoal, loop: asyncio.AbstractEventLoop) -> None:
         logger.info("[STUB] Simulating 10s navigation for order %s", goal.order_id)

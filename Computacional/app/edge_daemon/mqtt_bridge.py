@@ -22,6 +22,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import time
 from typing import Optional
 
@@ -239,7 +240,7 @@ class MQTTBridge:
         order_id  = data.get("order_id")
         issued_at = data.get("issued_at", 0)
         pose      = data.get("pose", {})
-        map_frame = data.get("map_frame", "map")
+        map_frame = data.get("map_frame") or pose.get("frame") or "map"
         waypoint  = data.get("waypoint_name", "")
 
         if not order_id:
@@ -266,12 +267,30 @@ class MQTTBridge:
             )
             return
 
+        try:
+            x = float(x)
+            y = float(y)
+            theta = float(theta)
+        except (TypeError, ValueError):
+            logger.error(
+                "Navigate payload for order %s has non-numeric pose fields, ignoring",
+                order_id,
+            )
+            return
+
+        if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(theta)):
+            logger.error(
+                "Navigate payload for order %s has non-finite pose fields, ignoring",
+                order_id,
+            )
+            return
+
         goal = ActiveGoal(
             order_id=order_id,
             waypoint_name=waypoint,
-            x=float(x),
-            y=float(y),
-            theta=float(theta),
+            x=x,
+            y=y,
+            theta=theta,
             map_frame=str(map_frame),
             issued_at=time.monotonic(),
         )

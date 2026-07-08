@@ -192,9 +192,13 @@ async def _estop_observer(
             payload: dict = await estop_queue.get()
             reason = payload.get("reason", "unspecified")
             logger.critical("E-STOP received: %s", payload)
-            await nav_bridge.cancel_current_goal()
-            await state.trigger_fault(f"estop: {reason}")
-            estop_queue.task_done()
+            try:
+                await nav_bridge.cancel_current_goal()
+            except Exception as exc:
+                logger.error("E-STOP Nav2 cancel failed: %s", exc, exc_info=True)
+            finally:
+                await state.trigger_fault(f"estop: {reason}")
+                estop_queue.task_done()
             logger.critical("E-STOP applied: Nav2 goal cancelled and state set to FAULT")
     except asyncio.CancelledError:
         logger.info("E-stop observer cancelled.")
@@ -238,9 +242,9 @@ async def _fault_monitor(
                     )
                     if cancel_on_timeout:
                         await nav_bridge.cancel_current_goal()
-                        await state.trigger_fault(
-                            f"offline_hold_timeout after {time_offline:.0f}s"
-                        )
+                    await state.trigger_fault(
+                        f"offline_hold_timeout after {time_offline:.0f}s"
+                    )
     except asyncio.CancelledError:
         logger.info("Fault monitor cancelled.")
         raise
@@ -366,7 +370,7 @@ async def _amain() -> None:
     ]
 
     logger.info(
-        "All tasks started (%d). MQTT → %s:%d | telemetry %.1f Hz | heartbeat every %.0fs.",
+        "All tasks started (%d). MQTT -> %s:%d | telemetry %.1f Hz | heartbeat every %.0fs.",
         len(tasks),
         cfg.mqtt.host,
         cfg.mqtt.port,
