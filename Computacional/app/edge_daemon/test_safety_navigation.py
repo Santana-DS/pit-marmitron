@@ -3,10 +3,12 @@ from __future__ import annotations
 import asyncio
 import time
 import unittest
+from argparse import Namespace
 
 from .__main__ import _estop_observer
 from .config import MQTTConfig
 from .mqtt_bridge import MQTTBridge
+from .sim_command import build_estop_payload, build_navigate_payload
 from .state_machine import RobotState, RobotStateMachine
 
 
@@ -86,6 +88,36 @@ class SafetyNavigationTests(unittest.IsolatedAsyncioTestCase):
             task.cancel()
             with self.assertRaises(asyncio.CancelledError):
                 await task
+
+    def test_validation_helper_builds_navigate_payload_contract(self) -> None:
+        payload = build_navigate_payload(
+            Namespace(
+                order_id="SIM-001",
+                x=1.0,
+                y=2.0,
+                theta=0.5,
+                frame="map",
+                waypoint="SIM_POINT",
+            )
+        )
+
+        self.assertEqual(payload["order_id"], "SIM-001")
+        self.assertEqual(payload["map_frame"], "map")
+        self.assertEqual(payload["pose"]["x"], 1.0)
+        self.assertEqual(payload["pose"]["y"], 2.0)
+        self.assertEqual(payload["pose"]["theta"], 0.5)
+        self.assertEqual(payload["pose"]["frame"], "map")
+        self.assertEqual(payload["waypoint_name"], "SIM_POINT")
+        self.assertIsInstance(payload["issued_at"], int)
+
+    def test_validation_helper_builds_estop_payload_contract(self) -> None:
+        payload = build_estop_payload(
+            Namespace(source="validation_cli", reason="operator_button")
+        )
+
+        self.assertEqual(payload["source"], "validation_cli")
+        self.assertEqual(payload["reason"], "operator_button")
+        self.assertIsInstance(payload["timestamp"], int)
 
 
 if __name__ == "__main__":
