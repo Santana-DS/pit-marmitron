@@ -38,10 +38,11 @@ const (
 // Use NewClient to construct; call Connect before publishing.
 // Call SetRobotState to wire telemetry storage before connecting.
 type Client struct {
-	inner      paho.Client
-	cfg        *config.Config
-	log        *slog.Logger
-	robotState robotStateStore // optional; set via SetRobotState
+	inner           paho.Client
+	cfg             *config.Config
+	log             *slog.Logger
+	robotState      robotStateStore
+	telemetryIngest telemetryEnqueuer
 }
 
 // robotStateStore is satisfied by *api.RobotState.
@@ -50,11 +51,21 @@ type robotStateStore interface {
 	Store(payload []byte)
 }
 
+type telemetryEnqueuer interface {
+	EnqueueTelemetry(payload []byte)
+}
+
 // SetRobotState wires a RobotState store so incoming telemetry payloads
 // are persisted and made available via GET /api/robot/telemetry.
 // Must be called before Connect().
 func (c *Client) SetRobotState(rs robotStateStore) {
 	c.robotState = rs
+}
+
+// SetTelemetryIngest wires the durable telemetry ingestion path.
+// Must be called before Connect().
+func (c *Client) SetTelemetryIngest(t telemetryEnqueuer) {
+	c.telemetryIngest = t
 }
 
 // NewClient builds a configured paho client but does not connect.
@@ -181,6 +192,9 @@ func (c *Client) handleTelemetry(_ paho.Client, msg paho.Message) {
 	)
 	if c.robotState != nil {
 		c.robotState.Store(msg.Payload())
+	}
+	if c.telemetryIngest != nil {
+		c.telemetryIngest.EnqueueTelemetry(msg.Payload())
 	}
 }
 
