@@ -129,6 +129,18 @@ from .nav_bridge import NavBridge                        # noqa: E402
 from .telemetry import TelemetryCollector                # noqa: E402
 
 
+def _init_ros2_once() -> None:
+    """Initialize rclpy once before ROS-using tasks start their threads."""
+    try:
+        import rclpy
+    except ImportError:
+        return
+
+    if not rclpy.ok():
+        rclpy.init()
+        logger.info("ROS 2 rclpy initialized.")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Background task: observe unlock commands → complete delivery in state machine
 # ─────────────────────────────────────────────────────────────────────────────
@@ -168,8 +180,30 @@ async def _unlock_observer(
 # Background task: fault watchdog
 # ─────────────────────────────────────────────────────────────────────────────
 
+async def _estop_observer(
+    estop_queue: asyncio.Queue,
+    state: RobotStateMachine,
+    nav_bridge: NavBridge,
+) -> None:
+    """Cancel the active Nav2 goal before marking the robot as FAULT."""
+    logger.info("E-stop observer started.")
+    try:
+        while True:
+            payload: dict = await estop_queue.get()
+            reason = payload.get("reason", "unspecified")
+            logger.critical("E-STOP received: %s", payload)
+            await nav_bridge.cancel_current_goal()
+            await state.trigger_fault(f"estop: {reason}")
+            estop_queue.task_done()
+            logger.critical("E-STOP applied: Nav2 goal cancelled and state set to FAULT")
+    except asyncio.CancelledError:
+        logger.info("E-stop observer cancelled.")
+        raise
+
+
 async def _fault_monitor(
     state: RobotStateMachine,
+    nav_bridge: NavBridge,
     offline_timeout: float,
     cancel_on_timeout: bool,
 ) -> None:
@@ -203,6 +237,7 @@ async def _fault_monitor(
                         offline_timeout,
                     )
                     if cancel_on_timeout:
+                        await nav_bridge.cancel_current_goal()
                         await state.trigger_fault(
                             f"offline_hold_timeout after {time_offline:.0f}s"
                         )
@@ -268,6 +303,8 @@ async def _amain() -> None:
         cfg.mqtt.client_id,
     )
 
+    _init_ros2_once()
+
     # ── Shared state ──────────────────────────────────────────────────────────
     state = RobotStateMachine()
 
@@ -275,6 +312,7 @@ async def _amain() -> None:
     # maxsize=0 → unbounded. Goals and unlock commands are rare; no cap needed.
     nav_goal_queue: asyncio.Queue = asyncio.Queue()
     unlock_queue:   asyncio.Queue = asyncio.Queue()
+    estop_queue:    asyncio.Queue = asyncio.Queue()
 
     # ── Component construction ────────────────────────────────────────────────
     mqtt_bridge = MQTTBridge(
@@ -282,6 +320,7 @@ async def _amain() -> None:
         state=state,
         nav_goal_queue=nav_goal_queue,
         unlock_queue=unlock_queue,
+        estop_queue=estop_queue,
     )
 
     nav_bridge = NavBridge(
@@ -312,8 +351,10 @@ async def _amain() -> None:
         ("nav_bridge",         nav_bridge.run()),
         ("telemetry",          telemetry_collector.run()),
         ("unlock_observer",    _unlock_observer(unlock_queue, state)),
+        ("estop_observer",     _estop_observer(estop_queue, state, nav_bridge)),
         ("fault_monitor",      _fault_monitor(
                                    state,
+                                   nav_bridge,
                                    cfg.fault.offline_safe_stop_timeout,
                                    cfg.fault.cancel_goal_on_offline_timeout,
                                )),
@@ -378,6 +419,16 @@ async def _amain() -> None:
                 task.get_name(),
                 result,
             )
+
+    nav_bridge.close()
+    try:
+        import rclpy
+
+        if rclpy.ok():
+            rclpy.shutdown()
+            logger.info("ROS 2 rclpy shut down.")
+    except ImportError:
+        pass
 
     logger.info("Edge daemon stopped cleanly.")
 

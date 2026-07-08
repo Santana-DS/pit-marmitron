@@ -170,7 +170,7 @@ Lists active robot deliveries with their most recent known telemetry point. In t
 
 ### `GET /api/operator/deliveries/{order_id}/telemetry?from=<RFC3339>`
 
-Returns the telemetry trail for an order as SLAM map-frame points plus per-point metadata, for replay/debugging. These coordinates are ROS 2 `map` frame metres, not GPS longitude/latitude and not GeoJSON.
+Returns the telemetry trail for an order as ROS 2 frame points plus per-point metadata, for replay/debugging. These coordinates are metres in the reported `pose.frame` (`map` from `/amcl_pose` when localization is available, otherwise `odom` fallback), not GPS longitude/latitude and not GeoJSON.
 
 **Response 200**
 ```json
@@ -338,7 +338,7 @@ Published at the configured telemetry rate by the edge daemon (onboard notebook)
 }
 ```
 
-`active_order_id` is the same opaque order code used by dispatch (`orders.public_code` / `OTPRecord.OrderID`), not a UUID from a separate deliveries table. The pose fields are ROS 2 SLAM map-frame coordinates in metres, not GPS longitude/latitude. `nav_state` mirrors `RobotState` but is advisory only for display purposes — `FAULT` detection is sourced from `robot/status/heartbeat`, not this topic (QoS 0 makes it unsuitable as the sole source of a safety-relevant signal). `battery.percent` refers to the **robot's traction battery**, not the onboard notebook's own battery — see CONVENTIONS.md.
+`active_order_id` is the same opaque order code used by dispatch (`orders.public_code` / `OTPRecord.OrderID`), not a UUID from a separate deliveries table. The pose fields are ROS 2 frame coordinates in metres; `pose.frame` is `map` when sourced from `/amcl_pose` and `odom` when falling back to `/odom`. They are not GPS longitude/latitude. `nav_state` mirrors `RobotState` but is advisory only for display purposes — `FAULT` detection is sourced from `robot/status/heartbeat`, not this topic (QoS 0 makes it unsuitable as the sole source of a safety-relevant signal). `battery.percent` refers to the **robot's traction battery** as reported by `/battery_state`, not the onboard notebook's own battery — see CONVENTIONS.md.
 
 ---
 

@@ -2,9 +2,10 @@
 -- order_id is orders.public_code, but intentionally has no foreign key:
 -- mock/test order IDs must not poison a real telemetry batch insert.
 --
--- pose_x/pose_y/pose_theta are ROS 2 SLAM map-frame coordinates in metres,
--- relative to the map origin. They are not GPS coordinates and must not be
--- stored as PostGIS SRID 4326 geometry without a calibrated transform.
+-- pose_x/pose_y/pose_theta are ROS 2 frame coordinates in metres. map_frame
+-- identifies whether the source was localized map pose (for example AMCL) or
+-- odometry fallback. They are not GPS coordinates and must not be stored as
+-- PostGIS SRID 4326 geometry without a calibrated transform.
 
 CREATE TABLE robot_telemetry (
     id                 bigserial PRIMARY KEY,

@@ -53,11 +53,13 @@ class MQTTBridge:
         state: RobotStateMachine,
         nav_goal_queue: asyncio.Queue,
         unlock_queue: asyncio.Queue,
+        estop_queue: asyncio.Queue,
     ) -> None:
         self._cfg              = cfg
         self._state            = state
         self._nav_goal_queue   = nav_goal_queue
         self._unlock_queue     = unlock_queue
+        self._estop_queue      = estop_queue
 
         # Internal client reference — set inside connect_loop context.
         self._client: Optional[aiomqtt.Client] = None
@@ -222,7 +224,7 @@ class MQTTBridge:
             )
         elif topic == Topics.ESTOP:
             logger.critical("E-STOP received: %s", data)
-            await self._state.trigger_fault(f"estop: {data.get('reason', 'unspecified')}")
+            await self._estop_queue.put(data)
         else:
             logger.debug("Unhandled topic: %s", topic)
 

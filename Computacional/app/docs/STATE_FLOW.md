@@ -252,6 +252,34 @@ sequenceDiagram
 
 ---
 
+## Operator E-stop - Nav2 cancel flow
+
+```mermaid
+sequenceDiagram
+    actor Staff as Ops staff
+    participant OPS as mobile/lib/operator route
+    participant GW as Go gateway
+    participant MQ as Mosquitto broker
+    participant NB as Onboard notebook
+    participant NAV as NavBridge / Nav2
+    participant SM as RobotStateMachine
+
+    Staff->>OPS: Press emergency stop
+    OPS->>GW: POST /api/robot/estop
+    GW->>MQ: PUBLISH robot/commands/estop (QoS 2)
+    MQ->>NB: DELIVER estop payload
+    NB->>NB: MQTTBridge enqueues estop_queue
+    NB->>NAV: estop_observer calls cancel_current_goal()
+    NAV->>NAV: goal_handle.cancel_goal_async()
+    NAV-->>NB: cancel response / timeout logged
+    NB->>SM: trigger_fault("estop: <reason>")
+    Note over NAV,SM: FAULT state alone is not the stop mechanism.<br/>The active Nav2 action goal must be cancelled first.
+```
+
+**Invariant:** ESTOP received while `NAVIGATING` must cancel the active Nav2 action goal before or alongside the `FAULT` state transition. Do not reintroduce direct `trigger_fault()` calls from the MQTT dispatch path; ESTOP flows through `estop_queue` so the nav bridge can cancel the physical motion command.
+
+---
+
 ## Go OTP service — state invariants
 
 ```
@@ -442,7 +470,7 @@ CREATE INDEX idx_robot_telemetry_ts ON robot_telemetry(ts);
 
 **Schema notes:**
 - `order_id` is the opaque public order code (`orders.public_code`, `OTPRecord.OrderID`, dispatch path parameter). It is deliberately **not** a foreign key: mock/test order IDs must not poison a real `pgx.CopyFrom` batch.
-- `pose_x`, `pose_y`, and `pose_theta` are ROS 2 SLAM map-frame coordinates in metres, not GPS. Do not store them as PostGIS SRID 4326 geometry without a separate calibrated map-frame → GPS transform.
+- `pose_x`, `pose_y`, and `pose_theta` are ROS 2 frame coordinates in metres. `map_frame` records whether the point came from localized map pose (`/amcl_pose`) or odometry fallback (`/odom`). Do not store them as PostGIS SRID 4326 geometry without a separate calibrated frame → GPS transform.
 - If onboard compute battery state is needed later (distinct from robot traction battery), add a separate `compute_battery_percent` column rather than overloading `battery_percent` — see ARCHITECTURE.md → "Hardware topology" for the rationale.
 
 ### `orders` robot-delivery fields
@@ -499,7 +527,7 @@ CREATE INDEX idx_campus_restrictions_geometry
   ON campus_restrictions USING GIST(geometry);
 ```
 
-All campus restriction geometry columns use `SRID 4326` (WGS 84 lat/lon). `GIST` indices are mandatory for spatial queries. This rule applies to geographic campus restriction zones, not to ROS 2 SLAM map-frame telemetry.
+All campus restriction geometry columns use `SRID 4326` (WGS 84 lat/lon). `GIST` indices are mandatory for spatial queries. This rule applies to geographic campus restriction zones, not to ROS 2 frame-based telemetry.
 
 ### `staff_users` table (NEW — required by operator auth flow)
 
