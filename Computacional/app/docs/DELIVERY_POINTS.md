@@ -21,7 +21,7 @@ Para cada local seguro, fornecer uma linha com:
 | `map_theta` | `0.0` | Orientacao final em radianos. |
 | `map_frame` | `map` | Frame Nav2/TF validado. |
 
-Os valores entram em `database/seeds/003_delivery_points_template.sql` ou diretamente na tabela `delivery_points`. O gateway aceita o `point_key`, resolve a pose no servidor e publica o comando MQTT; o Flutter nunca calcula nem envia pose ROS.
+Os valores entram em `database/seeds/003_delivery_points_template.sql` ou diretamente na tabela `delivery_points`. Em uma base ja existente, aplique primeiro `database/070_delivery_points.up.sql`; os arquivos montados pelo Docker sao executados automaticamente apenas quando o volume PostgreSQL e criado. O gateway aceita o `point_key`, resolve a pose no servidor e publica o comando MQTT; o Flutter nunca calcula nem envia pose ROS.
 
 ## Validacao antes da demonstracao
 
