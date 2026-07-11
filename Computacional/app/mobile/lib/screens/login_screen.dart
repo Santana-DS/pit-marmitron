@@ -32,6 +32,7 @@ import '../widgets/widgets.dart';
 import '../state/user_state.dart';                        // FIX #2
 import 'client/client_home_screen.dart';
 import 'restaurant/restaurant_home_screen.dart';           // FIX #1
+import 'operator/operator_screen.dart';
 
 // ─── Brand palette (matches splash_screen.dart constants) ─────────────────────
 class _Brand {
@@ -43,7 +44,7 @@ class _Brand {
 }
 
 // ─── Role enum ────────────────────────────────────────────────────────────────
-enum _Role { client, restaurant }
+enum _Role { client, restaurant, operator }
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -157,9 +158,12 @@ class _LoginScreenState extends State<LoginScreen>
     // Without this, userStateNotifier still holds the _kDefaultUser seed
     // ("Maria Silva") when ClientHomeScreen renders its first frame.
     final isRestaurantLogin = _selectedRole == _Role.restaurant;
+    final isOperatorLogin = _selectedRole == _Role.operator;
     final displayName = isRestaurantLogin
         ? kMockRestaurantProfile.adminName
-        : (_isSignUp ? _nameCtrl.text.trim() : _nameFromEmail(email));
+        : isOperatorLogin
+            ? _nameFromEmail(email)
+            : (_isSignUp ? _nameCtrl.text.trim() : _nameFromEmail(email));
 
     updateUser(
       userStateNotifier.value.copyWith(
@@ -174,22 +178,31 @@ class _LoginScreenState extends State<LoginScreen>
         address: isRestaurantLogin
             ? kMockRestaurantProfile.address
             : userStateNotifier.value.address,
-        role: isRestaurantLogin ? 'restaurant_admin' : 'client',
+        role: isRestaurantLogin
+            ? 'restaurant_admin'
+            : isOperatorLogin
+                ? 'operator'
+                : 'client',
         restaurantProfile:
             isRestaurantLogin ? kMockRestaurantProfile : null,
         clearRestaurantProfile: !isRestaurantLogin,
       ),
     );
 
-    // ── FIX #1: Route based on selected role ─────────────────────────────
+    // ── Route based on selected role ──────────────────────────────────────
     if (!mounted) return;
+    Widget destination;
+    switch (_selectedRole) {
+      case _Role.restaurant:
+        destination = const RestaurantHomeScreen();
+      case _Role.operator:
+        destination = const OperatorScreen();
+      case _Role.client:
+        destination = const ClientHomeScreen();
+    }
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => _selectedRole == _Role.restaurant
-            ? const RestaurantHomeScreen()
-            : const ClientHomeScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => destination),
     );
   }
 
@@ -440,6 +453,15 @@ class _RoleSelector extends StatelessWidget {
             onTap: () {
               hapticLight();
               onChanged(_Role.restaurant);
+            },
+          ),
+          _RolePill(
+            label: 'Operador',
+            icon: Icons.settings_remote_rounded,
+            active: selected == _Role.operator,
+            onTap: () {
+              hapticLight();
+              onChanged(_Role.operator);
             },
           ),
         ],
@@ -761,13 +783,23 @@ class _FormBody extends StatelessWidget {
   // FIX #1: Contextualised submit label so the destination is unambiguous.
   static String _submitLabel(bool isSignUp, _Role role) {
     if (isSignUp) {
-      return role == _Role.restaurant
-          ? 'Criar conta · Restaurante'
-          : 'Criar conta · Cliente';
+      switch (role) {
+        case _Role.restaurant:
+          return 'Criar conta · Restaurante';
+        case _Role.operator:
+          return 'Criar conta · Operador';
+        case _Role.client:
+          return 'Criar conta · Cliente';
+      }
     }
-    return role == _Role.restaurant
-        ? 'Entrar como Restaurante'
-        : 'Entrar como Cliente';
+    switch (role) {
+      case _Role.restaurant:
+        return 'Entrar como Restaurante';
+      case _Role.operator:
+        return 'Entrar como Operador';
+      case _Role.client:
+        return 'Entrar como Cliente';
+    }
   }
 }
 

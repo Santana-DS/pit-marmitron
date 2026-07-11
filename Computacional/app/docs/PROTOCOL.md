@@ -15,7 +15,7 @@ Health probe. No auth required.
 
 **Response 200**
 ```json
-{ "status": "ok", "version": "2.1.0" }
+{ "status": "ok", "version": "2.2.0" }
 ```
 
 ---
@@ -123,17 +123,145 @@ The code is consumed even on publish failure. The customer must contact support;
 
 ---
 
+## Operator REST API (Go gateway)
+
+All `/api/operator/*` endpoints require a staff auth token (`Authorization: Bearer <token>`). Unauthenticated requests receive `401`. These endpoints are the **only** write path into `campus_restrictions` — see CONVENTIONS.md.
+
+**Consumed by:** the hidden `operator/` route inside the `mobile/` Flutter app (see ARCHITECTURE.md → "Known Technical Debt"). The server-side auth check below is the actual security boundary for these endpoints — the client-side route being hidden is a UX convenience, not a substitute for this check. Do not weaken or bypass this middleware under any circumstance, including for internal testing convenience.
+
+### `POST /api/operator/auth/login`
+
+Exchanges staff credentials for a Bearer token. Called once when a staff member enters the hidden operator route.
+
+**Request body**
+```json
+{ "username": "staff_member", "password": "..." }
+```
+
+**Response 200**
+```json
+{ "token": "<bearer-token>", "expires_at": "2025-07-01T20:00:00Z" }
+```
+
+**Response 401** — invalid credentials.
+
+### `GET /api/operator/deliveries?status=DISPATCHED`
+
+Lists active deliveries with their most recent known telemetry point (read-only, joins `deliveries` + latest `robot_telemetry` row).
+
+**Query parameter**: `status` — one of `PENDING`, `DISPATCHED`, `NAVIGATING`, `DELIVERED`, `FAILED`.
+
+**Response 200**
+```json
+{
+  "deliveries": [
+    {
+      "id": "delivery_uuid",
+      "order_id": "order_1714000000123",
+      "destination": { "type": "Point", "coordinates": [-47.869, -15.7639] },
+      "current_position": { "type": "Point", "coordinates": [-47.870, -15.7642] },
+      "battery_percent": 67,
+      "status": "NAVIGATING",
+      "dispatched_at": "2025-06-30T14:02:11Z",
+      "ping_count": 143
+    }
+  ]
+}
+```
+
+### `GET /api/operator/deliveries/{delivery_id}/telemetry?from=<RFC3339>`
+
+Returns the full telemetry trail for a delivery as a GeoJSON `LineString` plus per-point metadata, for replay/debugging.
+
+**Response 200**
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[-47.869, -15.7639], [-47.8695, -15.7641]]
+      },
+      "properties": {
+        "telemetry": [
+          { "timestamp": "2025-06-30T14:02:11Z", "battery_percent": 78, "status": "NAVIGATING", "error_code": null },
+          { "timestamp": "2025-06-30T14:02:12Z", "battery_percent": 78, "status": "NAVIGATING", "error_code": null }
+        ]
+      }
+    }
+  ]
+}
+```
+
+### `GET /api/operator/ws/telemetry` (WebSocket)
+
+Live subscription for delivery/telemetry state changes. On connect, the server sends the current active-delivery snapshot (same shape as `GET /api/operator/deliveries`), then pushes incremental updates as the telemetry batching worker flushes. Reconnect is client-driven — the operator route must implement exponential backoff and re-request the snapshot on reconnect; it must not assume no updates were missed during a disconnect window.
+
+### `GET /api/operator/campus/restrictions?bounds=west,south,east,north`
+
+Returns campus restriction zones intersecting the given bounding box, as GeoJSON.
+
+**Response 200**
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Polygon", "coordinates": [[[-47.87,-15.764],[-47.869,-15.764],[-47.869,-15.763],[-47.87,-15.763],[-47.87,-15.764]]] },
+      "properties": {
+        "id": 12,
+        "name": "ICC construction closure",
+        "restriction_type": "NO_ENTRY",
+        "active_hours": null
+      }
+    }
+  ]
+}
+```
+
+Consumed by two distinct clients: (1) the onboard notebook's nav2 process, polling every 5 minutes for costmap overlay refresh (see STATE_FLOW.md), and (2) the operator route's map view, for zone visualization. Both are read-only against this endpoint.
+
+### `POST /api/operator/campus/restrictions`
+
+Creates a new restriction zone. Staff-authenticated. **This is the only path by which `campus_restrictions` is ever written — never from the MQTT telemetry consumer.**
+
+**Request body**
+```json
+{
+  "name": "ICC construction closure",
+  "restriction_type": "NO_ENTRY",
+  "geometry": { "type": "Polygon", "coordinates": [[...]] },
+  "active_hours": null
+}
+```
+
+**Response 201**
+```json
+{ "id": 12, "name": "ICC construction closure" }
+```
+
+**Response 400** — invalid geometry (self-intersecting polygon, wrong SRID assumption, etc.)
+
+---
+
 ## MQTT topics
 
 Broker: `tcp://<EC2_IP>:1883` · Authentication: M2M credentials (configured via `setup_mosquitto.sh`) · No anonymous access.
 
 | Topic | Direction | QoS | Publisher | Subscriber(s) |
 |---|---|---|---|---|
-| `robot/commands/navigate` | cloud → robot | 1 | Go gateway | Raspberry Pi (ROS 2) |
+| `robot/commands/navigate` | cloud → robot | 1 | Go gateway | Onboard notebook (ROS 2) |
 | `robot/commands/display_qr` | cloud → robot | 1 | Go gateway | ESP32 |
 | `robot/commands/unlock` | cloud → robot | 1 | Go gateway | ESP32 |
-| `robot/status/heartbeat` | robot → cloud | 1 | Pi, ESP32 | Go gateway |
-| `robot/telemetry` | robot → cloud | 0 | Raspberry Pi | Go gateway |
+| `robot/status/heartbeat` | robot → cloud | 1 | Onboard notebook, ESP32 | Go gateway (state/fault authority) |
+| `robot/telemetry` | robot → cloud | 0 | Onboard notebook | Go gateway (PostGIS ingestion) |
+
+**Reliability note:** `robot/telemetry` is intentionally QoS 0 — it is a high-frequency, loss-tolerant pose stream, and PostGIS ingestion is designed to tolerate gaps and out-of-order delivery (see CONVENTIONS.md, batching worker). Robot **fault detection** does not depend on this stream — it depends on `robot/status/heartbeat` at QoS 1, which is the reliability-critical channel. Do not attempt to detect `FAULT` state from telemetry payloads; use the heartbeat's `status` field.
+
+**Hardware note:** these topics and their payload schemas are unchanged by the Raspberry Pi → x86 notebook hardware pivot. The onboard notebook runs the identical edge daemon codebase; only the underlying compute hardware changed.
 
 ### `robot/commands/navigate` payload
 
@@ -177,7 +305,7 @@ ESP32 firmware rejects the command if `order_id` does not match `_pendingOrderId
 
 ### `robot/status/heartbeat` payload
 
-Published every 30 s by the ESP32. Also used as LWT (`{"source":"esp32","status":"offline"}`).
+Published every 30 s by the ESP32, and by the edge daemon on the onboard notebook. Also used as LWT (`{"source":"esp32","status":"offline"}` / `{"source":"onboard","status":"offline"}`).
 
 ```json
 {
@@ -192,11 +320,31 @@ Published every 30 s by the ESP32. Also used as LWT (`{"source":"esp32","status"
 }
 ```
 
-`pending_order` is `""` when idle. `display_ready` is `false` if the SSD1306 failed I2C initialisation (robot can still operate — unlock via manual OTP still works).
+`pending_order` is `""` when idle. `display_ready` is `false` if the SSD1306 failed I2C initialisation (robot can still operate — unlock via manual OTP still works). The onboard notebook's heartbeat payload carries `status` values from `RobotState` (`IDLE`, `NAVIGATING`, `COMPLETE`, `FAULT`, `OFFLINE_HOLD`) — this is the authoritative source for delivery status transitions written to `deliveries.status`.
+
+### `robot/telemetry` payload
+
+Published at 1 Hz by the edge daemon (onboard notebook) while `state == NAVIGATING`. Consumed exclusively by the Go gateway's telemetry ingestion service (see CONVENTIONS.md) and written to `robot_telemetry`.
+
+```json
+{
+  "delivery_id": "delivery_uuid",
+  "timestamp": "2025-06-30T14:02:11.482Z",
+  "pose": { "lat": -15.7639, "lon": -47.8690 },
+  "battery_percent": 67,
+  "wifi_rssi_dbm": -58,
+  "nav_goal_id": "goal_precision_dock_7",
+  "status": "NAVIGATING"
+}
+```
+
+`timestamp` is derived from a single monotonic read per publish cycle on the edge daemon (see CONVENTIONS.md) — do not treat arrival order at the broker as delivery order; always sort by this field on read. `status` here mirrors `RobotState` but is advisory only for display purposes — `FAULT` detection is sourced from `robot/status/heartbeat`, not this topic (QoS 0 makes it unsuitable as the sole source of a safety-relevant signal). `battery_percent` refers to the **robot's traction battery**, not the onboard notebook's own battery — see CONVENTIONS.md.
 
 ---
 
 ## Flutter sealed result types
+
+### Mobile app — customer screens (`mobile/lib/`)
 
 All API calls return sealed classes — `switch` is exhaustive at compile time.
 
@@ -205,3 +353,15 @@ All API calls return sealed classes — `switch` is exhaustive at compile time.
 | `dispatchOrder()` | `DispatchResult?` | `null` on network error |
 | `wakeDisplay()` | `WakeDisplayResult` | `WakeDisplayTriggered`, `WakeDisplayNotFound`, `WakeDisplayUnreachable`, `WakeDisplayNetworkError` |
 | `validateOtp()` | `UnlockResult` | `UnlockSuccess`, `UnlockInvalidCode`, `UnlockRobotUnreachable`, `UnlockNetworkError` |
+
+### Mobile app — operator route (`mobile/lib/operator/`)
+
+Same pattern, applied to the operator API surface, isolated within its own subtree (see CONVENTIONS.md).
+
+| Method | Return type | Variants |
+|---|---|---|
+| `staffLogin()` | `StaffAuthResult` | `StaffAuthSuccess`, `StaffAuthInvalidCredentials`, `StaffAuthNetworkError` |
+| `listActiveDeliveries()` | `DeliveryListResult` | `DeliveryListLoaded`, `DeliveryListUnauthorized`, `DeliveryListNetworkError` |
+| `getDeliveryTelemetry()` | `TelemetryReplayResult` | `TelemetryReplayLoaded`, `TelemetryReplayNotFound`, `TelemetryReplayNetworkError` |
+| `createRestriction()` | `RestrictionWriteResult` | `RestrictionCreated`, `RestrictionInvalidGeometry`, `RestrictionUnauthorized`, `RestrictionNetworkError` |
+| `connectTelemetryStream()` | `WebSocketConnectionState` (stream) | `Connecting`, `Connected`, `Disconnected(reason)`, `Reconnecting(attempt)` |
