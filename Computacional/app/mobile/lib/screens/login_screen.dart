@@ -29,17 +29,17 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
-import '../state/user_state.dart';                        // FIX #2
+import '../state/user_state.dart'; // FIX #2
 import 'client/client_home_screen.dart';
-import 'restaurant/restaurant_home_screen.dart';           // FIX #1
-import 'operator/operator_screen.dart';
+import 'restaurant/restaurant_home_screen.dart'; // FIX #1
+import '../operator/screens/operator_screen.dart';
 
 // ─── Brand palette (matches splash_screen.dart constants) ─────────────────────
 class _Brand {
-  static const navy        = Color(0xFF003366);
-  static const green       = Color(0xFF006633);
-  static const glow        = Color(0xFF00C97A);
-  static const onDark      = Color(0xFFF0F4F0);
+  static const navy = Color(0xFF003366);
+  static const green = Color(0xFF006633);
+  static const glow = Color(0xFF00C97A);
+  static const onDark = Color(0xFFF0F4F0);
   static const onDarkMuted = Color(0xFF8DB8A0);
 }
 
@@ -57,21 +57,21 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   // ── Animation ─────────────────────────────────────────────────────────────
   late final AnimationController _heroCtrl;
-  late final Animation<double>   _heroScale;
-  late final Animation<double>   _formFade;
-  late final Animation<Offset>   _formSlide;
+  late final Animation<double> _heroScale;
+  late final Animation<double> _formFade;
+  late final Animation<Offset> _formSlide;
 
   // ── Form controllers ──────────────────────────────────────────────────────
   // FIX #2: _nameCtrl added so the sign-up name field value is reachable from
   // _handleSubmit(). All three controllers are disposed in dispose().
-  final _nameCtrl  = TextEditingController();  // FIX #2
+  final _nameCtrl = TextEditingController(); // FIX #2
   final _emailCtrl = TextEditingController();
-  final _passCtrl  = TextEditingController();
+  final _passCtrl = TextEditingController();
 
   // ── Form state ────────────────────────────────────────────────────────────
-  bool  _obscure    = true;
-  bool  _loading    = false;
-  bool  _isSignUp   = false;
+  bool _obscure = true;
+  bool _loading = false;
+  bool _isSignUp = false;
 
   // FIX #1: Role selection — defaults to client, drives post-auth navigation.
   _Role _selectedRole = _Role.client;
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _heroCtrl.dispose();
-    _nameCtrl.dispose();   // FIX #2
+    _nameCtrl.dispose(); // FIX #2
     _emailCtrl.dispose();
     _passCtrl.dispose();
     super.dispose();
@@ -183,8 +183,7 @@ class _LoginScreenState extends State<LoginScreen>
             : isOperatorLogin
                 ? 'operator'
                 : 'client',
-        restaurantProfile:
-            isRestaurantLogin ? kMockRestaurantProfile : null,
+        restaurantProfile: isRestaurantLogin ? kMockRestaurantProfile : null,
         clearRestaurantProfile: !isRestaurantLogin,
       ),
     );
@@ -235,7 +234,6 @@ class _LoginScreenState extends State<LoginScreen>
       body: Column(
         children: [
           _Header(heroScale: _heroScale),
-
           Expanded(
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -245,17 +243,16 @@ class _LoginScreenState extends State<LoginScreen>
                 child: SlideTransition(
                   position: _formSlide,
                   child: _FormBody(
-                    isSignUp:     _isSignUp,
-                    selectedRole: _selectedRole,        // FIX #1
-                    nameCtrl:     _nameCtrl,             // FIX #2
-                    emailCtrl:    _emailCtrl,
-                    passCtrl:     _passCtrl,
-                    obscure:      _obscure,
-                    loading:      _loading,
-                    onRoleChanged: (role) =>             // FIX #1
+                    isSignUp: _isSignUp,
+                    selectedRole: _selectedRole, // FIX #1
+                    nameCtrl: _nameCtrl, // FIX #2
+                    emailCtrl: _emailCtrl,
+                    passCtrl: _passCtrl,
+                    obscure: _obscure,
+                    loading: _loading,
+                    onRoleChanged: (role) => // FIX #1
                         setState(() => _selectedRole = role),
-                    onToggleObscure: () =>
-                        setState(() => _obscure = !_obscure),
+                    onToggleObscure: () => setState(() => _obscure = !_obscure),
                     onSubmit: _handleSubmit,
                     onToggleMode: () {
                       hapticLight();
@@ -300,7 +297,6 @@ class _Header extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
             left: 8,
@@ -312,20 +308,16 @@ class _Header extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
           ),
-
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: MediaQuery.of(context).padding.top * 0.5),
-
                 ScaleTransition(
                   scale: heroScale,
                   child: _RobotBadge(),
                 ),
-
                 const SizedBox(height: 18),
-
                 Text(
                   'UnBot Delivery',
                   style: GoogleFonts.spaceGrotesk(
@@ -342,9 +334,7 @@ class _Header extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 5),
-
                 Text(
                   'Entrega autônoma na UnB',
                   style: GoogleFonts.dmSans(
@@ -356,7 +346,6 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-
           Positioned(
             bottom: -1,
             left: 0,
@@ -386,8 +375,8 @@ class _RobotBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.10),
         shape: BoxShape.circle,
-        border: Border.all(
-            color: _Brand.glow.withValues(alpha: 0.40), width: 1.8),
+        border:
+            Border.all(color: _Brand.glow.withValues(alpha: 0.40), width: 1.8),
         boxShadow: [
           BoxShadow(
             color: _Brand.glow.withValues(alpha: 0.28),
@@ -517,8 +506,7 @@ class _RolePill extends StatelessWidget {
                 label,
                 style: GoogleFonts.dmSans(
                   fontSize: 12,
-                  fontWeight:
-                      active ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: active ? FontWeight.w600 : FontWeight.w400,
                   color: active ? Colors.white : AC.muted(context),
                 ),
               ),
@@ -533,8 +521,8 @@ class _RolePill extends StatelessWidget {
 // ─── Form Body ───────────────────────────────────────────────────────────────
 class _FormBody extends StatelessWidget {
   final bool isSignUp;
-  final _Role selectedRole;                // FIX #1
-  final TextEditingController nameCtrl;    // FIX #2
+  final _Role selectedRole; // FIX #1
+  final TextEditingController nameCtrl; // FIX #2
   final TextEditingController emailCtrl;
   final TextEditingController passCtrl;
   final bool obscure;
@@ -716,17 +704,17 @@ class _FormBody extends StatelessWidget {
         // ── Divider ───────────────────────────────────────────────────────
         Row(children: [
           Expanded(
-              child: Divider(
-                  color: AC.primary(context).withValues(alpha: 0.1))),
+              child:
+                  Divider(color: AC.primary(context).withValues(alpha: 0.1))),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text('ou',
-                style: GoogleFonts.dmSans(
-                    fontSize: 12, color: AC.muted(context))),
+                style:
+                    GoogleFonts.dmSans(fontSize: 12, color: AC.muted(context))),
           ),
           Expanded(
-              child: Divider(
-                  color: AC.primary(context).withValues(alpha: 0.1))),
+              child:
+                  Divider(color: AC.primary(context).withValues(alpha: 0.1))),
         ]),
 
         const SizedBox(height: 16),
@@ -855,8 +843,8 @@ class _SocialButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: AC.card(context),
-          border: Border.all(
-              color: AC.primary(context).withValues(alpha: 0.10)),
+          border:
+              Border.all(color: AC.primary(context).withValues(alpha: 0.10)),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(

@@ -275,7 +275,7 @@ class RobotStateMachine:
         if new_state == self._state:
             return
         logger.info(
-            "State transition: %s → %s (was in state for %.1fs)",
+            "State transition: %s -> %s (was in state for %.1fs)",
             self._state.name,
             new_state.name,
             time.monotonic() - self._transition_time,

@@ -106,7 +106,7 @@ sequenceDiagram
 
 ---
 
-## Telemetry ingestion — MQTT to PostGIS
+## Telemetry ingestion — MQTT to `robot_telemetry`
 
 This flow is deliberately decoupled at the goroutine level to satisfy the non-blocking MQTT invariant (CONVENTIONS.md). The Paho callback and the Postgres write never share a call stack.
 
@@ -117,20 +117,25 @@ sequenceDiagram
     participant CB as Go gateway — Paho OnMessage callback
     participant CH as Buffered channel (cap 500)
     participant BW as Batching worker goroutine
-    participant PG as PostGIS (robot_telemetry)
+    participant PG as PostgreSQL (robot_telemetry)
 
-    loop Every 1s while NAVIGATING
+    loop Every telemetry tick
         NB->>MQ: PUBLISH robot/telemetry (QoS 0)
     end
     MQ->>CB: DELIVER telemetry payload
     CB->>CB: json.Unmarshal(payload)
     alt Payload valid
-        CB->>CH: non-blocking send
-        alt Channel has capacity
-            CH-->>CB: accepted
-        else Channel full
-            CB->>CB: droppedCounter.Add(1)
-            Note over CB: Callback returns immediately either way —<br/>never blocks on a full channel
+        alt active_order_id is empty
+            CB->>CB: skippedCounter.Add(1)
+            Note over CB: Idle telemetry is observed but not persisted
+        else active_order_id is present
+            CB->>CH: non-blocking send
+            alt Channel has capacity
+                CH-->>CB: accepted
+            else Channel full
+                CB->>CB: droppedCounter.Add(1)
+                Note over CB: Callback returns immediately either way —<br/>never blocks on a full channel
+            end
         end
     else Payload malformed
         CB->>CB: log warning, discard
@@ -149,9 +154,9 @@ sequenceDiagram
 
 **Invariants:**
 - The Paho callback (`CB`) never calls into `PG` directly, under any code path, including error handling.
-- Channel overflow drops the **oldest-pending** telemetry point implicitly (Go's `select`/`default` pattern drops the point being sent, not a queued one — for `robot_telemetry` this is acceptable data loss; it is never acceptable for `deliveries` status-transition messages, which must use a separate, larger-capacity or blocking-with-timeout channel if the same batching architecture is reused for them).
+- Channel overflow drops the telemetry point being sent (Go's `select`/`default` pattern does not evict queued points). For `robot_telemetry` this is acceptable data loss; it is never acceptable for order/status-transition messages, which must use a separate, higher-priority path if the same batching architecture is reused for them.
 - A failed `InsertBatch()` is logged and the batch is discarded, not retried indefinitely — telemetry is best-effort observability data, not transactional state. Retrying indefinitely against a degraded Postgres would itself become a backpressure source into the channel.
-- `robot/status/heartbeat` (QoS 1, delivery status / fault authority) is **not** subject to this drop policy — heartbeat-driven `deliveries.status` transitions use a dedicated, higher-priority path that is allowed to block briefly (bounded by a short timeout) rather than silently drop a `FAULT` transition.
+- `robot/status/heartbeat` (QoS 1, delivery status / fault authority) is **not** subject to this drop policy — heartbeat-driven status transitions reflected on `orders` use a dedicated, higher-priority path that is allowed to block briefly (bounded by a short timeout) rather than silently drop a `FAULT` transition.
 - This flow is unaffected by the Raspberry Pi → x86 notebook hardware pivot — only the participant label changed.
 
 ---
@@ -247,6 +252,34 @@ sequenceDiagram
 
 ---
 
+## Operator E-stop - Nav2 cancel flow
+
+```mermaid
+sequenceDiagram
+    actor Staff as Ops staff
+    participant OPS as mobile/lib/operator route
+    participant GW as Go gateway
+    participant MQ as Mosquitto broker
+    participant NB as Onboard notebook
+    participant NAV as NavBridge / Nav2
+    participant SM as RobotStateMachine
+
+    Staff->>OPS: Press emergency stop
+    OPS->>GW: POST /api/robot/estop
+    GW->>MQ: PUBLISH robot/commands/estop (QoS 2)
+    MQ->>NB: DELIVER estop payload
+    NB->>NB: MQTTBridge enqueues estop_queue
+    NB->>NAV: estop_observer calls cancel_current_goal()
+    NAV->>NAV: goal_handle.cancel_goal_async()
+    NAV-->>NB: cancel response / timeout logged
+    NB->>SM: trigger_fault("estop: <reason>")
+    Note over NAV,SM: FAULT state alone is not the stop mechanism.<br/>The active Nav2 action goal must be cancelled first.
+```
+
+**Invariant:** ESTOP received while `NAVIGATING` must cancel the active Nav2 action goal before or alongside the `FAULT` state transition. Do not reintroduce direct `trigger_fault()` calls from the MQTT dispatch path; ESTOP flows through `estop_queue` so the nav bridge can cancel the physical motion command.
+
+---
+
 ## Go OTP service — state invariants
 
 ```
@@ -267,10 +300,10 @@ concurrent requests, MQTT failures, or client retries.
 
 ---
 
-## `deliveries.status` — state invariants
+## `orders` robot status — state invariants
 
 ```
-deliveries.status transitions: PENDING → DISPATCHED → NAVIGATING → (DELIVERED | FAILED)
+orders robot lifecycle transitions: pending/placed → dispatched → navigating → (completed | failed/cancelled)
 
 Sourced from robot/status/heartbeat (QoS 1), not robot/telemetry (QoS 0).
 Enforced one-way at the schema level — mirrors OTPRecord.Consumed.
@@ -359,7 +392,7 @@ stateDiagram-v2
     COMPLETE --> IDLE : clear active goal, mark delivery terminal
     FAULT --> IDLE : human intervention / reset command
 
-    Note over IDLE,FAULT: Telemetry publishes only during NAVIGATING.<br/>Heartbeat publishes every 30s in all states.<br/>Delivery status written to `deliveries` table via heartbeat (QoS 1),<br/>not via telemetry (QoS 0).
+    Note over IDLE,FAULT: Current daemon publishes telemetry in all states;<br/>gateway persists only non-empty active_order_id ticks.<br/>Heartbeat publishes every 30s in all states.<br/>Robot delivery status is reflected on `orders` via heartbeat (QoS 1),<br/>not via telemetry (QoS 0).
 ```
 
 ---
@@ -386,7 +419,7 @@ sequenceDiagram
             par On telemetry tick
                 GW->>GW: batch worker flushes N points to DB
                 GW->>WS: push incremental delivery update
-                WS-->>OPS: {delivery_id, current_position, battery, ...}
+                WS-->>OPS: {order_id, current_pose, battery, ...}
                 OPS->>OPS: animate marker, update card
             end
         end
@@ -411,48 +444,69 @@ sequenceDiagram
 
 ```sql
 CREATE TABLE robot_telemetry (
-  id BIGSERIAL PRIMARY KEY,
-  delivery_id UUID NOT NULL,
-  timestamp TIMESTAMPTZ NOT NULL,
-  pose GEOMETRY(POINT, 4326),
-  battery_percent SMALLINT,   -- robot traction battery, NOT the onboard notebook's own battery
-  wifi_rssi_dbm SMALLINT,
-  nav_goal_id VARCHAR(64),
-  status VARCHAR(32),
-  error_code VARCHAR(64),
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  id                 bigserial PRIMARY KEY,
+  order_id           text NOT NULL,
+  ts                 timestamptz NOT NULL,
+  nav_state          text NOT NULL,
+  pose_x             double precision,
+  pose_y             double precision,
+  pose_theta         double precision,
+  map_frame          text,
+  linear_speed_mps   double precision,
+  avg_speed_mps      double precision,
+  battery_percent    double precision,   -- robot traction battery, NOT the onboard notebook's own battery
+  battery_voltage_v  double precision,
+  remaining_m        double precision,
+  progress_pct       double precision,
+  eta_seconds        double precision,
+  cpu_pct            double precision,
+  mem_pct            double precision,
+  created_at         timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_robot_telemetry_delivery_timestamp 
-  ON robot_telemetry(delivery_id, timestamp);
-CREATE INDEX idx_robot_telemetry_pose 
-  ON robot_telemetry USING GIST(pose);
+CREATE INDEX idx_robot_telemetry_order_ts ON robot_telemetry(order_id, ts);
+CREATE INDEX idx_robot_telemetry_ts ON robot_telemetry(ts);
 ```
 
-**Schema note:** if onboard compute battery state is needed later (distinct from robot traction battery), add a separate `compute_battery_percent` column rather than overloading `battery_percent` — see ARCHITECTURE.md → "Hardware topology" for the rationale.
+**Schema notes:**
+- `order_id` is the opaque public order code (`orders.public_code`, `OTPRecord.OrderID`, dispatch path parameter). It is deliberately **not** a foreign key: mock/test order IDs must not poison a real `pgx.CopyFrom` batch.
+- `pose_x`, `pose_y`, and `pose_theta` are ROS 2 frame coordinates in metres. `map_frame` records whether the point came from localized TF (`map -> base_link`, typically via ORB-SLAM3 `map -> odom -> base_link`), an explicitly configured localized pose topic, or odometry fallback (`/odom`). Do not store them as PostGIS SRID 4326 geometry without a separate calibrated frame -> GPS transform.
+- If onboard compute battery state is needed later (distinct from robot traction battery), add a separate `compute_battery_percent` column rather than overloading `battery_percent` — see ARCHITECTURE.md → "Hardware topology" for the rationale.
 
-### `deliveries` table
+### `orders` robot-delivery fields
 
 ```sql
-CREATE TABLE deliveries (
-  id UUID PRIMARY KEY,
-  order_id VARCHAR(64) NOT NULL UNIQUE,
-  customer_id UUID NOT NULL,
-  restaurant_id UUID NOT NULL,
-  destination GEOMETRY(POINT, 4326),
-  planned_route GEOMETRY(LINESTRING, 4326),
-  actual_route GEOMETRY(LINESTRING, 4326),
-  dispatched_at TIMESTAMPTZ,
-  completed_at TIMESTAMPTZ,
-  status VARCHAR(32),
-  failure_reason VARCHAR(256),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  CHECK (status IN ('PENDING', 'DISPATCHED', 'NAVIGATING', 'DELIVERED', 'FAILED'))
+CREATE TABLE orders (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  public_code text NOT NULL UNIQUE,
+  client_user_id uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+  restaurant_id uuid NOT NULL REFERENCES restaurants(id) ON DELETE RESTRICT,
+  delivery_address text NOT NULL,
+  status order_status NOT NULL DEFAULT 'pending',
+  subtotal_cents integer NOT NULL CHECK (subtotal_cents >= 0),
+  delivery_fee_cents integer NOT NULL DEFAULT 0 CHECK (delivery_fee_cents >= 0),
+  discount_cents integer NOT NULL DEFAULT 0 CHECK (discount_cents >= 0),
+  total_cents integer NOT NULL CHECK (total_cents >= 0),
+  robot_dispatched boolean NOT NULL DEFAULT false,
+  gateway_mode gateway_mode,
+  mqtt_connected boolean NOT NULL DEFAULT false,
+  placed_at timestamptz NOT NULL DEFAULT now(),
+  dispatched_at timestamptz,
+  completed_at timestamptz,
+  cancelled_at timestamptz,
+  cancel_reason text,
+  notes text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CHECK (total_cents = subtotal_cents + delivery_fee_cents - discount_cents)
 );
 
-CREATE INDEX idx_deliveries_status ON deliveries(status);
+CREATE INDEX idx_orders_client ON orders(client_user_id, placed_at DESC);
+CREATE INDEX idx_orders_restaurant ON orders(restaurant_id, placed_at DESC);
+CREATE INDEX idx_orders_status ON orders(status);
 ```
+
+There is no separate `deliveries` table in the current codebase. Robot dispatch and delivery metadata were added directly to `orders`; telemetry correlates to it by `orders.public_code`.
 
 ### `campus_restrictions` table
 
@@ -473,7 +527,7 @@ CREATE INDEX idx_campus_restrictions_geometry
   ON campus_restrictions USING GIST(geometry);
 ```
 
-All geometry columns use `SRID 4326` (WGS 84 lat/lon). `GIST` indices are mandatory for spatial queries.
+All campus restriction geometry columns use `SRID 4326` (WGS 84 lat/lon). `GIST` indices are mandatory for spatial queries. This rule applies to geographic campus restriction zones, not to ROS 2 frame-based telemetry.
 
 ### `staff_users` table (NEW — required by operator auth flow)
 

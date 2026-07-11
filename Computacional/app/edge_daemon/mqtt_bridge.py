@@ -22,6 +22,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import time
 from typing import Optional
 
@@ -53,11 +54,13 @@ class MQTTBridge:
         state: RobotStateMachine,
         nav_goal_queue: asyncio.Queue,
         unlock_queue: asyncio.Queue,
+        estop_queue: asyncio.Queue,
     ) -> None:
         self._cfg              = cfg
         self._state            = state
         self._nav_goal_queue   = nav_goal_queue
         self._unlock_queue     = unlock_queue
+        self._estop_queue      = estop_queue
 
         # Internal client reference — set inside connect_loop context.
         self._client: Optional[aiomqtt.Client] = None
@@ -222,7 +225,7 @@ class MQTTBridge:
             )
         elif topic == Topics.ESTOP:
             logger.critical("E-STOP received: %s", data)
-            await self._state.trigger_fault(f"estop: {data.get('reason', 'unspecified')}")
+            await self._estop_queue.put(data)
         else:
             logger.debug("Unhandled topic: %s", topic)
 
@@ -237,7 +240,7 @@ class MQTTBridge:
         order_id  = data.get("order_id")
         issued_at = data.get("issued_at", 0)
         pose      = data.get("pose", {})
-        map_frame = data.get("map_frame", "map")
+        map_frame = data.get("map_frame") or pose.get("frame") or "map"
         waypoint  = data.get("waypoint_name", "")
 
         if not order_id:
@@ -264,12 +267,30 @@ class MQTTBridge:
             )
             return
 
+        try:
+            x = float(x)
+            y = float(y)
+            theta = float(theta)
+        except (TypeError, ValueError):
+            logger.error(
+                "Navigate payload for order %s has non-numeric pose fields, ignoring",
+                order_id,
+            )
+            return
+
+        if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(theta)):
+            logger.error(
+                "Navigate payload for order %s has non-finite pose fields, ignoring",
+                order_id,
+            )
+            return
+
         goal = ActiveGoal(
             order_id=order_id,
             waypoint_name=waypoint,
-            x=float(x),
-            y=float(y),
-            theta=float(theta),
+            x=x,
+            y=y,
+            theta=theta,
             map_frame=str(map_frame),
             issued_at=time.monotonic(),
         )

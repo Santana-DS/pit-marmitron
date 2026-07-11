@@ -28,7 +28,10 @@ except ImportError:
 try:
     import rclpy
     from rclpy.node import Node
+    from geometry_msgs.msg import PoseWithCovarianceStamped
     from nav_msgs.msg import Odometry
+    from sensor_msgs.msg import BatteryState
+    import tf2_ros
     ROS2_AVAILABLE = True
 except ImportError:
     ROS2_AVAILABLE = False
@@ -64,13 +67,17 @@ class TelemetryCollector:
         # because these are only read in the asyncio event loop and written
         # from a single ROS 2 executor thread.
         self._odom_speed_mps:  float = 0.0
-        self._battery_pct:     float = 100.0
-        self._battery_voltage: float = 0.0
+        self._battery_pct:     float = 0.0
+        self._battery_voltage: Optional[float] = None
         self._pose_x:          float = 0.0
         self._pose_y:          float = 0.0
         self._pose_theta:      float = 0.0
+        self._pose_frame:      str = "unknown"
+        self._has_localized_pose = False
 
         self._ros_node:         Optional[object] = None
+        self._tf_buffer:        Optional[object] = None
+        self._tf_listener:      Optional[object] = None
         self._ros_executor_thread = None
 
     # ── Main coroutines ───────────────────────────────────────────────────────
@@ -112,6 +119,7 @@ class TelemetryCollector:
     # ── Publishers ────────────────────────────────────────────────────────────
 
     async def _publish_telemetry(self) -> None:
+        self._refresh_tf_pose()
         payload = {
             "source":    "edge_daemon",
             "timestamp": int(time.time()),
@@ -119,14 +127,18 @@ class TelemetryCollector:
                 "x":     round(self._pose_x, 3),
                 "y":     round(self._pose_y, 3),
                 "theta": round(self._pose_theta, 4),
-                "frame": "map",
+                "frame": self._pose_frame,
             },
             "velocity": {
                 "linear_mps": round(self._odom_speed_mps, 3),
             },
             "battery": {
                 "percent": round(self._battery_pct, 1),
-                "voltage_v": round(self._battery_voltage, 2),
+                "voltage_v": (
+                    round(self._battery_voltage, 2)
+                    if self._battery_voltage is not None
+                    else None
+                ),
             },
             **self._state.to_telemetry_dict(),
             **self._system_stats(),
@@ -194,10 +206,6 @@ class TelemetryCollector:
         """
         import threading
 
-        # Reuse existing node if nav_bridge already initialized rclpy.
-        if not rclpy.ok():
-            rclpy.init()
-
         self._ros_node = rclpy.create_node("unbot_telemetry_collector")
 
         self._ros_node.create_subscription(
@@ -206,6 +214,29 @@ class TelemetryCollector:
             self._odom_callback,
             10,
         )
+        self._ros_node.create_subscription(
+            BatteryState,
+            self._nav_cfg.battery_topic,
+            self._battery_callback,
+            10,
+        )
+        self._tf_buffer = tf2_ros.Buffer()
+        self._tf_listener = tf2_ros.TransformListener(self._tf_buffer, self._ros_node)
+
+        if self._nav_cfg.pose_topic:
+            self._ros_node.create_subscription(
+                PoseWithCovarianceStamped,
+                self._nav_cfg.pose_topic,
+                self._pose_callback,
+                10,
+            )
+            logger.info("Localized pose topic subscriber started on %s", self._nav_cfg.pose_topic)
+        else:
+            logger.info(
+                "Localized pose topic disabled; deriving pose from TF %s -> %s",
+                self._nav_cfg.tf_map_frame,
+                self._nav_cfg.tf_base_frame,
+            )
 
         # Spin in background thread so asyncio event loop is not blocked.
         def spin():
@@ -224,12 +255,60 @@ class TelemetryCollector:
         vy = msg.twist.twist.linear.y
         self._odom_speed_mps = math.sqrt(vx ** 2 + vy ** 2)
 
+        if not self._has_localized_pose:
+            self._pose_x = msg.pose.pose.position.x
+            self._pose_y = msg.pose.pose.position.y
+            self._pose_frame = msg.header.frame_id or "odom"
+
+            q = msg.pose.pose.orientation
+            self._pose_theta = _quat_to_yaw(q)
+
+    def _battery_callback(self, msg) -> None:
+        """
+        ROS 2 battery callback. This is expected to represent the robot's
+        traction/mobility battery, not the onboard notebook battery.
+        """
+        if msg.percentage is not None and not math.isnan(msg.percentage):
+            pct = msg.percentage * 100.0 if msg.percentage <= 1.0 else msg.percentage
+            self._battery_pct = max(0.0, min(100.0, pct))
+        if msg.voltage is not None and not math.isnan(msg.voltage):
+            self._battery_voltage = msg.voltage
+
+    def _pose_callback(self, msg) -> None:
+        """Optional ROS 2 localized pose callback configured via ROS_POSE_TOPIC."""
+        self._has_localized_pose = True
         self._pose_x = msg.pose.pose.position.x
         self._pose_y = msg.pose.pose.position.y
+        self._pose_frame = msg.header.frame_id or self._nav_cfg.default_map_frame
+        self._pose_theta = _quat_to_yaw(msg.pose.pose.orientation)
 
-        # Convert quaternion to yaw.
-        q = msg.pose.pose.orientation
-        self._pose_theta = math.atan2(
-            2.0 * (q.w * q.z + q.x * q.y),
-            1.0 - 2.0 * (q.y ** 2 + q.z ** 2),
-        )
+    def _refresh_tf_pose(self) -> None:
+        if not ROS2_AVAILABLE or self._ros_node is None:
+            return
+        tf_buffer = getattr(self, "_tf_buffer", None)
+        if tf_buffer is None:
+            return
+
+        try:
+            transform = tf_buffer.lookup_transform(
+                self._nav_cfg.tf_map_frame,
+                self._nav_cfg.tf_base_frame,
+                rclpy.time.Time(),
+            )
+        except Exception:
+            return
+
+        translation = transform.transform.translation
+        rotation = transform.transform.rotation
+        self._has_localized_pose = True
+        self._pose_x = translation.x
+        self._pose_y = translation.y
+        self._pose_frame = transform.header.frame_id or self._nav_cfg.tf_map_frame
+        self._pose_theta = _quat_to_yaw(rotation)
+
+
+def _quat_to_yaw(q) -> float:
+    return math.atan2(
+        2.0 * (q.w * q.z + q.x * q.y),
+        1.0 - 2.0 * (q.y ** 2 + q.z ** 2),
+    )

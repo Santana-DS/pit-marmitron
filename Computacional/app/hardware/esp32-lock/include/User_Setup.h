@@ -32,12 +32,20 @@
 #define TFT_HEIGHT 320
 
 // ── Step 3: Pin assignments ───────────────────────────────────────────────────
-#define TFT_MOSI  23   // SDA on display silkscreen
-#define TFT_SCLK  18   // SCL on display silkscreen
-#define TFT_CS     5   // Chip select (active LOW)
-#define TFT_DC    27   // Data/Command select
-#define TFT_RST   26   // Hardware reset (active LOW)
-#define TFT_BL    32   // Backlight enable — controlled via LEDC PWM in firmware
+//#define TFT_MOSI  23   // SDA on display silkscreen
+//#define TFT_SCLK  18   // SCL on display silkscreen
+//#define TFT_CS     5   // Chip select (active LOW)
+//#define TFT_DC    27   // Data/Command select
+//#define TFT_RST   26   // Hardware reset (active LOW)
+//#define TFT_BL    32   // Backlight enable — controlled via LEDC PWM in firmware
+
+#define TFT_MOSI  23   // (Nativo VSPI) Backups: 13, 16, 17, 19.
+#define TFT_SCLK  18   // (Nativo VSPI) Backups: 16, 17, 19, 21.
+#define TFT_CS    5    // (Nativo VSPI) Backups: 13, 15, 21, 22.
+#define TFT_DC    21   // Backups: 2, 13, 16, 17, 19.
+#define TFT_RST   22   // Backups: 2, 13, 16, 17, 19.
+#define TFT_BL    15   // Backups: 2, 13, 21, 22. 
+
 
 // ── Step 4: SPI speed ─────────────────────────────────────────────────────────
 // ST7789V write cycle minimum: 16 ns → theoretical max ~62.5 MHz.

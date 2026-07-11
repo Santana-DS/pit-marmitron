@@ -147,20 +147,19 @@ Exchanges staff credentials for a Bearer token. Called once when a staff member 
 
 ### `GET /api/operator/deliveries?status=DISPATCHED`
 
-Lists active deliveries with their most recent known telemetry point (read-only, joins `deliveries` + latest `robot_telemetry` row).
+Lists active robot deliveries with their most recent known telemetry point. In the current schema, delivery state is stored on `orders` and correlated by `orders.public_code` / `robot_telemetry.order_id`; there is no separate `deliveries` table.
 
-**Query parameter**: `status` — one of `PENDING`, `DISPATCHED`, `NAVIGATING`, `DELIVERED`, `FAILED`.
+**Query parameter**: `status` — mapped from the current order / robot lifecycle state.
 
 **Response 200**
 ```json
 {
   "deliveries": [
     {
-      "id": "delivery_uuid",
       "order_id": "order_1714000000123",
-      "destination": { "type": "Point", "coordinates": [-47.869, -15.7639] },
-      "current_position": { "type": "Point", "coordinates": [-47.870, -15.7642] },
-      "battery_percent": 67,
+      "destination_waypoint": "FT_ENTRADA",
+      "current_pose": { "x": 12.35, "y": -3.42, "theta": 1.5708, "frame": "map" },
+      "battery_percent": 67.5,
       "status": "NAVIGATING",
       "dispatched_at": "2025-06-30T14:02:11Z",
       "ping_count": 143
@@ -169,27 +168,22 @@ Lists active deliveries with their most recent known telemetry point (read-only,
 }
 ```
 
-### `GET /api/operator/deliveries/{delivery_id}/telemetry?from=<RFC3339>`
+### `GET /api/operator/deliveries/{order_id}/telemetry?from=<RFC3339>`
 
-Returns the full telemetry trail for a delivery as a GeoJSON `LineString` plus per-point metadata, for replay/debugging.
+Returns the telemetry trail for an order as ROS 2 frame points plus per-point metadata, for replay/debugging. These coordinates are metres in the reported `pose.frame` (`map` from localized TF such as ORB-SLAM3 `map -> odom -> base_link`, or from an explicitly configured pose topic; otherwise `odom` fallback), not GPS longitude/latitude and not GeoJSON.
 
 **Response 200**
 ```json
 {
-  "type": "FeatureCollection",
-  "features": [
+  "order_id": "order_1714000000123",
+  "points": [
     {
-      "type": "Feature",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [[-47.869, -15.7639], [-47.8695, -15.7641]]
-      },
-      "properties": {
-        "telemetry": [
-          { "timestamp": "2025-06-30T14:02:11Z", "battery_percent": 78, "status": "NAVIGATING", "error_code": null },
-          { "timestamp": "2025-06-30T14:02:12Z", "battery_percent": 78, "status": "NAVIGATING", "error_code": null }
-        ]
-      }
+      "timestamp": "2025-06-30T14:02:11Z",
+      "pose": { "x": 12.35, "y": -3.42, "theta": 1.5708, "frame": "map" },
+      "battery_percent": 78.4,
+      "nav_state": "NAVIGATING",
+      "remaining_m": 42.1,
+      "progress_pct": 55.0
     }
   ]
 }
@@ -257,9 +251,9 @@ Broker: `tcp://<EC2_IP>:1883` · Authentication: M2M credentials (configured via
 | `robot/commands/display_qr` | cloud → robot | 1 | Go gateway | ESP32 |
 | `robot/commands/unlock` | cloud → robot | 1 | Go gateway | ESP32 |
 | `robot/status/heartbeat` | robot → cloud | 1 | Onboard notebook, ESP32 | Go gateway (state/fault authority) |
-| `robot/telemetry` | robot → cloud | 0 | Onboard notebook | Go gateway (PostGIS ingestion) |
+| `robot/telemetry` | robot → cloud | 0 | Onboard notebook | Go gateway (batched telemetry ingestion) |
 
-**Reliability note:** `robot/telemetry` is intentionally QoS 0 — it is a high-frequency, loss-tolerant pose stream, and PostGIS ingestion is designed to tolerate gaps and out-of-order delivery (see CONVENTIONS.md, batching worker). Robot **fault detection** does not depend on this stream — it depends on `robot/status/heartbeat` at QoS 1, which is the reliability-critical channel. Do not attempt to detect `FAULT` state from telemetry payloads; use the heartbeat's `status` field.
+**Reliability note:** `robot/telemetry` is intentionally QoS 0 — it is a high-frequency, loss-tolerant pose stream, and the gateway's batch ingestion is designed to tolerate gaps and out-of-order delivery (see CONVENTIONS.md, batching worker). Robot **fault detection** does not depend on this stream — it depends on `robot/status/heartbeat` at QoS 1, which is the reliability-critical channel. Do not attempt to detect `FAULT` state from telemetry payloads; use the heartbeat's status field.
 
 **Hardware note:** these topics and their payload schemas are unchanged by the Raspberry Pi → x86 notebook hardware pivot. The onboard notebook runs the identical edge daemon codebase; only the underlying compute hardware changed.
 
@@ -320,25 +314,31 @@ Published every 30 s by the ESP32, and by the edge daemon on the onboard noteboo
 }
 ```
 
-`pending_order` is `""` when idle. `display_ready` is `false` if the SSD1306 failed I2C initialisation (robot can still operate — unlock via manual OTP still works). The onboard notebook's heartbeat payload carries `status` values from `RobotState` (`IDLE`, `NAVIGATING`, `COMPLETE`, `FAULT`, `OFFLINE_HOLD`) — this is the authoritative source for delivery status transitions written to `deliveries.status`.
+`pending_order` is `""` when idle. `display_ready` is `false` if the SSD1306 failed I2C initialisation (robot can still operate — unlock via manual OTP still works). The onboard notebook's heartbeat payload carries `status` values from `RobotState` (`IDLE`, `NAVIGATING`, `COMPLETE`, `FAULT`, `OFFLINE_HOLD`) — this is the authoritative source for robot delivery status transitions reflected on `orders`.
 
 ### `robot/telemetry` payload
 
-Published at 1 Hz by the edge daemon (onboard notebook) while `state == NAVIGATING`. Consumed exclusively by the Go gateway's telemetry ingestion service (see CONVENTIONS.md) and written to `robot_telemetry`.
+Published at the configured telemetry rate by the edge daemon (onboard notebook). The current daemon publishes in all robot states; the gateway stores only payloads with a non-empty `active_order_id` and skips idle ticks. Consumed by the Go gateway's telemetry ingestion service (see CONVENTIONS.md) and written to `robot_telemetry`.
 
 ```json
 {
-  "delivery_id": "delivery_uuid",
-  "timestamp": "2025-06-30T14:02:11.482Z",
-  "pose": { "lat": -15.7639, "lon": -47.8690 },
-  "battery_percent": 67,
-  "wifi_rssi_dbm": -58,
-  "nav_goal_id": "goal_precision_dock_7",
-  "status": "NAVIGATING"
+  "source": "edge_daemon",
+  "timestamp": 1714000000,
+  "pose": { "x": 12.35, "y": -3.42, "theta": 1.5708, "frame": "map" },
+  "velocity": { "linear_mps": 0.42 },
+  "battery": { "percent": 67.5, "voltage_v": 24.2 },
+  "nav_state": "NAVIGATING",
+  "active_order_id": "order_1714000000123",
+  "remaining_m": 42.1,
+  "progress_pct": 55.0,
+  "avg_speed_mps": 0.39,
+  "eta_seconds": 108.0,
+  "cpu_pct": 12.3,
+  "mem_pct": 44.8
 }
 ```
 
-`timestamp` is derived from a single monotonic read per publish cycle on the edge daemon (see CONVENTIONS.md) — do not treat arrival order at the broker as delivery order; always sort by this field on read. `status` here mirrors `RobotState` but is advisory only for display purposes — `FAULT` detection is sourced from `robot/status/heartbeat`, not this topic (QoS 0 makes it unsuitable as the sole source of a safety-relevant signal). `battery_percent` refers to the **robot's traction battery**, not the onboard notebook's own battery — see CONVENTIONS.md.
+`active_order_id` is the same opaque order code used by dispatch (`orders.public_code` / `OTPRecord.OrderID`), not a UUID from a separate deliveries table. The pose fields are ROS 2 frame coordinates in metres; `pose.frame` is `map` when derived from localized TF (`map -> base_link`, typically via ORB-SLAM3 publishing `map -> odom`) or from an explicitly configured localized pose topic, and `odom` when falling back to `/odom`. They are not GPS longitude/latitude. `nav_state` mirrors `RobotState` but is advisory only for display purposes — `FAULT` detection is sourced from `robot/status/heartbeat`, not this topic (QoS 0 makes it unsuitable as the sole source of a safety-relevant signal). `battery.percent` refers to the **robot's traction battery** as reported by `/battery_state`, not the onboard notebook's own battery — see CONVENTIONS.md.
 
 ---
 

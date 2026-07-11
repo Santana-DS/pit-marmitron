@@ -2,8 +2,8 @@
 //
 // Operator-facing robot control endpoints:
 //
-//   POST /api/robot/estop     — publishes robot/commands/estop (QoS 2)
-//   GET  /api/robot/telemetry — returns last telemetry snapshot received
+//	POST /api/robot/estop     — publishes robot/commands/estop (QoS 2)
+//	GET  /api/robot/telemetry — returns last telemetry snapshot received
 //
 // ESTOP SAFETY CONTRACT
 // ──────────────────────
@@ -24,6 +24,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -65,9 +68,10 @@ func (rs *RobotState) Load() (payload []byte, receivedAt time.Time, ok bool) {
 //
 // Publishes {"source":"...","timestamp":...} to robot/commands/estop at QoS 2.
 // Returns:
-//   200 — published successfully (robot should stop)
-//   502 — MQTT broker unreachable (robot may NOT stop — warn operator)
-//   500 — unexpected error
+//
+//	200 — published successfully (robot should stop)
+//	502 — MQTT broker unreachable (robot may NOT stop — warn operator)
+//	500 — unexpected error
 func (s *Server) estopHandler(mqttClient *mqtt.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -133,8 +137,9 @@ func (s *Server) estopHandler(mqttClient *mqtt.Client) http.HandlerFunc {
 //
 // Returns the last telemetry snapshot received on robot/telemetry.
 // Returns:
-//   200 — snapshot available (JSON body)
-//   204 — no snapshot received since gateway startup
+//
+//	200 — snapshot available (JSON body)
+//	204 — no snapshot received since gateway startup
 func (s *Server) telemetryHandler(robotState *RobotState) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -164,4 +169,84 @@ func (s *Server) telemetryHandler(robotState *RobotState) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(raw)
 	}
+}
+
+type cameraConfigResponse struct {
+	Available          bool     `json:"available"`
+	StreamURL          string   `json:"stream_url"`
+	StreamKind         string   `json:"stream_kind"`
+	SignalingURL       string   `json:"signaling_url"`
+	ICEServers         []string `json:"ice_servers"`
+	Label              string   `json:"label"`
+	LatencyTargetMS    int      `json:"latency_target_ms"`
+	ROSImageTopic      string   `json:"ros_image_topic"`
+	ROSCompressedTopic string   `json:"ros_compressed_topic"`
+}
+
+// GET /api/robot/camera
+//
+// Returns the operator camera stream metadata. The gateway does not proxy video
+// in Phase 1; it only tells the app which stream endpoint to render.
+func (s *Server) cameraConfigHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			writeJSON(w, http.StatusMethodNotAllowed,
+				errorResponse{Error: "method not allowed"})
+			return
+		}
+
+		streamURL := os.Getenv("ROBOT_CAMERA_STREAM_URL")
+		streamKind := os.Getenv("ROBOT_CAMERA_STREAM_KIND")
+		if streamKind == "" {
+			streamKind = "unset"
+		}
+		signalingURL := os.Getenv("ROBOT_CAMERA_SIGNALING_URL")
+		iceServers := splitCSVEnv("ROBOT_CAMERA_ICE_SERVERS")
+		label := os.Getenv("ROBOT_CAMERA_LABEL")
+		if label == "" {
+			label = "C920 front camera"
+		}
+		latencyTargetMS := 500
+		if raw := os.Getenv("ROBOT_CAMERA_LATENCY_TARGET_MS"); raw != "" {
+			if parsed, err := strconv.Atoi(raw); err == nil && parsed > 0 {
+				latencyTargetMS = parsed
+			}
+		}
+		rosImageTopic := os.Getenv("ROBOT_CAMERA_ROS_IMAGE_TOPIC")
+		if rosImageTopic == "" {
+			rosImageTopic = "/camera/image_raw"
+		}
+		rosCompressedTopic := os.Getenv("ROBOT_CAMERA_ROS_COMPRESSED_TOPIC")
+		if rosCompressedTopic == "" {
+			rosCompressedTopic = "/camera/image_raw/compressed"
+		}
+
+		writeJSON(w, http.StatusOK, cameraConfigResponse{
+			Available:          streamURL != "",
+			StreamURL:          streamURL,
+			StreamKind:         streamKind,
+			SignalingURL:       signalingURL,
+			ICEServers:         iceServers,
+			Label:              label,
+			LatencyTargetMS:    latencyTargetMS,
+			ROSImageTopic:      rosImageTopic,
+			ROSCompressedTopic: rosCompressedTopic,
+		})
+	}
+}
+
+func splitCSVEnv(key string) []string {
+	raw := os.Getenv(key)
+	if raw == "" {
+		return nil
+	}
+	parts := strings.Split(raw, ",")
+	values := make([]string, 0, len(parts))
+	for _, part := range parts {
+		value := strings.TrimSpace(part)
+		if value != "" {
+			values = append(values, value)
+		}
+	}
+	return values
 }

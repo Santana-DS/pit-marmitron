@@ -108,6 +108,7 @@ func (s *Server) routes(
 		s.mux.HandleFunc("POST /api/robot/estop", s.estopHandler(mqttClient))
 	}
 	s.mux.HandleFunc("GET /api/robot/telemetry", s.telemetryHandler(robotState))
+	s.mux.HandleFunc("GET /api/robot/camera", s.cameraConfigHandler())
 
 	if catalogSvc != nil {
 		s.mux.HandleFunc("GET /api/restaurants", s.listRestaurantsHandler(catalogSvc))
