@@ -62,7 +62,7 @@ graph TD
     end
 
     subgraph Robot ["Delivery robot (campus LAN / 4G)"]
-        NB["Onboard x86 Notebook<br/>ROS 2 Humble · nav2<br/>Edge daemon (Python/asyncio)"]
+        NB["Onboard x86 Notebook<br/>ROS 2 Foxy/Humble · ORB-SLAM3/nav2<br/>Edge daemon (Python/asyncio)"]
         ESP["ESP32<br/>lock actuator + SSD1306 OLED"]
     end
 

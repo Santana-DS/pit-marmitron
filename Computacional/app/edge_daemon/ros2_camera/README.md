@@ -16,6 +16,12 @@ Do not run a separate MJPEG/WebRTC process directly against `/dev/video0` while 
 
 ## Install expected packages
 
+On ROS 2 Foxy:
+
+```bash
+sudo apt install ros-foxy-v4l2-camera ros-foxy-image-transport-plugins
+```
+
 On ROS 2 Humble:
 
 ```bash
