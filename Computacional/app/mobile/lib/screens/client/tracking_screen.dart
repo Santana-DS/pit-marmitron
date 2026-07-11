@@ -123,7 +123,6 @@ class _TrackingScreenState extends State<TrackingScreen>
             backgroundColor: AC.surface(context),
             surfaceTintColor: Colors.transparent,
           ),
-
         if (!widget.standalone)
           SliverToBoxAdapter(
             child: Padding(
@@ -134,7 +133,6 @@ class _TrackingScreenState extends State<TrackingScreen>
               ),
             ),
           ),
-
         SliverToBoxAdapter(
           child: _TrackingMap(
             robotProgress: _robotProgress,
@@ -142,7 +140,6 @@ class _TrackingScreenState extends State<TrackingScreen>
             pulseCtrl: _pulseCtrl,
           ),
         ),
-
         SliverPadding(
           padding: const EdgeInsets.all(20),
           sliver: SliverList(
@@ -204,12 +201,11 @@ class _TrackingScreenState extends State<TrackingScreen>
                     ],
                   ),
                 ),
-
               if (order != null && order.isOtpOnly) ...[
                 const SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: AppColors.accent.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
@@ -232,14 +228,10 @@ class _TrackingScreenState extends State<TrackingScreen>
                   ),
                 ),
               ],
-
               const SizedBox(height: 20),
               const SectionLabel('Status da entrega'),
-
               ..._steps.map((s) => _StepTile(step: s)),
-
               const SizedBox(height: 20),
-
               AppButton(
                 label: 'Ver código de retirada',
                 onTap: () {
@@ -262,9 +254,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                 },
                 icon: Icons.lock_open_rounded,
               ),
-
               const SizedBox(height: 12),
-
               if (order != null)
                 AppButton(
                   label: 'Cancelar pedido',
@@ -294,6 +284,8 @@ class _TrackingScreenState extends State<TrackingScreen>
                           ),
                           TextButton(
                             onPressed: () async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final navigator = Navigator.of(context);
                               Navigator.pop(ctx);
                               try {
                                 await const OrderService().updateOrderStatus(
@@ -302,9 +294,10 @@ class _TrackingScreenState extends State<TrackingScreen>
                                 );
                               } catch (e) {
                                 if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                messenger.showSnackBar(
                                   SnackBar(
-                                    content: Text('Erro ao cancelar pedido: $e'),
+                                    content:
+                                        Text('Erro ao cancelar pedido: $e'),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -316,7 +309,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                                 reason: 'cancelled',
                               );
                               if (widget.standalone && mounted) {
-                                Navigator.pop(context);
+                                navigator.pop();
                               }
                             },
                             child: Text('Cancelar pedido',
@@ -339,7 +332,6 @@ class _TrackingScreenState extends State<TrackingScreen>
                   outlined: true,
                   icon: Icons.headset_mic_rounded,
                 ),
-
               const SizedBox(height: 24),
             ]),
           ),
@@ -348,9 +340,7 @@ class _TrackingScreenState extends State<TrackingScreen>
     );
 
     return widget.standalone
-        ? Scaffold(
-            backgroundColor: AC.surface(context),
-            body: content)
+        ? Scaffold(backgroundColor: AC.surface(context), body: content)
         : content;
   }
 }
@@ -385,9 +375,11 @@ class _TrackingMap extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 24, top: 60,
+            left: 24,
+            top: 60,
             child: Container(
-              width: 36, height: 36,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                   color: AppColors.purple,
                   borderRadius: BorderRadius.circular(10)),
@@ -396,10 +388,12 @@ class _TrackingMap extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 30, top: 130,
+            right: 30,
+            top: 130,
             child: Column(children: [
               Container(
-                width: 30, height: 30,
+                width: 30,
+                height: 30,
                 decoration: const BoxDecoration(
                     color: AppColors.teal, shape: BoxShape.circle),
                 child: const Icon(Icons.home_rounded,
@@ -419,21 +413,25 @@ class _TrackingMap extends StatelessWidget {
               );
             },
             child: Container(
-              width: 44, height: 44,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: AppColors.accent,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
                       color: AppColors.accent.withValues(alpha: 0.4),
-                      blurRadius: 14, spreadRadius: 5),
+                      blurRadius: 14,
+                      spreadRadius: 5),
                 ],
               ),
               child: const RobotIcon(size: 28, color: Colors.white),
             ),
           ),
           Positioned(
-            bottom: 10, left: 12, right: 12,
+            bottom: 10,
+            left: 12,
+            right: 12,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
@@ -443,7 +441,8 @@ class _TrackingMap extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                      width: 8, height: 8,
+                      width: 8,
+                      height: 8,
                       decoration: const BoxDecoration(
                           color: AppColors.teal, shape: BoxShape.circle)),
                   const SizedBox(width: 10),
@@ -550,7 +549,8 @@ class _StepTile extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 34, height: 34,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
                 color: step.done
                     ? AppColors.teal.withValues(alpha: 0.15)
@@ -559,7 +559,8 @@ class _StepTile extends StatelessWidget {
                         : AC.primary(context).withValues(alpha: 0.06),
                 shape: BoxShape.circle,
               ),
-              child: Icon(step.icon, size: 17,
+              child: Icon(step.icon,
+                  size: 17,
                   color: step.done
                       ? AppColors.teal
                       : step.active
@@ -571,16 +572,15 @@ class _StepTile extends StatelessWidget {
               child: Text(step.label,
                   style: GoogleFonts.dmSans(
                       fontSize: 13,
-                      fontWeight: step.active
-                          ? FontWeight.w500
-                          : FontWeight.w400,
+                      fontWeight:
+                          step.active ? FontWeight.w500 : FontWeight.w400,
                       color: step.done || step.active
                           ? AC.primary(context)
                           : AC.muted(context))),
             ),
             Text(step.time,
-                style: GoogleFonts.dmSans(
-                    fontSize: 11, color: AC.muted(context))),
+                style:
+                    GoogleFonts.dmSans(fontSize: 11, color: AC.muted(context))),
           ],
         ),
       ),
