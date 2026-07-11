@@ -6,6 +6,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"log/slog"
 	"os"
@@ -26,7 +27,7 @@ func newTestOrderService(pub *mockPublisher) (*OrderService, *OTPService) {
 		Level: slog.LevelError, // suppress info logs during tests
 	}))
 	otpSvc := NewOTPService(pub)
-	orderSvc := NewOrderService(otpSvc, pub, log)
+	orderSvc := NewOrderService(otpSvc, pub, log, nil)
 	return orderSvc, otpSvc
 }
 
@@ -38,7 +39,7 @@ func TestDispatch_FullMode_Success(t *testing.T) {
 	pub := &mockPublisher{}
 	orderSvc, otpSvc := newTestOrderService(pub)
 
-	result, err := orderSvc.Dispatch("order_test_001", testDest)
+	result, err := orderSvc.Dispatch(context.Background(), "order_test_001", testDest)
 	if err != nil {
 		t.Fatalf("expected nil error, got: %v", err)
 	}
@@ -79,7 +80,7 @@ func TestDispatch_OTPOnly_WhenMQTTFails(t *testing.T) {
 	pub := &mockPublisher{failNext: true}
 	orderSvc, _ := newTestOrderService(pub)
 
-	result, err := orderSvc.Dispatch("order_test_002", testDest)
+	result, err := orderSvc.Dispatch(context.Background(), "order_test_002", testDest)
 	if err != nil {
 		t.Fatalf("dispatch should not return error on MQTT failure, got: %v", err)
 	}
@@ -104,7 +105,7 @@ func TestDispatch_OTPIsUnique(t *testing.T) {
 
 	seen := make(map[string]struct{})
 	for i := 0; i < 50; i++ {
-		result, err := orderSvc.Dispatch("order_uniqueness_test", testDest)
+		result, err := orderSvc.Dispatch(context.Background(), "order_uniqueness_test", testDest)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -123,7 +124,7 @@ func TestDispatch_NavigatePayloadContainsOrderID(t *testing.T) {
 	orderSvc, _ := newTestOrderService(pub)
 
 	const orderID = "order_payload_check"
-	_, err := orderSvc.Dispatch(orderID, testDest)
+	_, err := orderSvc.Dispatch(context.Background(), orderID, testDest)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -152,6 +153,7 @@ func TestDispatch_ConcurrentSafety(t *testing.T) {
 		go func() {
 			defer wg.Done()
 			_, errs[i] = orderSvc.Dispatch(
+				context.Background(),
 				// Each goroutine uses a unique orderID to avoid deliberate collision.
 				strings.Repeat("x", i+1),
 				testDest,

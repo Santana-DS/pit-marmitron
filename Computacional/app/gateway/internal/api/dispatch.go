@@ -96,7 +96,7 @@ func (s *Server) dispatchHandler(orderSvc *services.OrderService) http.HandlerFu
 		}
 
 		// ── Delegate to service ───────────────────────────────────────────
-		result, err := orderSvc.Dispatch(orderID, dest)
+		result, err := orderSvc.Dispatch(r.Context(), orderID, dest)
 		if err != nil {
 			switch {
 			case errors.Is(err, services.ErrUnknownWaypoint):

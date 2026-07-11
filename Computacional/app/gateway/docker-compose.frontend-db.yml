@@ -16,6 +16,8 @@ services:
       - ../database/030_products.up.sql:/docker-entrypoint-initdb.d/030_products.sql:ro
       - ../database/040_orders.up.sql:/docker-entrypoint-initdb.d/040_orders.sql:ro
       - ../database/050_order_items.up.sql:/docker-entrypoint-initdb.d/050_order_items.sql:ro
+	      - ../database/060_telemetry.up.sql:/docker-entrypoint-initdb.d/060_telemetry.sql:ro
+	      - ../database/070_delivery_points.up.sql:/docker-entrypoint-initdb.d/070_delivery_points.sql:ro
       - ../database/seeds/001_sample_data.sql:/docker-entrypoint-initdb.d/100_seed_sample_data.sql:ro
       - ../database/seeds/002_orders_data.sql:/docker-entrypoint-initdb.d/101_seed_orders_data.sql:ro
     healthcheck:
