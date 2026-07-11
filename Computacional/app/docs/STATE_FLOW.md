@@ -470,7 +470,7 @@ CREATE INDEX idx_robot_telemetry_ts ON robot_telemetry(ts);
 
 **Schema notes:**
 - `order_id` is the opaque public order code (`orders.public_code`, `OTPRecord.OrderID`, dispatch path parameter). It is deliberately **not** a foreign key: mock/test order IDs must not poison a real `pgx.CopyFrom` batch.
-- `pose_x`, `pose_y`, and `pose_theta` are ROS 2 frame coordinates in metres. `map_frame` records whether the point came from localized map pose (`/amcl_pose`) or odometry fallback (`/odom`). Do not store them as PostGIS SRID 4326 geometry without a separate calibrated frame → GPS transform.
+- `pose_x`, `pose_y`, and `pose_theta` are ROS 2 frame coordinates in metres. `map_frame` records whether the point came from localized TF (`map -> base_link`, typically via ORB-SLAM3 `map -> odom -> base_link`), an explicitly configured localized pose topic, or odometry fallback (`/odom`). Do not store them as PostGIS SRID 4326 geometry without a separate calibrated frame -> GPS transform.
 - If onboard compute battery state is needed later (distinct from robot traction battery), add a separate `compute_battery_percent` column rather than overloading `battery_percent` — see ARCHITECTURE.md → "Hardware topology" for the rationale.
 
 ### `orders` robot-delivery fields

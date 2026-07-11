@@ -85,8 +85,14 @@ class NavConfig:
     # cmd_vel topic — monitored for speed telemetry.
     cmd_vel_topic: str = "/cmd_vel"
 
-    # /amcl_pose topic — live localization.
-    pose_topic: str = "/amcl_pose"
+    # Optional localized pose topic. Leave empty when localization is provided
+    # through TF only (ORB-SLAM3 map->odom + odom->base_link).
+    pose_topic: str = ""
+
+    # TF frames used to derive localized pose when AMCL is not present.
+    # With ORB-SLAM3, the expected chain is map -> odom -> base_link.
+    tf_map_frame: str = "map"
+    tf_base_frame: str = "base_link"
 
     # Rolling window for ETA speed average (number of /odom samples).
     speed_avg_window: int = 10
@@ -153,6 +159,14 @@ def load_config() -> DaemonConfig:
         ),
         nav=NavConfig(
             goal_timeout=float(_optional("NAV_GOAL_TIMEOUT", "120")),
+            action_server=_optional("NAV_ACTION_SERVER", "navigate_to_pose"),
+            default_map_frame=_optional("ROS_MAP_FRAME", "map"),
+            odom_topic=_optional("ROS_ODOM_TOPIC", "/odom"),
+            battery_topic=_optional("ROS_BATTERY_TOPIC", "/battery_state"),
+            cmd_vel_topic=_optional("ROS_CMD_VEL_TOPIC", "/cmd_vel"),
+            pose_topic=_optional("ROS_POSE_TOPIC", ""),
+            tf_map_frame=_optional("ROS_TF_MAP_FRAME", "map"),
+            tf_base_frame=_optional("ROS_TF_BASE_FRAME", "base_link"),
         ),
         telemetry=TelemetryConfig(
             publish_hz=float(_optional("TELEMETRY_HZ", "2")),

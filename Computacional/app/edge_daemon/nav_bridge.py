@@ -36,7 +36,7 @@ except ImportError:
     ROS2_AVAILABLE = False
     logging.getLogger(__name__).warning(
         "rclpy not available - nav_bridge running in STUB mode. "
-        "Install ROS 2 Humble and source /opt/ros/humble/setup.bash."
+        "Install/source the robot's ROS 2 environment (Foxy or Humble)."
     )
 
 from .config import NavConfig

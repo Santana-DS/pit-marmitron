@@ -31,6 +31,7 @@ try:
     from geometry_msgs.msg import PoseWithCovarianceStamped
     from nav_msgs.msg import Odometry
     from sensor_msgs.msg import BatteryState
+    import tf2_ros
     ROS2_AVAILABLE = True
 except ImportError:
     ROS2_AVAILABLE = False
@@ -75,6 +76,8 @@ class TelemetryCollector:
         self._has_localized_pose = False
 
         self._ros_node:         Optional[object] = None
+        self._tf_buffer:        Optional[object] = None
+        self._tf_listener:      Optional[object] = None
         self._ros_executor_thread = None
 
     # ── Main coroutines ───────────────────────────────────────────────────────
@@ -116,6 +119,7 @@ class TelemetryCollector:
     # ── Publishers ────────────────────────────────────────────────────────────
 
     async def _publish_telemetry(self) -> None:
+        self._refresh_tf_pose()
         payload = {
             "source":    "edge_daemon",
             "timestamp": int(time.time()),
@@ -216,12 +220,23 @@ class TelemetryCollector:
             self._battery_callback,
             10,
         )
-        self._ros_node.create_subscription(
-            PoseWithCovarianceStamped,
-            self._nav_cfg.pose_topic,
-            self._pose_callback,
-            10,
-        )
+        self._tf_buffer = tf2_ros.Buffer()
+        self._tf_listener = tf2_ros.TransformListener(self._tf_buffer, self._ros_node)
+
+        if self._nav_cfg.pose_topic:
+            self._ros_node.create_subscription(
+                PoseWithCovarianceStamped,
+                self._nav_cfg.pose_topic,
+                self._pose_callback,
+                10,
+            )
+            logger.info("Localized pose topic subscriber started on %s", self._nav_cfg.pose_topic)
+        else:
+            logger.info(
+                "Localized pose topic disabled; deriving pose from TF %s -> %s",
+                self._nav_cfg.tf_map_frame,
+                self._nav_cfg.tf_base_frame,
+            )
 
         # Spin in background thread so asyncio event loop is not blocked.
         def spin():
@@ -260,12 +275,36 @@ class TelemetryCollector:
             self._battery_voltage = msg.voltage
 
     def _pose_callback(self, msg) -> None:
-        """ROS 2 localized pose callback, usually /amcl_pose in map frame."""
+        """Optional ROS 2 localized pose callback configured via ROS_POSE_TOPIC."""
         self._has_localized_pose = True
         self._pose_x = msg.pose.pose.position.x
         self._pose_y = msg.pose.pose.position.y
         self._pose_frame = msg.header.frame_id or self._nav_cfg.default_map_frame
         self._pose_theta = _quat_to_yaw(msg.pose.pose.orientation)
+
+    def _refresh_tf_pose(self) -> None:
+        if not ROS2_AVAILABLE or self._ros_node is None:
+            return
+        tf_buffer = getattr(self, "_tf_buffer", None)
+        if tf_buffer is None:
+            return
+
+        try:
+            transform = tf_buffer.lookup_transform(
+                self._nav_cfg.tf_map_frame,
+                self._nav_cfg.tf_base_frame,
+                rclpy.time.Time(),
+            )
+        except Exception:
+            return
+
+        translation = transform.transform.translation
+        rotation = transform.transform.rotation
+        self._has_localized_pose = True
+        self._pose_x = translation.x
+        self._pose_y = translation.y
+        self._pose_frame = transform.header.frame_id or self._nav_cfg.tf_map_frame
+        self._pose_theta = _quat_to_yaw(rotation)
 
 
 def _quat_to_yaw(q) -> float:
