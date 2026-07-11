@@ -19,10 +19,13 @@ RUN apt update && apt install -y \
     ros-foxy-cv-bridge \
     ros-foxy-image-transport \
     ros-foxy-v4l2-camera \
+    ros-foxy-usb-cam \
     ros-foxy-rclcpp \
     ros-foxy-sensor-msgs \
     ros-foxy-message-filters \
     ros-foxy-rviz2 \
+    ros-foxy-geometry-msgs \
+    ros-foxy-robot-localization \
     && rm -rf /var/lib/apt/lists/*
 
 # =========================
@@ -63,44 +66,52 @@ RUN apt update && sudo apt install libfmt-dev && \
     git clone https://github.com/strasdat/Sophus.git && \
     cd Sophus && \
     git checkout 1.22.10 && \
-    mkdir build && cd build \
+    mkdir build && \ 
+    cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release .. && \
-    make -j$(nproc) && sudo make install
+    make -j$(nproc) && \
+    sudo make install && \
+    ldconfig
 
-# =========================
-# Workspace ROS2 e Correções de acesso a libs
-# =========================
-RUN mkdir -p /ws/src && \
-    cd /ws/src && \
-    git clone https://github.com/zang09/ORB_SLAM3_ROS2.git orbslam3_ros2
-    cd /opt/Thirdparty/Sophus/build && \
-    sudo make install && ldconfig && \
-    cd /ws/src/orbslam3_ros2/vocabulary && tar -xvf ORBvoc.txt.tar.gz #descomprime o vocabulary pro ORB
+RUN mkdir -p /ws/src
+
+#Instala nano e v4l-utils
+RUN apt update && apt install nano && apt install v4l-utils && apt install setserial
     
 WORKDIR /ws
 
-RUN source /opt/ros/foxy/setup.bash && colcon build && \
-    source install/setup.bash
-RUN apt-get update && apt-get install nano
+#Clona wrapper ORB-SLAM3 modificado
+RUN cd /ws/src && \
+    git clone https://github.com/gabrielconceicao09-coder/ORB_SLAM3_ROS2 orbslam3_ros2 && \
+    cd /ws/src/orbslam3_ros2/vocabulary && tar -xvf ORBvoc.txt.tar.gz
 
-# =========================
-# ENV ROS automático
-# =========================
+#Clona pacote serial_comms
+RUN cd /ws/src && \
+    git clone https://github.com/gabrielconceicao09-coder/serial_comms.git
+
+#Monta o pacote
+RUN source /opt/ros/foxy/setup.bash && \
+    colcon build --executor sequential && \
+    source install/setup.bash
+
+#Checa se tudo está nos conformes e configura o que for necessário
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc && \
     echo "source /ws/install/setup.bash" >> ~/.bashrc && \
-    echo 'export LD_LIBRARY_PATH=/opt/ORB_SLAM3/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+    echo 'export LD_LIBRARY_PATH=/opt/ORB_SLAM3/lib:$LD_LIBRARY_PATH' >> ~/.bashrc && \
+    setserial /dev/ttyACM0 low_latency     
 
 CMD ["/bin/bash"]
 
 # Para montar o pkg, precisa incluir /Thirdparty/Sophus no CMakeLists.txt se não tiver encontrando sophus.he
-# pra começar o docker:
-#docker run -it --rm --net=host --ipc=host --privileged --device=/dev/video3 --device=/dev/ttyUSB0 -e DISPLAY=$DISPLAY -e XDG_RUNTIME_DIR=/tmp/runtime-root -v /tmp/.X11-unix:/tmp/.X11-unix -v /tmp/runtime-root:/tmp/runtime-root orbslam3_wrapped
+#pra rodar o docker (partindo da pasta da dockerfile): docker run -it --rm --net=host --ipc=host --device=/dev/dri --device=/dev/video2 --device=/dev/ttyUSB0 -e DISPLAY=$DISPLAY -e XDG_RUNTIME_DIR=/tmp/runtime-root -v /tmp/.X11-unix:/tmp/.X11-unix -v /tmp/runtime-root:/tmp/runtime-root --mount type=bind,src=.,dst=/mount,ro marmitron_docker
+
+#como eu tava rodando antes: docker run -it --rm --net=host --ipc=host --privileged --device=/dev/video3 --device=/dev/ttyUSB0 -e DISPLAY=$DISPLAY -e XDG_RUNTIME_DIR=/tmp/runtime-root -v /tmp/.X11-unix:/tmp/.X11-unix -v /tmp/runtime-root:/tmp/runtime-root <TAG DO DOCKER>
 #Para incluir o pacote de comunicação serial: cd /ws/src && git clone https://github.com/gabrielconceicao09-coder/serial_comms.git
 #Pra atualizar o src do orbslam3_ros2 com o repositorio fork: cd /ws/src && rm -r orbslam3_ros2 && git clone https://github.com/gabrielconceicao09-coder/ORB_SLAM3_ROS2.git orbslam3_ros2
-#Sempre tem que descompacatar o vocabulary: cd /ws/src/orbslam3_ros2/vocabulary && tar -xf ORBvoc.txt.tar.gz
+#Se reinstalar o wrapper tem que descompacatar o vocabulary: cd /ws/src/orbslam3_ros2/vocabulary && tar -xf ORBvoc.txt.tar.gz
 #Precisa rodar (não lembro mt pq nem como consertar kkkkk): export LD_LIBRARY_PATH=/opt/ORB_SLAM3/lib:$LD_LIBRARY_PATH 
  # Pra chamar os nodes do pacote, precisa do endereço do vocab e da configuração (.yaml):
-# Pra referência fácil: ros2 run orbslam3 mono-inertial src/orbslam3_ros2/vocabulary/ORBvoc.txt src/orbslam3_ros2/config/monocular/TUM1.yaml
+# Pra referência fácil: ros2 run orbslam3 mono-inertial src/orbslam3_ros2/vocabulary/ORBvoc.txt src/orbslam3_ros2/config/monocular-inertial/EuRoC.yaml
 #Pra mostrar as imagens rodando: docker ps
 #Pra rodar outro terminal na mesma imagem: docker exec -it <container_id> bash
 

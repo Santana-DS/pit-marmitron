@@ -1,0 +1,49 @@
+[0.012s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms -- -j16 -l16
+[0.080s] [ 20%] Built target image_restamper_node
+[0.091s] [ 30%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial_imu_node.cpp.o[0m
+[0.513s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:235:9:[m[K [01;35m[Kwarning: [m[K"/*" within comment [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wcomment-Wcomment]8;;[m[K]
+[0.513s]   235 |         /*
+[0.514s]       |          
+[3.711s] In file included from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+[3.711s]                  from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27[m[K,
+[3.711s]                  from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171[m[K,
+[3.711s]                  from [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:1[m[K:
+[3.711s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:[m[K In member function ‘[01m[Kvoid SerialImuNode::[01;32m[KReadPub_callback[m[K()[m[K’:
+[3.711s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:155:45:[m[K [01;35m[Kwarning: [m[Kformat ‘[01m[K%i[m[K’ expects argument of type ‘[01m[Kint[m[K’, but argument 6 has type ‘[01m[Kstd::vector<double, std::allocator<double> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=-Wformat=]8;;[m[K]
+[3.712s]   155 |             RCLCPP_INFO(this->get_logger(), [01;35m[K"Leitura de número errado de valores. Linha: %s, n de valores: %i"[m[K, line.c_str(), [32m[Kvalores.size()[m[K);
+[3.712s]       |                                             [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K                [32m[K~~~~~~~~~~~~~~[m[K
+[3.712s]       |                                                                                                                                           [32m[K|[m[K
+[3.712s]       |                                                                                                                                           [32m[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}[m[K
+[3.712s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:155:109:[m[K [01;36m[Knote: [m[Kformat string is defined here
+[3.712s]   155 | tura de número errado de valores. Linha: %s, n de valores: [01;36m[K%i[m[K", line.c_str(), valores.size());
+[3.713s]       |                                                            [01;36m[K~^[m[K
+[3.713s]       |                                                             [01;36m[K|[m[K
+[3.713s]       |                                                             [01;36m[Kint[m[K
+[3.713s]       |                                                            [32m[K%li[m[K
+[3.714s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:167:18:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Ksequencia[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+[3.714s]   167 |         uint32_t [01;35m[Ksequencia[m[K = (uint32_t) valores[0];
+[3.714s]       |                  [01;35m[K^~~~~~~~~[m[K
+[5.636s] [ 40%] [32m[1mLinking CXX executable serial_imu_node[0m
+[5.922s] [100%] Built target serial_imu_node
+[5.936s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms -- -j16 -l16
+[5.947s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms
+[5.957s] -- Install configuration: ""
+[5.957s] -- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node
+[5.959s] -- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node" to ""
+[5.960s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/image_restamper_node
+[5.960s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.sh
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.dsv
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.bash
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.sh
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.zsh
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.dsv
+[5.961s] -- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.dsv
+[5.961s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms
+[5.962s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake
+[5.962s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake
+[5.962s] -- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.xml
+[5.963s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms

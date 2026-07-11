@@ -7,9 +7,10 @@ import '../../theme/app_theme.dart';
 import '../../models/models.dart';
 import '../../widgets/widgets.dart';
 import '../../services/api_service.dart';
+import '../../services/delivery_point_service.dart';
 import '../../services/order_service.dart';
 import '../../state/active_order_state.dart';
-import '../../state/user_state.dart';
+import '../../models/delivery_point.dart';
 import 'tracking_screen.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -24,8 +25,10 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   late List<Product> _products;
   bool _isDispatching = false;
-  final _addressCtrl =
-      TextEditingController(text: 'Faculdade de Tecnologia, FT - UnB');
+  bool _loadingDeliveryPoints = true;
+  String? _deliveryPointsError;
+  List<DeliveryPoint> _deliveryPoints = const [];
+  DeliveryPoint? _selectedDeliveryPoint;
 
   @override
   void initState() {
@@ -44,12 +47,25 @@ class _OrderScreenState extends State<OrderScreen> {
               quantity: p.quantity,
             ))
         .toList();
+    _loadDeliveryPoints();
   }
 
-  @override
-  void dispose() {
-    _addressCtrl.dispose();
-    super.dispose();
+  Future<void> _loadDeliveryPoints() async {
+    try {
+      final points = await const DeliveryPointService().listActive();
+      if (!mounted) return;
+      setState(() {
+        _deliveryPoints = points;
+        _loadingDeliveryPoints = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _deliveryPointsError =
+            'Nao foi possivel carregar os pontos de entrega.';
+        _loadingDeliveryPoints = false;
+      });
+    }
   }
 
   double get _subtotal =>
@@ -68,6 +84,14 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _confirmOrder() async {
     if (_subtotal <= 0 || _isDispatching) return;
+    final deliveryPoint = _selectedDeliveryPoint;
+    if (deliveryPoint == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Selecione um ponto de entrega calibrado.')),
+      );
+      return;
+    }
 
     setState(() => _isDispatching = true);
 
@@ -89,7 +113,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final orderDetails = await orderService.createOrder(
         // clientId: null, // Let backend inject mock user
         restaurantId: widget.restaurant.id,
-        deliveryAddress: _addressCtrl.text.trim(),
+        deliveryAddress: deliveryPoint.displayAddress,
         items: orderItems,
       );
 
@@ -99,6 +123,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final dispatchResult = await ApiService().dispatchOrder(
         orderDetails.order.id,
         widget.restaurant.name,
+        deliveryPoint.pointKey,
       );
 
       if (!mounted) return;
@@ -118,7 +143,7 @@ class _OrderScreenState extends State<OrderScreen> {
       final newOrder = ActiveOrder(
         result: dispatchResult,
         restaurant: widget.restaurant,
-        deliveryAddress: _addressCtrl.text.trim(),
+        deliveryAddress: deliveryPoint.displayAddress,
         itemsSummary: _itemsSummary,
         formattedTotal: _formattedTotal,
         placedAt: DateTime.now().toUtc(),
@@ -151,7 +176,7 @@ class _OrderScreenState extends State<OrderScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isDispatching = false);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erro ao criar pedido: $e'),
@@ -173,8 +198,7 @@ class _OrderScreenState extends State<OrderScreen> {
           if (_totalItems > 0)
             Container(
               margin: const EdgeInsets.only(right: 16),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.accent,
                 borderRadius: BorderRadius.circular(20),
@@ -251,16 +275,33 @@ class _OrderScreenState extends State<OrderScreen> {
                 const SizedBox(height: 20),
 
                 // ── Delivery address ──────────────────────────────────
-                const SectionLabel('Endereço de entrega'),
-                TextField(
-                  controller: _addressCtrl,
-                  style: TextStyle(color: AC.primary(context)), // FIXED
-                  decoration: InputDecoration(
-                    hintText: 'Rua, número, complemento',
-                    prefixIcon: Icon(Icons.location_on_outlined,
-                        color: AC.muted(context), size: 20), // FIXED
+                const SectionLabel('Ponto de entrega'),
+                if (_loadingDeliveryPoints)
+                  const Center(child: CircularProgressIndicator())
+                else if (_deliveryPointsError != null)
+                  Text(_deliveryPointsError!,
+                      style: const TextStyle(color: Colors.orange))
+                else if (_deliveryPoints.isEmpty)
+                  Text('Aguardando pontos calibrados pela equipe de navegacao.',
+                      style: TextStyle(color: AC.muted(context)))
+                else
+                  DropdownButtonFormField<DeliveryPoint>(
+                    initialValue: _selectedDeliveryPoint,
+                    isExpanded: true,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.location_on_outlined),
+                    ),
+                    hint: const Text('Selecione no campus'),
+                    items: _deliveryPoints
+                        .map((point) => DropdownMenuItem(
+                              value: point,
+                              child: Text(point.label,
+                                  overflow: TextOverflow.ellipsis),
+                            ))
+                        .toList(),
+                    onChanged: (point) =>
+                        setState(() => _selectedDeliveryPoint = point),
                   ),
-                ),
                 const SizedBox(height: 20),
 
                 // ── Order summary ─────────────────────────────────────
@@ -270,9 +311,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   AppCard(
                     child: Column(
                       children: [
-                        ..._products
-                            .where((p) => p.quantity > 0)
-                            .map(
+                        ..._products.where((p) => p.quantity > 0).map(
                               (p) => Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4),
@@ -378,13 +417,15 @@ class _ProductItem extends StatelessWidget {
           // Selected state gets a warm tint that works in both modes;
           // default state falls back to the theme-aware card color.
           color: product.quantity > 0
-              ? AppColors.accent.withValues(alpha: 0.06) // FIXED: was Color(0xFFFFF8F5)
+              ? AppColors.accent
+                  .withValues(alpha: 0.06) // FIXED: was Color(0xFFFFF8F5)
               : AC.card(context), // FIXED: was AppColors.card
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: product.quantity > 0
                 ? AppColors.accent
-                : AC.border(context), // FIXED: was AppColors.primary.withValues(alpha:0.08)
+                : AC.border(
+                    context), // FIXED: was AppColors.primary.withValues(alpha:0.08)
             width: product.quantity > 0 ? 1.5 : 1,
           ),
         ),
@@ -400,8 +441,8 @@ class _ProductItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child: Text(product.emoji,
-                      style: const TextStyle(fontSize: 28)),
+                  child:
+                      Text(product.emoji, style: const TextStyle(fontSize: 28)),
                 ),
               ),
               const SizedBox(width: 12),

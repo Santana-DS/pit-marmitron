@@ -30,13 +30,21 @@ void IRAM_ATTR EncoderISR::isrWrapper(void* arg) {
 
 // A sua lógica impecável de medição de período para evitar quantização
 void IRAM_ATTR EncoderISR::rotinaInterrupcao() {
-  this->conta_encoder++;
-  if (this->conta_encoder >= 10) {
-    this->t_encoder = micros();
-    this->periodo_quarta_volta = this->t_encoder - this->t_anterior_encoder; 
-    this->t_anterior_encoder = this->t_encoder;
-    this->conta_encoder = 0;
+  unsigned long t_atual = micros();
+  unsigned long delta = t_atual - this->t_anterior_encoder;
+
+  // =========================================================================
+  // FILTRO DE DEBOUNCE (Rejeição de Ruído Elétrico)
+  // Se o intervalo for menor que 500us, o motor teria que estar a > 3000 RPM.
+  // Como isso é impossível, descartamos o pulso falso imediatamente.
+  // =========================================================================
+  if (delta < 500) {
+    return; // Ignora o ruído e sai da interrupção
   }
+
+  this->t_encoder = t_atual;
+  this->periodo_quarta_volta = delta; 
+  this->t_anterior_encoder = this->t_encoder;
 }
 
 // ==========================================
@@ -44,8 +52,7 @@ void IRAM_ATTR EncoderISR::rotinaInterrupcao() {
 // ==========================================
 void EncoderISR::init() {
   pinMode(this->pinoA, INPUT);
-  
-  // A MÁGICA: Passamos o pino, o wrapper, e o 'this' (a identidade desta roda)
+  // Alterado para RISING para maior precisão física e leitura constante
   attachInterruptArg(digitalPinToInterrupt(this->pinoA), isrWrapper, this, CHANGE);
 }
 
@@ -54,27 +61,36 @@ float EncoderISR::lerVelocidadeRPM() {
   unsigned long periodo_copia = 0;
   unsigned long t_ultimo_pulso = 0;
   
-  // Cópia segura das variáveis protegidas
   portENTER_CRITICAL(&this->mux);
   periodo_copia = this->periodo_quarta_volta;
   t_ultimo_pulso = this->t_anterior_encoder;
   portEXIT_CRITICAL(&this->mux);
 
-  float vel_medida = 0.0;
+  // Quanto tempo se passou desde o último pulso físico recebido?
+  unsigned long delta_t = t_agora - t_ultimo_pulso;
 
-  // Proteção do "Motor Parado" (Timeout de 200ms)
-  if (t_agora - t_ultimo_pulso > 200000) {
-    vel_medida = 0.0;
-    portENTER_CRITICAL(&this->mux);
-    this->periodo_quarta_volta = 0;
-    portEXIT_CRITICAL(&this->mux);
+  // 1. Proteção contra Motor Parado (Timeout reduzido para 100ms para resposta mais esperta)
+  if (delta_t > 100000) {
+    vel_filtrada = 0.0;
+    return 0.0;
   } 
-  // O seu cálculo de RPM (40 furos lidos a cada 10)
-  else if (periodo_copia != 0) {
-    vel_medida = (float)60.0 * 1000000.0 / (4.0 * periodo_copia);
+
+  // 2. MÁGICA DO DECAIMENTO: Se o delta_t atual já superou o último período, 
+  // significa que o motor está desacelerando. Forçamos o período a crescer.
+  if (delta_t > periodo_copia) {
+    periodo_copia = delta_t;
   }
 
-  // O seu filtro passa-baixas
+  float vel_medida = 0.0;
+  if (periodo_copia != 0) {
+    // Fórmula: (60 segundos * 1.000.000 microssegundos) / (60 mudanças * periodo)
+    // Simplificando: 2*1.000.000 / periodo
+    vel_medida = (float)1000000.0 / periodo_copia;
+  }
+
+  Serial.print(">periodo_copia"); Serial.print(periodo_copia);
+  Serial.print(",vel_medida:"); Serial.print(vel_medida);
+  Serial.print(",vel_filtrada:"); Serial.println(vel_filtrada);
   this->vel_filtrada = (this->alpha * this->vel_filtrada) + ((1.0 - this->alpha) * vel_medida);
 
   return this->vel_filtrada;

@@ -1,4 +1,4 @@
-# UnBot Delivery — Documentation Update (V2.3, Milestone Pivot)
+# MARMITRON 3000 — Documentation Update (V2.3, Milestone Pivot)
 
 ## What changed since V2.2
 
@@ -54,6 +54,14 @@ Two constraints came from the team, both accepted with conditions attached. This
 
 ---
 
+## Backlog de acabamento (baixa prioridade, apos a integracao funcional)
+
+- [ ] Gerar o APK com o nome de artefato `MARMITRON_3000` e icone oficial do projeto.
+- [ ] Reformular a arte do display embarcado e expor logs de navegacao legiveis para apoio da equipe tecnica.
+- [ ] Revisar icone do app, modo escuro e consistencia visual geral do Flutter.
+
+Esses itens nao bloqueiam a demonstracao funcional. Devem ser tratados depois da telemetria, navegacao e video reais ou quando as dependencias externas estiverem aguardando retorno.
+
 ## 2-Week Milestone Roadmap
 
 Given the compressed timeline, here's the priority order. Items marked **[BLOCKING]** are required for the security model to hold — do not defer them to "after the demo."
@@ -77,7 +85,7 @@ Given the compressed timeline, here's the priority order. Items marked **[BLOCKI
 
 ### Days 8–11: Gateway operator endpoints
 - [ ] `GET /api/operator/deliveries`
-- [ ] `GET /api/operator/deliveries/{id}/telemetry`
+- [x] `GET /api/operator/deliveries/{id}/telemetry` (trilha persistida; lista de entregas ainda depende do contrato de destino)
 - [ ] `GET /api/operator/campus/restrictions`
 - [ ] `POST /api/operator/campus/restrictions` (form-based zone creation, not map-drawn)
 - [ ] `GET /api/operator/ws/telemetry` WebSocket, with reconnect + resnapshot logic

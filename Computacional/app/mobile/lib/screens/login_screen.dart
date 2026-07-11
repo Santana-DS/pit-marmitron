@@ -1,6 +1,6 @@
 // lib/screens/login_screen.dart
 //
-// UnBot Delivery — First Contact / Login Screen
+// MARMITRON 3000 — First Contact / Login Screen
 // ─────────────────────────────────────────────────────────────────────────────
 // FIX #1 — Role Selector: Added a segmented pill control (Cliente / Restaurante)
 //           rendered directly in the form body. _selectedRole drives navigation:
@@ -319,7 +319,7 @@ class _Header extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  'UnBot Delivery',
+                  'MARMITRON 3000',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
@@ -427,7 +427,7 @@ class _RoleSelector extends StatelessWidget {
       child: Row(
         children: [
           _RolePill(
-            label: 'Sou Cliente',
+            label: 'Cliente',
             icon: Icons.person_rounded,
             active: selected == _Role.client,
             onTap: () {
@@ -436,7 +436,7 @@ class _RoleSelector extends StatelessWidget {
             },
           ),
           _RolePill(
-            label: 'Sou Restaurante',
+            label: 'Restaurante',
             icon: Icons.store_rounded,
             active: selected == _Role.restaurant,
             onTap: () {

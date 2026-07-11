@@ -9,7 +9,7 @@ PIDController::PIDController(float kp, float ki, float kd) {
   this->Sentido = 1; // 1 para frente, -1 para ré
   // this->limite_saida_min = -255.0; // Padrão genérico de PWM
   // this->limite_saida_max = 255.0;
-  this->ultimo_tempo = millis();
+  this->ultimo_tempo = micros();
 }
 
 void PIDController::setGanhos(float kp, float ki, float kd) {
@@ -18,7 +18,7 @@ void PIDController::setGanhos(float kp, float ki, float kd) {
   this->Kd = kd;
 }
 
-void PIDController::setSentido(int sentido) {
+void PIDController::setSentido(float sentido) {
   this->Sentido = (sentido >= 0) ? 1 : -1;
 }
 
@@ -26,9 +26,20 @@ int PIDController::controle(float vel_ref,float vel_filtrada){
   unsigned long tempo_agora = micros();
   
   float dt = (float)(tempo_agora - ultimo_tempo) / 1.0e6; // Converte para segundos
-  float erro = vel_ref - vel_filtrada;
-  erro = (abs(erro) < 0.001) ? 0.0 : erro; // Zona morta de 0.001 para evitar ruído
+  if (dt <= 0.0) dt = 0.0001;
+
+  //Se a velocidade de ref for zero, zeramos o erro integral.
+  if (vel_ref == 0.0) {
+    erro_integral = 0.0;
+  }
+
+  float erro = abs(vel_ref) - abs(vel_filtrada);
+  
+  erro = (abs(erro) < 0.05) ? 0.0 : erro; // Zona morta
   erro_integral += erro * dt;
+
+  // Anti-windup: Limita o crescimento da integral para evitar instabilidade extrema
+  erro_integral = constrain(erro_integral, -150.0, 150.0);
 
   float P = Kp * erro;
   float I = Ki * erro_integral;

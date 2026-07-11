@@ -28,6 +28,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,10 +56,12 @@ class _OperatorScreenState extends State<OperatorScreen>
 
   RobotTelemetry? _telemetry;
   RobotCameraConfig? _cameraConfig;
+  final List<RobotPose> _poseTrail = [];
   bool _loading = true;
   bool _estopInProgress = false;
   String? _errorMsg;
   String? _cameraError;
+  String? _trackedTrailOrderId;
   DateTime? _lastUpdated;
   Timer? _pollTimer;
 
@@ -95,10 +98,20 @@ class _OperatorScreenState extends State<OperatorScreen>
   Future<void> _fetchTelemetry() async {
     final result = await _svc.fetchTelemetry();
     if (!mounted) return;
+    String? historyOrderId;
     setState(() {
       _loading = false;
       switch (result) {
         case TelemetryOk(:final data):
+          final orderId = data.activeOrderId ?? '';
+          if (_trackedTrailOrderId != orderId) {
+            _poseTrail.clear();
+            _trackedTrailOrderId = orderId;
+            historyOrderId = orderId.isEmpty ? null : orderId;
+          }
+          if (data.pose != null) {
+            _rememberPose(data.pose!);
+          }
           _telemetry = data;
           _errorMsg = null;
           _lastUpdated = DateTime.now();
@@ -109,6 +122,37 @@ class _OperatorScreenState extends State<OperatorScreen>
           _errorMsg = message;
       }
     });
+    if (historyOrderId != null) {
+      _loadTelemetryHistory(historyOrderId!);
+    }
+  }
+
+  Future<void> _loadTelemetryHistory(String orderId) async {
+    final result = await _svc.fetchTelemetryHistory(orderId);
+    if (!mounted || _trackedTrailOrderId != orderId) return;
+    if (result case TelemetryHistoryOk(:final poses)) {
+      setState(() {
+        for (final pose in poses) {
+          _rememberPose(pose);
+        }
+      });
+    }
+  }
+
+  void _rememberPose(RobotPose pose) {
+    if (_poseTrail.isNotEmpty) {
+      final last = _poseTrail.last;
+      final dx = pose.x - last.x;
+      final dy = pose.y - last.y;
+      final moved = math.sqrt(dx * dx + dy * dy);
+      final turned = (pose.theta - last.theta).abs();
+      if (moved < 0.03 && turned < 0.02) return;
+    }
+
+    _poseTrail.add(pose);
+    if (_poseTrail.length > 80) {
+      _poseTrail.removeRange(0, _poseTrail.length - 80);
+    }
   }
 
   Future<void> _fetchCameraConfig() async {
@@ -217,16 +261,16 @@ class _OperatorScreenState extends State<OperatorScreen>
               delegate: SliverChildListDelegate([
                 _buildStateCard(),
                 const SizedBox(height: 14),
+                _buildIntegrationReadinessCard(),
+                const SizedBox(height: 14),
                 _buildCameraCard(),
                 const SizedBox(height: 14),
                 _buildTelemetryGrid(),
                 const SizedBox(height: 14),
                 _buildSystemGrid(),
                 const SizedBox(height: 14),
-                if (_telemetry?.pose != null) ...[
-                  _buildPoseCard(),
-                  const SizedBox(height: 14),
-                ],
+                _buildPoseCard(),
+                const SizedBox(height: 14),
                 if (_telemetry?.activeOrderId != null) ...[
                   _buildOrderCard(),
                   const SizedBox(height: 14),
@@ -327,8 +371,8 @@ class _OperatorScreenState extends State<OperatorScreen>
             } else if (v == 'theme') {
               themeModeNotifier.value =
                   themeModeNotifier.value == ThemeMode.dark
-                  ? ThemeMode.light
-                  : ThemeMode.dark;
+                      ? ThemeMode.light
+                      : ThemeMode.dark;
             }
           },
           itemBuilder: (_) => [
@@ -417,11 +461,86 @@ class _OperatorScreenState extends State<OperatorScreen>
 
   // ── Telemetry Grid ────────────────────────────────────────────────────────
 
+  Widget _buildIntegrationReadinessCard() {
+    final hasPose = _telemetry?.pose != null;
+    final cameraReady = _cameraConfig?.available == true;
+    final allReady = hasPose && cameraReady;
+    final locationMessage = _errorMsg != null
+        ? 'Sem conexao com o gateway para consultar a localizacao.'
+        : hasPose
+            ? 'Pose ROS recebida no app.'
+            : 'Aguardando o edge daemon publicar pose ROS.';
+    final videoMessage = _cameraError != null
+        ? 'Nao foi possivel consultar a configuracao de video.'
+        : cameraReady
+            ? 'Stream configurado pelo gateway.'
+            : 'Aguardando URL do stream de video no gateway.';
+
+    return AppCard(
+      borderColor:
+          (allReady ? AppColors.teal : Colors.orange).withValues(alpha: 0.35),
+      borderWidth: 1.25,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                allReady
+                    ? Icons.check_circle_outline_rounded
+                    : Icons.pending_outlined,
+                color: allReady ? AppColors.teal : Colors.orange,
+                size: 19,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  allReady
+                      ? 'Integracoes operacionais'
+                      : 'Integracoes pendentes para operacao real',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AC.primary(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _IntegrationStatusRow(
+            icon: Icons.my_location_rounded,
+            label: 'Localizacao e navegacao',
+            message: locationMessage,
+            ready: hasPose,
+          ),
+          const SizedBox(height: 9),
+          _IntegrationStatusRow(
+            icon: Icons.videocam_rounded,
+            label: 'Video da camera',
+            message: videoMessage,
+            ready: cameraReady,
+          ),
+          if (!allReady) ...[
+            const SizedBox(height: 10),
+            Text(
+              'O painel segue utilizavel para demonstracao, mas estes dados dependem da integracao da equipe de Computacao e do stream da camera.',
+              style: GoogleFonts.dmSans(
+                fontSize: 11,
+                height: 1.35,
+                color: AC.muted(context),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildCameraCard() {
     final config = _cameraConfig;
     final kind = config?.streamKind.toLowerCase() ?? '';
-    final canRenderInline =
-        config != null &&
+    final canRenderInline = config != null &&
         config.available &&
         (kind == 'mjpeg' || kind == 'http' || kind == 'jpeg');
 
@@ -556,9 +675,8 @@ class _OperatorScreenState extends State<OperatorScreen>
               child: _MetricCard(
                 icon: Icons.speed_rounded,
                 label: 'Velocidade',
-                value: t != null
-                    ? '${t.speedKmh.toStringAsFixed(1)} km/h'
-                    : '--',
+                value:
+                    t != null ? '${t.speedKmh.toStringAsFixed(1)} km/h' : '--',
                 color: AppColors.accent,
               ),
             ),
@@ -636,7 +754,9 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── Pose Card ─────────────────────────────────────────────────────────────
 
   Widget _buildPoseCard() {
-    final pose = _telemetry!.pose!;
+    final pose =
+        _telemetry?.pose ?? const RobotPose(x: 0, y: 0, theta: 0, frame: 'map');
+    final hasPose = _telemetry?.pose != null;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,24 +769,72 @@ class _OperatorScreenState extends State<OperatorScreen>
                 color: AC.muted(context),
               ),
               const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  hasPose
+                      ? 'Mapa ROS local (frame: ${pose.frame})'
+                      : 'Mapa ROS local',
+                  style: GoogleFonts.dmSans(
+                    fontSize: 12,
+                    color: AC.muted(context),
+                  ),
+                ),
+              ),
               Text(
-                'Posição (frame: ${pose.frame})',
+                hasPose ? '${_poseTrail.length} pontos' : 'aguardando pose',
                 style: GoogleFonts.dmSans(
-                  fontSize: 12,
-                  color: AC.muted(context),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: hasPose ? AppColors.accent : AC.muted(context),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              height: 180,
+              width: double.infinity,
+              child: CustomPaint(
+                painter: _RosPoseMapPainter(
+                  poses: _poseTrail,
+                  currentPose: pose,
+                  backgroundColor: AC.mapBg(context),
+                  gridColor: AC.primary(context).withValues(alpha: 0.08),
+                  pathColor: hasPose ? AppColors.accent : AC.muted(context),
+                  robotColor: hasPose ? AC.primary(context) : AC.muted(context),
+                  textColor: AC.primary(context),
+                  mutedColor: AC.muted(context),
+                  showRobot: hasPose,
+                ),
+              ),
+            ),
+          ),
+          if (!hasPose) ...[
+            const SizedBox(height: 10),
+            _CameraMessage(
+              icon: Icons.route_rounded,
+              text:
+                  'Aguardando pose do edge daemon via /api/robot/telemetry. Quando ROS publicar map/odom, a trilha aparece aqui em tempo real.',
+              color: AC.muted(context),
+            ),
+          ],
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _PoseValue(label: 'X', value: pose.x.toStringAsFixed(2)),
-              _PoseValue(label: 'Y', value: pose.y.toStringAsFixed(2)),
+              _PoseValue(
+                label: 'X',
+                value: hasPose ? pose.x.toStringAsFixed(2) : '--',
+              ),
+              _PoseValue(
+                label: 'Y',
+                value: hasPose ? pose.y.toStringAsFixed(2) : '--',
+              ),
               _PoseValue(
                 label: 'θ (rad)',
-                value: pose.theta.toStringAsFixed(3),
+                value: hasPose ? pose.theta.toStringAsFixed(3) : '--',
               ),
             ],
           ),
@@ -864,6 +1032,62 @@ class _OperatorScreenState extends State<OperatorScreen>
 
 // ─── METRIC CARD ─────────────────────────────────────────────────────────────
 
+class _IntegrationStatusRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String message;
+  final bool ready;
+
+  const _IntegrationStatusRow({
+    required this.icon,
+    required this.label,
+    required this.message,
+    required this.ready,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = ready ? AppColors.teal : Colors.orange;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: color, size: 17),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.dmSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AC.primary(context),
+                ),
+              ),
+              const SizedBox(height: 1),
+              Text(
+                message,
+                style: GoogleFonts.dmSans(
+                  fontSize: 11,
+                  height: 1.3,
+                  color: AC.muted(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Icon(
+          ready ? Icons.check_circle_rounded : Icons.pending_rounded,
+          color: color,
+          size: 17,
+        ),
+      ],
+    );
+  }
+}
+
 class _CameraStatusChip extends StatelessWidget {
   final bool available;
   final String? error;
@@ -875,13 +1099,13 @@ class _CameraStatusChip extends StatelessWidget {
     final color = error != null
         ? Colors.orange
         : available
-        ? AppColors.teal
-        : AC.muted(context);
+            ? AppColors.teal
+            : AC.muted(context);
     final label = error != null
         ? 'Erro'
         : available
-        ? 'Ao vivo'
-        : 'Pendente';
+            ? 'Ao vivo'
+            : 'Pendente';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -973,6 +1197,188 @@ class _CameraDetail extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _RosPoseMapPainter extends CustomPainter {
+  final List<RobotPose> poses;
+  final RobotPose currentPose;
+  final Color backgroundColor;
+  final Color gridColor;
+  final Color pathColor;
+  final Color robotColor;
+  final Color textColor;
+  final Color mutedColor;
+  final bool showRobot;
+
+  const _RosPoseMapPainter({
+    required this.poses,
+    required this.currentPose,
+    required this.backgroundColor,
+    required this.gridColor,
+    required this.pathColor,
+    required this.robotColor,
+    required this.textColor,
+    required this.mutedColor,
+    this.showRobot = true,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    canvas.drawRect(rect, Paint()..color = backgroundColor);
+
+    final gridPaint = Paint()
+      ..color = gridColor
+      ..strokeWidth = 1;
+    for (double x = 0; x <= size.width; x += 24) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
+    }
+    for (double y = 0; y <= size.height; y += 24) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
+    }
+
+    final points = poses.isEmpty ? <RobotPose>[currentPose] : poses;
+    var minX = currentPose.x;
+    var maxX = currentPose.x;
+    var minY = currentPose.y;
+    var maxY = currentPose.y;
+    for (final p in points) {
+      minX = math.min(minX, p.x);
+      maxX = math.max(maxX, p.x);
+      minY = math.min(minY, p.y);
+      maxY = math.max(maxY, p.y);
+    }
+
+    final spanX = math.max(maxX - minX, 2.0);
+    final spanY = math.max(maxY - minY, 2.0);
+    final scale = math.min(
+      (size.width - 36) / spanX,
+      (size.height - 36) / spanY,
+    );
+    final centerX = (minX + maxX) / 2;
+    final centerY = (minY + maxY) / 2;
+
+    Offset project(RobotPose p) => Offset(
+          size.width / 2 + (p.x - centerX) * scale,
+          size.height / 2 - (p.y - centerY) * scale,
+        );
+
+    final axisPaint = Paint()
+      ..color = mutedColor.withValues(alpha: 0.28)
+      ..strokeWidth = 1.2;
+    final origin = project(
+      RobotPose(x: 0, y: 0, theta: 0, frame: currentPose.frame),
+    );
+    if (origin.dx >= 0 && origin.dx <= size.width) {
+      canvas.drawLine(
+        Offset(origin.dx, 0),
+        Offset(origin.dx, size.height),
+        axisPaint,
+      );
+    }
+    if (origin.dy >= 0 && origin.dy <= size.height) {
+      canvas.drawLine(
+        Offset(0, origin.dy),
+        Offset(size.width, origin.dy),
+        axisPaint,
+      );
+    }
+
+    if (points.length > 1) {
+      final first = project(points.first);
+      final path = Path()..moveTo(first.dx, first.dy);
+      for (final p in points.skip(1)) {
+        final o = project(p);
+        path.lineTo(o.dx, o.dy);
+      }
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = pathColor
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = 3,
+      );
+    }
+
+    if (showRobot) {
+      final robotCenter = project(currentPose);
+      canvas.drawCircle(
+        robotCenter,
+        14,
+        Paint()..color = robotColor.withValues(alpha: 0.14),
+      );
+      canvas.drawCircle(robotCenter, 5, Paint()..color = robotColor);
+
+      final heading = currentPose.theta;
+      final front =
+          robotCenter + Offset(math.cos(heading), -math.sin(heading)) * 18;
+      final left = robotCenter +
+          Offset(math.cos(heading + 2.45), -math.sin(heading + 2.45)) * 10;
+      final right = robotCenter +
+          Offset(math.cos(heading - 2.45), -math.sin(heading - 2.45)) * 10;
+      final robotShape = Path()
+        ..moveTo(front.dx, front.dy)
+        ..lineTo(left.dx, left.dy)
+        ..lineTo(right.dx, right.dy)
+        ..close();
+      canvas.drawPath(robotShape, Paint()..color = robotColor);
+    } else {
+      _drawLabel(canvas, 'sem pose ROS', const Offset(12, 10), mutedColor);
+    }
+
+    const scaleMeters = 1.0;
+    final scalePx = scaleMeters * scale;
+    final scaleStart = Offset(16, size.height - 18);
+    final scaleLength = scalePx.clamp(24.0, size.width - 48).toDouble();
+    final scaleEnd = Offset(16 + scaleLength, size.height - 18);
+    final scalePaint = Paint()
+      ..color = textColor.withValues(alpha: 0.75)
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(scaleStart, scaleEnd, scalePaint);
+    _drawLabel(
+      canvas,
+      '1 m',
+      Offset(scaleStart.dx, scaleStart.dy - 18),
+      mutedColor,
+    );
+
+    if (showRobot) {
+      _drawLabel(
+        canvas,
+        'x ${currentPose.x.toStringAsFixed(2)}  y ${currentPose.y.toStringAsFixed(2)}',
+        const Offset(12, 10),
+        textColor,
+      );
+    }
+  }
+
+  void _drawLabel(Canvas canvas, String text, Offset offset, Color color) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: GoogleFonts.dmSans(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          color: color,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    painter.paint(canvas, offset);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RosPoseMapPainter oldDelegate) {
+    return oldDelegate.currentPose.x != currentPose.x ||
+        oldDelegate.currentPose.y != currentPose.y ||
+        oldDelegate.currentPose.theta != currentPose.theta ||
+        oldDelegate.poses.length != poses.length ||
+        oldDelegate.showRobot != showRobot ||
+        oldDelegate.backgroundColor != backgroundColor;
   }
 }
 

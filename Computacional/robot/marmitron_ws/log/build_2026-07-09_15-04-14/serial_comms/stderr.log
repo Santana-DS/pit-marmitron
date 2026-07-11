@@ -1,0 +1,243 @@
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:73:19:[m[K [01;31m[Kerror: [m[Kexpected class-name before ‘[01m[K([m[K’ token
+   73 |     ~SerialImuNode[01;31m[K([m[K)
+      |                   [01;31m[K^[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In constructor ‘[01m[KSerialMotorsNode::[01;32m[KSerialMotorsNode[m[K()[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:40:114:[m[K [01;31m[Kerror: [m[K‘[01m[KCommandSubEsq_callback[m[K’ is not a member of ‘[01m[KSerialMotorsNode[m[K’
+   40 |         commandsEsq_sub_ = this->create_subscription<float>(commandsEsq_topic_, 10, std::bind(&SerialMotorsNode::[01;31m[KCommandSubEsq_callback[m[K, this, std::placeholders::_1));
+      |                                                                                                                  [01;31m[K^~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:41:114:[m[K [01;31m[Kerror: [m[K‘[01m[KCommandSubDir_callback[m[K’ is not a member of ‘[01m[KSerialMotorsNode[m[K’
+   41 |         commandsDir_sub_ = this->create_subscription<float>(commandsDir_topic_, 10, std::bind(&SerialMotorsNode::[01;31m[KCommandSubDir_callback[m[K, this, std::placeholders::_1));
+      |                                                                                                                  [01;31m[K^~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:91:19:[m[K [01;31m[Kerror: [m[Kexpected class-name before ‘[01m[K([m[K’ token
+   91 |     ~SerialImuNode[01;31m[K([m[K)
+      |                   [01;31m[K^[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In member function ‘[01m[Kvoid SerialMotorsNode::[01;32m[KReadPub_callback[m[K()[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:142:31:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K)[m[K’ token
+  142 |         if (valores.size() != [01;31m[K)[m[K
+      |                               [01;31m[K^[m[K
+In file included from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171[m[K,
+                 from [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:1[m[K:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:144:45:[m[K [01;35m[Kwarning: [m[Kformat ‘[01m[K%i[m[K’ expects argument of type ‘[01m[Kint[m[K’, but argument 6 has type ‘[01m[Kstd::vector<double, std::allocator<double> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=-Wformat=]8;;[m[K]
+  144 |             RCLCPP_INFO(this->get_logger(), [01;35m[K"Leitura de número errado de valores. Linha: %s, n de valores: %i"[m[K, line.c_str(), [32m[Kvalores.size()[m[K);
+      |                                             [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K                [32m[K~~~~~~~~~~~~~~[m[K
+      |                                                                                                                                           [32m[K|[m[K
+      |                                                                                                                                           [32m[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:144:109:[m[K [01;36m[Knote: [m[Kformat string is defined here
+  144 |             RCLCPP_INFO(this->get_logger(), "Leitura de número errado de valores. Linha: %s, n de valores: [01;36m[K%i[m[K", line.c_str(), valores.size());
+      |                                                                                                            [01;36m[K~^[m[K
+      |                                                                                                             [01;36m[K|[m[K
+      |                                                                                                             [01;36m[Kint[m[K
+      |                                                                                                            [32m[K%li[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:159:62:[m[K [01;31m[Kerror: [m[K‘[01m[Kmicros_esp_imu[m[K’ was not declared in this scope
+  159 |                 offset_clocks_ns = tempo_ros.nanoseconds() - [01;31m[Kmicros_esp_imu[m[K*1000LL;
+      |                                                              [01;31m[K^~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:164:110:[m[K [01;31m[Kerror: [m[K‘[01m[Kmicros_esp_imu[m[K’ was not declared in this scope
+  164 |                 offset_clocks_ns = (int64_t) offset_clocks_ns*(1-offset_alpha_) + (tempo_ros.nanoseconds() - [01;31m[Kmicros_esp_imu[m[K*1000LL)*offset_alpha_;
+      |                                                                                                              [01;31m[K^~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:[m[K In constructor ‘[01m[KSerialSensorsNode::[01;32m[KSerialSensorsNode[m[K()[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:58:63:[m[K [01;31m[Kerror: [m[K‘[01m[KPointCloud2[m[K’ is not a member of ‘[01m[Ksensor_msgs::msg[m[K’
+   58 |         sonar_pub_ = this->create_publisher<sensor_msgs::msg::[01;31m[KPointCloud2[m[K>(sonar_topic_, rclcpp::SensorDataQoS());
+      |                                                               [01;31m[K^~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:58:75:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KSerialSensorsNode::create_publisher<<expression error> >(std::string&, rclcpp::SensorDataQoS)[m[K’
+   58 |         sonar_pub_ = [01;31m[Kthis->create_publisher<sensor_msgs::msg::PointCloud2>(sonar_topic_, rclcpp::SensorDataQoS())[m[K;
+      |                      [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+In file included from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node.hpp:1650[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/executors.hpp:22[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:172[m[K,
+                 from [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:1[m[K:
+[01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node_impl.hpp:74:1:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::[01;32m[Kcreate_publisher[m[K(const std::string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)[m[K’
+   74 | [01;36m[KNode[m[K::create_publisher(
+      | [01;36m[K^~~~[m[K
+[01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node_impl.hpp:74:1:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:58:75:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   58 |         sonar_pub_ = [01;31m[Kthis->create_publisher<sensor_msgs::msg::PointCloud2>(sonar_topic_, rclcpp::SensorDataQoS())[m[K;
+      |                      [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:169:13:[m[K [01;31m[Kerror: [m[K‘[01m[KencoderMsg[m[K’ was not declared in this scope; did you mean ‘[01m[KencodersMsg[m[K’?
+  169 |             [01;31m[KencoderMsg[m[K->header.frame_id = axis_frame_;
+      |             [01;31m[K^~~~~~~~~~[m[K
+      |             [32m[KencodersMsg[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:203:17:[m[K [01;31m[Kerror: [m[K‘[01m[Kencoder_pub_[m[K’ was not declared in this scope; did you mean ‘[01m[Kencoders_pub_[m[K’?
+  203 |                 [01;31m[Kencoder_pub_[m[K->publish(*encoderMsg);
+      |                 [01;31m[K^~~~~~~~~~~~[m[K
+      |                 [32m[Kencoders_pub_[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:204:27:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K{[m[K’ before ‘[01m[Kdo[m[K’
+  204 |             } catch (...) [01;31m[KRCLCPP_WARN[m[K(this->get_logger(), "Mensagem encoders não publicada");
+      |                           [01;31m[K^~~~~~~~~~~[m[K
+In file included from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27[m[K,
+                 from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171[m[K:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:[m[K In member function ‘[01m[Kvoid SerialSensorsNode::[01;32m[KReadPub_callback[m[K()[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:171:45:[m[K [01;35m[Kwarning: [m[Kformat ‘[01m[K%i[m[K’ expects argument of type ‘[01m[Kint[m[K’, but argument 6 has type ‘[01m[Kstd::vector<double, std::allocator<double> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=-Wformat=]8;;[m[K]
+  171 |             RCLCPP_INFO(this->get_logger(), [01;35m[K"Leitura de número errado de valores. Linha: %s, n de valores: %i"[m[K, line.c_str(), [32m[Kvalores.size()[m[K);
+      |                                             [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K                [32m[K~~~~~~~~~~~~~~[m[K
+      |                                                                                                                                           [32m[K|[m[K
+      |                                                                                                                                           [32m[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:171:109:[m[K [01;36m[Knote: [m[Kformat string is defined here
+  171 |             RCLCPP_INFO(this->get_logger(), "Leitura de número errado de valores. Linha: %s, n de valores: [01;36m[K%i[m[K", line.c_str(), valores.size());
+      |                                                                                                            [01;36m[K~^[m[K
+      |                                                                                                             [01;36m[K|[m[K
+      |                                                                                                             [01;36m[Kint[m[K
+      |                                                                                                            [32m[K%li[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In member function ‘[01m[Kvoid SerialMotorsNode::[01;32m[KCommandSub_callback[m[K(geometry_msgs::msg::Twist)[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:229:46:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kserial::Serial::write(const std::string*)[m[K’
+  229 |         size_t bytes_escritos = [01;31m[Kserial_.write(&marcador_esq)[m[K;
+      |                                 [01;31m[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~[m[K
+In file included from [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:8[m[K:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const uint8_t*, size_t)[m[K’
+  372 |   [01;36m[Kwrite[m[K (const uint8_t *data, size_t size);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[K  candidate expects 2 arguments, 1 provided
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)[m[K’
+  387 |   [01;36m[Kwrite[m[K (const std::vector<uint8_t> &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&[m[K’
+  387 |   write ([01;36m[Kconst std::vector<uint8_t> &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::string&)[m[K’
+  402 |   [01;36m[Kwrite[m[K (const std::string &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+  402 |   write ([01;36m[Kconst std::string &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:230:40:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kserial::Serial::write(const std::string*)[m[K’
+  230 |         bytes_escritos += [01;31m[Kserial_.write(&rpm_ref_esq_s)[m[K;
+      |                           [01;31m[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const uint8_t*, size_t)[m[K’
+  372 |   [01;36m[Kwrite[m[K (const uint8_t *data, size_t size);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[K  candidate expects 2 arguments, 1 provided
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)[m[K’
+  387 |   [01;36m[Kwrite[m[K (const std::vector<uint8_t> &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&[m[K’
+  387 |   write ([01;36m[Kconst std::vector<uint8_t> &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::string&)[m[K’
+  402 |   [01;36m[Kwrite[m[K (const std::string &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+  402 |   write ([01;36m[Kconst std::string &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:231:40:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kserial::Serial::write(const std::string*)[m[K’
+  231 |         bytes_escritos += [01;31m[Kserial_.write(&linebreak)[m[K;
+      |                           [01;31m[K~~~~~~~~~~~~~^~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const uint8_t*, size_t)[m[K’
+  372 |   [01;36m[Kwrite[m[K (const uint8_t *data, size_t size);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[K  candidate expects 2 arguments, 1 provided
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)[m[K’
+  387 |   [01;36m[Kwrite[m[K (const std::vector<uint8_t> &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&[m[K’
+  387 |   write ([01;36m[Kconst std::vector<uint8_t> &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::string&)[m[K’
+  402 |   [01;36m[Kwrite[m[K (const std::string &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+  402 |   write ([01;36m[Kconst std::string &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:232:40:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kserial::Serial::write(const std::string*)[m[K’
+  232 |         bytes_escritos += [01;31m[Kserial_.write(&marcador_dir)[m[K;
+      |                           [01;31m[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const uint8_t*, size_t)[m[K’
+  372 |   [01;36m[Kwrite[m[K (const uint8_t *data, size_t size);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[K  candidate expects 2 arguments, 1 provided
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)[m[K’
+  387 |   [01;36m[Kwrite[m[K (const std::vector<uint8_t> &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&[m[K’
+  387 |   write ([01;36m[Kconst std::vector<uint8_t> &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::string&)[m[K’
+  402 |   [01;36m[Kwrite[m[K (const std::string &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+  402 |   write ([01;36m[Kconst std::string &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:233:40:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kserial::Serial::write(const std::string*)[m[K’
+  233 |         bytes_escritos += [01;31m[Kserial_.write(&rpm_ref_dir_s)[m[K;
+      |                           [01;31m[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const uint8_t*, size_t)[m[K’
+  372 |   [01;36m[Kwrite[m[K (const uint8_t *data, size_t size);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:[m[K [01;36m[Knote: [m[K  candidate expects 2 arguments, 1 provided
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)[m[K’
+  387 |   [01;36m[Kwrite[m[K (const std::vector<uint8_t> &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&[m[K’
+  387 |   write ([01;36m[Kconst std::vector<uint8_t> &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ksize_t serial::Serial::[01;32m[Kwrite[m[K(const std::string&)[m[K’
+  402 |   [01;36m[Kwrite[m[K (const std::string &data);
+      |   [01;36m[K^~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kconst std::string*[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>*[m[K’} to ‘[01m[Kconst std::string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+  402 |   write ([01;36m[Kconst std::string &data[m[K);
+      |          [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:211:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_linearx[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  211 |         float [01;35m[Kvel_linearx[m[K = msg.linear.x;
+      |               [01;35m[K^~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:212:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_lineary[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  212 |         float [01;35m[Kvel_lineary[m[K = msg.linear.y;
+      |               [01;35m[K^~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:213:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_linearz[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  213 |         float [01;35m[Kvel_linearz[m[K = msg.linear.z;
+      |               [01;35m[K^~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:215:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_angx[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  215 |         float [01;35m[Kvel_angx[m[K = msg.angular.x;
+      |               [01;35m[K^~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:216:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_angy[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  216 |         float [01;35m[Kvel_angy[m[K = msg.angular.y;
+      |               [01;35m[K^~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:217:15:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Kvel_angz[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable-Wunused-variable]8;;[m[K]
+  217 |         float [01;35m[Kvel_angz[m[K = msg.angular.z;
+      |               [01;35m[K^~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:315:1:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K->[m[K’ token
+  315 | [01;31m[K->[m[K
+      | [01;31m[K^~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:321:1:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K->[m[K’ token
+  321 | [01;31m[K->[m[K
+      | [01;31m[K^~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:327:1:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K->[m[K’ token
+  327 | [01;31m[K->[m[K
+      | [01;31m[K^~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:382:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  382 |             sonarMsg1.[01;31m[Kheader[m[K.stamp = rclcpp::Time(timestamp_sonares_ns);
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:383:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  383 |             sonarMsg2.[01;31m[Kheader[m[K.stamp = rclcpp::Time(timestamp_sonares_ns);
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:384:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  384 |             sonarMsg3.[01;31m[Kheader[m[K.stamp = rclcpp::Time(timestamp_sonares_ns);
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:385:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  385 |             sonarMsg4.[01;31m[Kheader[m[K.stamp = rclcpp::Time(timestamp_sonares_ns);
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:386:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  386 |             sonarMsg5.[01;31m[Kheader[m[K.stamp = rclcpp::Time(timestamp_sonares_ns);
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:388:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  388 |             sonarMsg1.[01;31m[Kheader[m[K.frame_id = sonar1_frame_;
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:389:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  389 |             sonarMsg2.[01;31m[Kheader[m[K.frame_id = sonar2_frame_;
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:390:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  390 |             sonarMsg3.[01;31m[Kheader[m[K.frame_id = sonar3_frame_;
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:391:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  391 |             sonarMsg4.[01;31m[Kheader[m[K.frame_id = sonar4_frame_;
+      |                       [01;31m[K^~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:392:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kclass std::shared_ptr<sensor_msgs::msg::Range_<std::allocator<void> > >[m[K’ has no member named ‘[01m[Kheader[m[K’
+  392 |             sonarMsg5.[01;31m[Kheader[m[K.frame_id = sonar5_frame_;
+      |                       [01;31m[K^~~~~~[m[K
+gmake[2]: *** [CMakeFiles/serial_motors_node.dir/build.make:76: CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:167: CMakeFiles/serial_motors_node.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/serial_sensors_node.dir/build.make:76: CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:141: CMakeFiles/serial_sensors_node.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

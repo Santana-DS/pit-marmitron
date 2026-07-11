@@ -1,0 +1,147 @@
+[0.000000] (-) TimerEvent: {}
+[0.000722] (serial_comms) JobQueued: {'identifier': 'serial_comms', 'dependencies': OrderedDict()}
+[0.000802] (serial_comms) JobStarted: {'identifier': 'serial_comms'}
+[0.010147] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'cmake'}
+[0.011149] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'build'}
+[0.012153] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', '--', '-j16', '-l16'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4071', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4071,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4071', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/70b6fa97_6bf4_4c8e_bba6_498cd64f18c5', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.V103R3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.752', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[0.092647] (serial_comms) StdoutLine: {'line': b'[ 11%] Built target image_restamper_node\n'}
+[0.093218] (serial_comms) StdoutLine: {'line': b'[ 16%] \x1b[32mBuilding CXX object CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o\x1b[0m\n'}
+[0.099760] (-) TimerEvent: {}
+[0.107905] (serial_comms) StdoutLine: {'line': b'[ 22%] \x1b[32mBuilding CXX object CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o\x1b[0m\n'}
+[0.199939] (-) TimerEvent: {}
+[0.300387] (-) TimerEvent: {}
+[0.400715] (-) TimerEvent: {}
+[0.501087] (-) TimerEvent: {}
+[0.601697] (-) TimerEvent: {}
+[0.702078] (-) TimerEvent: {}
+[0.802493] (-) TimerEvent: {}
+[0.902891] (-) TimerEvent: {}
+[1.003513] (-) TimerEvent: {}
+[1.104165] (-) TimerEvent: {}
+[1.204817] (-) TimerEvent: {}
+[1.305454] (-) TimerEvent: {}
+[1.405874] (-) TimerEvent: {}
+[1.506281] (-) TimerEvent: {}
+[1.606700] (-) TimerEvent: {}
+[1.707090] (-) TimerEvent: {}
+[1.807585] (-) TimerEvent: {}
+[1.908122] (-) TimerEvent: {}
+[2.008490] (-) TimerEvent: {}
+[2.108834] (-) TimerEvent: {}
+[2.209185] (-) TimerEvent: {}
+[2.309541] (-) TimerEvent: {}
+[2.409897] (-) TimerEvent: {}
+[2.469587] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialSensorsNode::\x1b[01;32m\x1b[KReadPub_callback\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[2.470143] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:295:32:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno match for \xe2\x80\x98\x1b[01m\x1b[Koperator-\x1b[m\x1b[K\xe2\x80\x99 (operand types are \xe2\x80\x98\x1b[01m\x1b[KSerialSensorsNode*\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Krclcpp::Logger\x1b[m\x1b[K\xe2\x80\x99)\n'}
+[2.470454] (serial_comms) StderrLine: {'line': b'  295 |         } else RCLCPP_INGO(\x1b[32m\x1b[Kthis\x1b[m\x1b[K\x1b[01;31m\x1b[K-\x1b[m\x1b[K\x1b[34m\x1b[Kget_logger()\x1b[m\x1b[K, "Sequ\xc3\xaancia GPS menor ou igual \xc3\xa0 anterior, mensagem n\xc3\xa3o publicada");\n'}
+[2.470849] (serial_comms) StderrLine: {'line': b'      |                            \x1b[32m\x1b[K~~~~\x1b[m\x1b[K\x1b[01;31m\x1b[K^\x1b[m\x1b[K\x1b[34m\x1b[K~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[2.470973] (serial_comms) StderrLine: {'line': b'      |                            \x1b[32m\x1b[K|\x1b[m\x1b[K              \x1b[34m\x1b[K|\x1b[m\x1b[K\n'}
+[2.471081] (serial_comms) StderrLine: {'line': b'      |                            \x1b[32m\x1b[K|\x1b[m\x1b[K              \x1b[34m\x1b[Krclcpp::Logger\x1b[m\x1b[K\n'}
+[2.471184] (serial_comms) StderrLine: {'line': b'      |                            \x1b[32m\x1b[KSerialSensorsNode*\x1b[m\x1b[K\n'}
+[2.471283] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/usr/include/c++/13/bits/stl_algobase.h:67\x1b[m\x1b[K,\n'}
+[2.471378] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/usr/include/c++/13/bits/stl_uninitialized.h:63\x1b[m\x1b[K,\n'}
+[2.471491] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/usr/include/c++/13/memory:69\x1b[m\x1b[K,\n'}
+[2.471593] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:169\x1b[m\x1b[K,\n'}
+[2.471692] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:1\x1b[m\x1b[K:\n'}
+[2.471790] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/13/bits/stl_iterator.h:625:5:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ktemplate<class _IteratorL, class _IteratorR> constexpr decltype ((__y.base() - __x.base())) std::\x1b[01;32m\x1b[Koperator-\x1b[m\x1b[K(const reverse_iterator<_Iterator>&, const reverse_iterator<_IteratorR>&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[2.471896] (serial_comms) StderrLine: {'line': b'  625 |     \x1b[01;36m\x1b[Koperator\x1b[m\x1b[K-(const reverse_iterator<_IteratorL>& __x,\n'}
+[2.471990] (serial_comms) StderrLine: {'line': b'      |     \x1b[01;36m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[2.472080] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/13/bits/stl_iterator.h:625:5:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  template argument deduction/substitution failed:\n'}
+[2.472175] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:295:44:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  mismatched types \xe2\x80\x98\x1b[01m\x1b[Kconst std::reverse_iterator<_Iterator>\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[KSerialSensorsNode*\x1b[m\x1b[K\xe2\x80\x99\n'}
+[2.472269] (serial_comms) StderrLine: {'line': b'  295 |         } else RCLCPP_INGO(this-get_logger(\x1b[01;36m\x1b[K)\x1b[m\x1b[K, "Sequ\xc3\xaancia GPS menor ou igual \xc3\xa0 anterior, mensagem n\xc3\xa3o publicada");\n'}
+[2.472362] (serial_comms) StderrLine: {'line': b'      |                                            \x1b[01;36m\x1b[K^\x1b[m\x1b[K\n'}
+[2.472465] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/13/bits/stl_iterator.h:1800:5:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ktemplate<class _IteratorL, class _IteratorR> constexpr decltype ((__x.base() - __y.base())) std::\x1b[01;32m\x1b[Koperator-\x1b[m\x1b[K(const move_iterator<_IteratorL>&, const move_iterator<_IteratorR>&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[2.472590] (serial_comms) StderrLine: {'line': b' 1800 |     \x1b[01;36m\x1b[Koperator\x1b[m\x1b[K-(const move_iterator<_IteratorL>& __x,\n'}
+[2.472683] (serial_comms) StderrLine: {'line': b'      |     \x1b[01;36m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[2.472776] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/13/bits/stl_iterator.h:1800:5:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  template argument deduction/substitution failed:\n'}
+[2.472879] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:295:44:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  mismatched types \xe2\x80\x98\x1b[01m\x1b[Kconst std::move_iterator<_IteratorL>\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[KSerialSensorsNode*\x1b[m\x1b[K\xe2\x80\x99\n'}
+[2.472999] (serial_comms) StderrLine: {'line': b'  295 |         } else RCLCPP_INGO(this-get_logger(\x1b[01;36m\x1b[K)\x1b[m\x1b[K, "Sequ\xc3\xaancia GPS menor ou igual \xc3\xa0 anterior, mensagem n\xc3\xa3o publicada");\n'}
+[2.473101] (serial_comms) StderrLine: {'line': b'      |                                            \x1b[01;36m\x1b[K^\x1b[m\x1b[K\n'}
+[2.473200] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/time.hpp:24\x1b[m\x1b[K,\n'}
+[2.473300] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/clock.hpp:24\x1b[m\x1b[K,\n'}
+[2.473399] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/client.hpp:38\x1b[m\x1b[K,\n'}
+[2.473514] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/callback_group.hpp:24\x1b[m\x1b[K,\n'}
+[2.473623] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/any_executable.hpp:20\x1b[m\x1b[K,\n'}
+[2.473723] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/memory_strategy.hpp:25\x1b[m\x1b[K,\n'}
+[2.473833] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/memory_strategies.hpp:18\x1b[m\x1b[K,\n'}
+[2.473936] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/executor_options.hpp:22\x1b[m\x1b[K,\n'}
+[2.474037] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/executor.hpp:38\x1b[m\x1b[K,\n'}
+[2.474137] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25\x1b[m\x1b[K,\n'}
+[2.474238] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/executors.hpp:21\x1b[m\x1b[K,\n'}
+[2.474339] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:172\x1b[m\x1b[K:\n'}
+[2.474449] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/duration.hpp:168:1:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Kbuiltin_interfaces::msg::Time rclcpp::\x1b[01;32m\x1b[Koperator-\x1b[m\x1b[K(const builtin_interfaces::msg::Time&, const Duration&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[2.474553] (serial_comms) StderrLine: {'line': b'  168 | \x1b[01;36m\x1b[Koperator\x1b[m\x1b[K-(const builtin_interfaces::msg::Time & lhs, const rclcpp::Duration & rhs);\n'}
+[2.474653] (serial_comms) StderrLine: {'line': b'      | \x1b[01;36m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[2.474753] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/duration.hpp:168:49:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[KSerialSensorsNode*\x1b[m\x1b[K\xe2\x80\x99 to \xe2\x80\x98\x1b[01m\x1b[Kconst builtin_interfaces::msg::Time&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst builtin_interfaces::msg::Time_<std::allocator<void> >&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[2.474855] (serial_comms) StderrLine: {'line': b'  168 | operator-(\x1b[01;36m\x1b[Kconst builtin_interfaces::msg::Time & lhs\x1b[m\x1b[K, const rclcpp::Duration & rhs);\n'}
+[2.474957] (serial_comms) StderrLine: {'line': b'      |           \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~\x1b[m\x1b[K\n'}
+[2.479187] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:295:16:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[KRCLCPP_INGO\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[KRCLCPP_INFO\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[2.479501] (serial_comms) StderrLine: {'line': b'  295 |         } else \x1b[01;31m\x1b[KRCLCPP_INGO\x1b[m\x1b[K(this-get_logger(), "Sequ\xc3\xaancia GPS menor ou igual \xc3\xa0 anterior, mensagem n\xc3\xa3o publicada");\n'}
+[2.479635] (serial_comms) StderrLine: {'line': b'      |                \x1b[01;31m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[2.479758] (serial_comms) StderrLine: {'line': b'      |                \x1b[32m\x1b[KRCLCPP_INFO\x1b[m\x1b[K\n'}
+[2.510041] (-) TimerEvent: {}
+[2.610423] (-) TimerEvent: {}
+[2.710876] (-) TimerEvent: {}
+[2.811250] (-) TimerEvent: {}
+[2.912218] (-) TimerEvent: {}
+[3.012569] (-) TimerEvent: {}
+[3.112981] (-) TimerEvent: {}
+[3.213781] (-) TimerEvent: {}
+[3.314591] (-) TimerEvent: {}
+[3.415001] (-) TimerEvent: {}
+[3.515404] (-) TimerEvent: {}
+[3.615824] (-) TimerEvent: {}
+[3.716726] (-) TimerEvent: {}
+[3.817412] (-) TimerEvent: {}
+[3.918229] (-) TimerEvent: {}
+[4.018966] (-) TimerEvent: {}
+[4.119405] (-) TimerEvent: {}
+[4.220055] (-) TimerEvent: {}
+[4.320539] (-) TimerEvent: {}
+[4.320847] (serial_comms) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/serial_sensors_node.dir/build.make:76: CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o] Error 1\n'}
+[4.321500] (serial_comms) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:141: CMakeFiles/serial_sensors_node.dir/all] Error 2\n'}
+[4.321716] (serial_comms) StderrLine: {'line': b'gmake[1]: *** Waiting for unfinished jobs....\n'}
+[4.420700] (-) TimerEvent: {}
+[4.521166] (-) TimerEvent: {}
+[4.621635] (-) TimerEvent: {}
+[4.722052] (-) TimerEvent: {}
+[4.822519] (-) TimerEvent: {}
+[4.922973] (-) TimerEvent: {}
+[5.023382] (-) TimerEvent: {}
+[5.123784] (-) TimerEvent: {}
+[5.224214] (-) TimerEvent: {}
+[5.324696] (-) TimerEvent: {}
+[5.425376] (-) TimerEvent: {}
+[5.525855] (-) TimerEvent: {}
+[5.626279] (-) TimerEvent: {}
+[5.726723] (-) TimerEvent: {}
+[5.827149] (-) TimerEvent: {}
+[5.927583] (-) TimerEvent: {}
+[6.027974] (-) TimerEvent: {}
+[6.128290] (-) TimerEvent: {}
+[6.228755] (-) TimerEvent: {}
+[6.329203] (-) TimerEvent: {}
+[6.429671] (-) TimerEvent: {}
+[6.530097] (-) TimerEvent: {}
+[6.630497] (-) TimerEvent: {}
+[6.730864] (-) TimerEvent: {}
+[6.831288] (-) TimerEvent: {}
+[6.931777] (-) TimerEvent: {}
+[7.032203] (-) TimerEvent: {}
+[7.132703] (-) TimerEvent: {}
+[7.233132] (-) TimerEvent: {}
+[7.333563] (-) TimerEvent: {}
+[7.433927] (-) TimerEvent: {}
+[7.534339] (-) TimerEvent: {}
+[7.635164] (-) TimerEvent: {}
+[7.735765] (-) TimerEvent: {}
+[7.755452] (serial_comms) StdoutLine: {'line': b'[ 27%] \x1b[32m\x1b[1mLinking CXX executable serial_motors_node\x1b[0m\n'}
+[7.835925] (-) TimerEvent: {}
+[7.936384] (-) TimerEvent: {}
+[8.036869] (-) TimerEvent: {}
+[8.137281] (-) TimerEvent: {}
+[8.161836] (serial_comms) StdoutLine: {'line': b'[ 61%] Built target serial_motors_node\n'}
+[8.163634] (serial_comms) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Error 2\n'}
+[8.166307] (serial_comms) CommandEnded: {'returncode': 2}
+[8.175819] (serial_comms) JobEnded: {'identifier': 'serial_comms', 'rc': 2}
+[8.186659] (-) EventReactorShutdown: {}

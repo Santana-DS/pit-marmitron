@@ -4,8 +4,8 @@
 // REDE WI-FI
 // ==========================================
 // Usamos 'const char*' para textos
-const char* const WIFI_SSID = "NOME_DA_SUA_REDE";
-const char* const WIFI_PASS = "SUA_SENHA_AQUI";
+const char* const WIFI_SSID = "Robozin";
+const char* const WIFI_PASS = "12345678";
 
 // ==========================================
 // SINTONIA DO PID (RODAS)
