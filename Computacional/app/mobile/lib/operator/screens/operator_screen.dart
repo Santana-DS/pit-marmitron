@@ -244,6 +244,8 @@ class _OperatorScreenState extends State<OperatorScreen>
               delegate: SliverChildListDelegate([
                 _buildStateCard(),
                 const SizedBox(height: 14),
+                _buildIntegrationReadinessCard(),
+                const SizedBox(height: 14),
                 _buildCameraCard(),
                 const SizedBox(height: 14),
                 _buildTelemetryGrid(),
@@ -441,6 +443,82 @@ class _OperatorScreenState extends State<OperatorScreen>
   }
 
   // ── Telemetry Grid ────────────────────────────────────────────────────────
+
+  Widget _buildIntegrationReadinessCard() {
+    final hasPose = _telemetry?.pose != null;
+    final cameraReady = _cameraConfig?.available == true;
+    final allReady = hasPose && cameraReady;
+    final locationMessage = _errorMsg != null
+        ? 'Sem conexao com o gateway para consultar a localizacao.'
+        : hasPose
+            ? 'Pose ROS recebida no app.'
+            : 'Aguardando o edge daemon publicar pose ROS.';
+    final videoMessage = _cameraError != null
+        ? 'Nao foi possivel consultar a configuracao de video.'
+        : cameraReady
+            ? 'Stream configurado pelo gateway.'
+            : 'Aguardando URL do stream de video no gateway.';
+
+    return AppCard(
+      borderColor:
+          (allReady ? AppColors.teal : Colors.orange).withValues(alpha: 0.35),
+      borderWidth: 1.25,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                allReady
+                    ? Icons.check_circle_outline_rounded
+                    : Icons.pending_outlined,
+                color: allReady ? AppColors.teal : Colors.orange,
+                size: 19,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  allReady
+                      ? 'Integracoes operacionais'
+                      : 'Integracoes pendentes para operacao real',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AC.primary(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _IntegrationStatusRow(
+            icon: Icons.my_location_rounded,
+            label: 'Localizacao e navegacao',
+            message: locationMessage,
+            ready: hasPose,
+          ),
+          const SizedBox(height: 9),
+          _IntegrationStatusRow(
+            icon: Icons.videocam_rounded,
+            label: 'Video da camera',
+            message: videoMessage,
+            ready: cameraReady,
+          ),
+          if (!allReady) ...[
+            const SizedBox(height: 10),
+            Text(
+              'O painel segue utilizavel para demonstracao, mas estes dados dependem da integracao da equipe de Computacao e do stream da camera.',
+              style: GoogleFonts.dmSans(
+                fontSize: 11,
+                height: 1.35,
+                color: AC.muted(context),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 
   Widget _buildCameraCard() {
     final config = _cameraConfig;
@@ -936,6 +1014,62 @@ class _OperatorScreenState extends State<OperatorScreen>
 }
 
 // ─── METRIC CARD ─────────────────────────────────────────────────────────────
+
+class _IntegrationStatusRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String message;
+  final bool ready;
+
+  const _IntegrationStatusRow({
+    required this.icon,
+    required this.label,
+    required this.message,
+    required this.ready,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = ready ? AppColors.teal : Colors.orange;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: color, size: 17),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.dmSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AC.primary(context),
+                ),
+              ),
+              const SizedBox(height: 1),
+              Text(
+                message,
+                style: GoogleFonts.dmSans(
+                  fontSize: 11,
+                  height: 1.3,
+                  color: AC.muted(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Icon(
+          ready ? Icons.check_circle_rounded : Icons.pending_rounded,
+          color: color,
+          size: 17,
+        ),
+      ],
+    );
+  }
+}
 
 class _CameraStatusChip extends StatelessWidget {
   final bool available;
