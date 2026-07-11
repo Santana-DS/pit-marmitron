@@ -114,13 +114,11 @@ class ApiService {
     final url = Uri.parse('$baseUrl/api/orders/$orderId/wake-display');
 
     try {
-      final response = await http
-          .post(
-            url,
-            headers: {'Content-Type': 'application/json'},
-            // No body needed — orderId is in the path, no additional params.
-          )
-          .timeout(_kApiTimeout);
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        // No body needed — orderId is in the path, no additional params.
+      ).timeout(_kApiTimeout);
 
       if (response.statusCode == 200) {
         final data = _parseJson(response.body);
@@ -179,7 +177,9 @@ class ApiService {
       debugPrint('validateOtp failed — HTTP ${response.statusCode}: $detail');
 
       if (response.statusCode == 401) return UnlockInvalidCode(message: detail);
-      if (response.statusCode == 502) return UnlockRobotUnreachable(message: detail);
+      if (response.statusCode == 502) {
+        return UnlockRobotUnreachable(message: detail);
+      }
 
       return const UnlockNetworkError();
     } on TimeoutException {
@@ -197,6 +197,7 @@ class ApiService {
   Future<DispatchResult?> dispatchOrder(
     String orderId,
     String restaurantName,
+    String deliveryPointKey,
   ) async {
     final url = Uri.parse('$baseUrl/api/orders/$orderId/dispatch');
 
@@ -206,7 +207,7 @@ class ApiService {
             url,
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              'destination': {'x': 12.0, 'y': -3.5},
+              'waypoint_name': deliveryPointKey,
               'restaurant_name': restaurantName,
             }),
           )
@@ -257,12 +258,12 @@ class DispatchResult {
 
   factory DispatchResult.fromJson(Map<String, dynamic> json) {
     return DispatchResult(
-      success:       json['success'] as bool,
-      orderId:       json['order_id'] as String,
-      status:        json['status'] as String,
-      otpCode:       json['otp_code'] as String,
+      success: json['success'] as bool,
+      orderId: json['order_id'] as String,
+      status: json['status'] as String,
+      otpCode: json['otp_code'] as String,
       mqttConnected: json['mqtt_connected'] as bool,
-      gatewayMode:   json['gateway_mode'] as String,
+      gatewayMode: json['gateway_mode'] as String,
     );
   }
 

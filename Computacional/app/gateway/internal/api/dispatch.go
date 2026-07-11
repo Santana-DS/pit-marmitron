@@ -77,6 +77,12 @@ func (s *Server) dispatchHandler(orderSvc *services.OrderService) http.HandlerFu
 		}
 
 		// ── Build Destination from request ────────────────────────────────
+		if req.WaypointName == "" {
+			writeJSON(w, http.StatusBadRequest,
+				errorResponse{Error: "a calibrated delivery point is required"})
+			return
+		}
+
 		var dest services.Destination
 
 		if req.WaypointName != "" {
