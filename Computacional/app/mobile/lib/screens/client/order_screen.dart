@@ -9,7 +9,6 @@ import '../../widgets/widgets.dart';
 import '../../services/api_service.dart';
 import '../../services/order_service.dart';
 import '../../state/active_order_state.dart';
-import '../../state/user_state.dart';
 import 'tracking_screen.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -151,7 +150,7 @@ class _OrderScreenState extends State<OrderScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isDispatching = false);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erro ao criar pedido: $e'),
@@ -173,8 +172,7 @@ class _OrderScreenState extends State<OrderScreen> {
           if (_totalItems > 0)
             Container(
               margin: const EdgeInsets.only(right: 16),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.accent,
                 borderRadius: BorderRadius.circular(20),
@@ -270,9 +268,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   AppCard(
                     child: Column(
                       children: [
-                        ..._products
-                            .where((p) => p.quantity > 0)
-                            .map(
+                        ..._products.where((p) => p.quantity > 0).map(
                               (p) => Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 4),
@@ -378,13 +374,15 @@ class _ProductItem extends StatelessWidget {
           // Selected state gets a warm tint that works in both modes;
           // default state falls back to the theme-aware card color.
           color: product.quantity > 0
-              ? AppColors.accent.withValues(alpha: 0.06) // FIXED: was Color(0xFFFFF8F5)
+              ? AppColors.accent
+                  .withValues(alpha: 0.06) // FIXED: was Color(0xFFFFF8F5)
               : AC.card(context), // FIXED: was AppColors.card
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: product.quantity > 0
                 ? AppColors.accent
-                : AC.border(context), // FIXED: was AppColors.primary.withValues(alpha:0.08)
+                : AC.border(
+                    context), // FIXED: was AppColors.primary.withValues(alpha:0.08)
             width: product.quantity > 0 ? 1.5 : 1,
           ),
         ),
@@ -400,8 +398,8 @@ class _ProductItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child: Text(product.emoji,
-                      style: const TextStyle(fontSize: 28)),
+                  child:
+                      Text(product.emoji, style: const TextStyle(fontSize: 28)),
                 ),
               ),
               const SizedBox(width: 12),

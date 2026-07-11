@@ -250,10 +250,8 @@ class _OperatorScreenState extends State<OperatorScreen>
                 const SizedBox(height: 14),
                 _buildSystemGrid(),
                 const SizedBox(height: 14),
-                if (_telemetry?.pose != null) ...[
-                  _buildPoseCard(),
-                  const SizedBox(height: 14),
-                ],
+                _buildPoseCard(),
+                const SizedBox(height: 14),
                 if (_telemetry?.activeOrderId != null) ...[
                   _buildOrderCard(),
                   const SizedBox(height: 14),
@@ -661,7 +659,9 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── Pose Card ─────────────────────────────────────────────────────────────
 
   Widget _buildPoseCard() {
-    final pose = _telemetry!.pose!;
+    final pose =
+        _telemetry?.pose ?? const RobotPose(x: 0, y: 0, theta: 0, frame: 'map');
+    final hasPose = _telemetry?.pose != null;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -676,7 +676,9 @@ class _OperatorScreenState extends State<OperatorScreen>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Mapa ROS local (frame: ${pose.frame})',
+                  hasPose
+                      ? 'Mapa ROS local (frame: ${pose.frame})'
+                      : 'Mapa ROS local',
                   style: GoogleFonts.dmSans(
                     fontSize: 12,
                     color: AC.muted(context),
@@ -684,11 +686,11 @@ class _OperatorScreenState extends State<OperatorScreen>
                 ),
               ),
               Text(
-                '${_poseTrail.length} pontos',
+                hasPose ? '${_poseTrail.length} pontos' : 'aguardando pose',
                 style: GoogleFonts.dmSans(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.accent,
+                  color: hasPose ? AppColors.accent : AC.muted(context),
                 ),
               ),
             ],
@@ -705,23 +707,39 @@ class _OperatorScreenState extends State<OperatorScreen>
                   currentPose: pose,
                   backgroundColor: AC.mapBg(context),
                   gridColor: AC.primary(context).withValues(alpha: 0.08),
-                  pathColor: AppColors.accent,
-                  robotColor: AC.primary(context),
+                  pathColor: hasPose ? AppColors.accent : AC.muted(context),
+                  robotColor: hasPose ? AC.primary(context) : AC.muted(context),
                   textColor: AC.primary(context),
                   mutedColor: AC.muted(context),
+                  showRobot: hasPose,
                 ),
               ),
             ),
           ),
+          if (!hasPose) ...[
+            const SizedBox(height: 10),
+            _CameraMessage(
+              icon: Icons.route_rounded,
+              text:
+                  'Aguardando pose do edge daemon via /api/robot/telemetry. Quando ROS publicar map/odom, a trilha aparece aqui em tempo real.',
+              color: AC.muted(context),
+            ),
+          ],
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _PoseValue(label: 'X', value: pose.x.toStringAsFixed(2)),
-              _PoseValue(label: 'Y', value: pose.y.toStringAsFixed(2)),
+              _PoseValue(
+                label: 'X',
+                value: hasPose ? pose.x.toStringAsFixed(2) : '--',
+              ),
+              _PoseValue(
+                label: 'Y',
+                value: hasPose ? pose.y.toStringAsFixed(2) : '--',
+              ),
               _PoseValue(
                 label: 'θ (rad)',
-                value: pose.theta.toStringAsFixed(3),
+                value: hasPose ? pose.theta.toStringAsFixed(3) : '--',
               ),
             ],
           ),
@@ -1040,6 +1058,7 @@ class _RosPoseMapPainter extends CustomPainter {
   final Color robotColor;
   final Color textColor;
   final Color mutedColor;
+  final bool showRobot;
 
   const _RosPoseMapPainter({
     required this.poses,
@@ -1050,6 +1069,7 @@ class _RosPoseMapPainter extends CustomPainter {
     required this.robotColor,
     required this.textColor,
     required this.mutedColor,
+    this.showRobot = true,
   });
 
   @override
@@ -1132,27 +1152,31 @@ class _RosPoseMapPainter extends CustomPainter {
       );
     }
 
-    final robotCenter = project(currentPose);
-    canvas.drawCircle(
-      robotCenter,
-      14,
-      Paint()..color = robotColor.withValues(alpha: 0.14),
-    );
-    canvas.drawCircle(robotCenter, 5, Paint()..color = robotColor);
+    if (showRobot) {
+      final robotCenter = project(currentPose);
+      canvas.drawCircle(
+        robotCenter,
+        14,
+        Paint()..color = robotColor.withValues(alpha: 0.14),
+      );
+      canvas.drawCircle(robotCenter, 5, Paint()..color = robotColor);
 
-    final heading = currentPose.theta;
-    final front =
-        robotCenter + Offset(math.cos(heading), -math.sin(heading)) * 18;
-    final left = robotCenter +
-        Offset(math.cos(heading + 2.45), -math.sin(heading + 2.45)) * 10;
-    final right = robotCenter +
-        Offset(math.cos(heading - 2.45), -math.sin(heading - 2.45)) * 10;
-    final robotShape = Path()
-      ..moveTo(front.dx, front.dy)
-      ..lineTo(left.dx, left.dy)
-      ..lineTo(right.dx, right.dy)
-      ..close();
-    canvas.drawPath(robotShape, Paint()..color = robotColor);
+      final heading = currentPose.theta;
+      final front =
+          robotCenter + Offset(math.cos(heading), -math.sin(heading)) * 18;
+      final left = robotCenter +
+          Offset(math.cos(heading + 2.45), -math.sin(heading + 2.45)) * 10;
+      final right = robotCenter +
+          Offset(math.cos(heading - 2.45), -math.sin(heading - 2.45)) * 10;
+      final robotShape = Path()
+        ..moveTo(front.dx, front.dy)
+        ..lineTo(left.dx, left.dy)
+        ..lineTo(right.dx, right.dy)
+        ..close();
+      canvas.drawPath(robotShape, Paint()..color = robotColor);
+    } else {
+      _drawLabel(canvas, 'sem pose ROS', const Offset(12, 10), mutedColor);
+    }
 
     const scaleMeters = 1.0;
     final scalePx = scaleMeters * scale;
@@ -1171,12 +1195,14 @@ class _RosPoseMapPainter extends CustomPainter {
       mutedColor,
     );
 
-    _drawLabel(
-      canvas,
-      'x ${currentPose.x.toStringAsFixed(2)}  y ${currentPose.y.toStringAsFixed(2)}',
-      const Offset(12, 10),
-      textColor,
-    );
+    if (showRobot) {
+      _drawLabel(
+        canvas,
+        'x ${currentPose.x.toStringAsFixed(2)}  y ${currentPose.y.toStringAsFixed(2)}',
+        const Offset(12, 10),
+        textColor,
+      );
+    }
   }
 
   void _drawLabel(Canvas canvas, String text, Offset offset, Color color) {
@@ -1200,6 +1226,7 @@ class _RosPoseMapPainter extends CustomPainter {
         oldDelegate.currentPose.y != currentPose.y ||
         oldDelegate.currentPose.theta != currentPose.theta ||
         oldDelegate.poses.length != poses.length ||
+        oldDelegate.showRobot != showRobot ||
         oldDelegate.backgroundColor != backgroundColor;
   }
 }
