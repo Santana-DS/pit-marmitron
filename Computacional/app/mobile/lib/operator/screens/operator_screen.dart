@@ -98,6 +98,7 @@ class _OperatorScreenState extends State<OperatorScreen>
   Future<void> _fetchTelemetry() async {
     final result = await _svc.fetchTelemetry();
     if (!mounted) return;
+    String? historyOrderId;
     setState(() {
       _loading = false;
       switch (result) {
@@ -106,6 +107,7 @@ class _OperatorScreenState extends State<OperatorScreen>
           if (_trackedTrailOrderId != orderId) {
             _poseTrail.clear();
             _trackedTrailOrderId = orderId;
+            historyOrderId = orderId.isEmpty ? null : orderId;
           }
           if (data.pose != null) {
             _rememberPose(data.pose!);
@@ -120,6 +122,21 @@ class _OperatorScreenState extends State<OperatorScreen>
           _errorMsg = message;
       }
     });
+    if (historyOrderId != null) {
+      _loadTelemetryHistory(historyOrderId!);
+    }
+  }
+
+  Future<void> _loadTelemetryHistory(String orderId) async {
+    final result = await _svc.fetchTelemetryHistory(orderId);
+    if (!mounted || _trackedTrailOrderId != orderId) return;
+    if (result case TelemetryHistoryOk(:final poses)) {
+      setState(() {
+        for (final pose in poses) {
+          _rememberPose(pose);
+        }
+      });
+    }
   }
 
   void _rememberPose(RobotPose pose) {
