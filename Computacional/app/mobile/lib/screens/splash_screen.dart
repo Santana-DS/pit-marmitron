@@ -1,6 +1,6 @@
 // lib/screens/splash_screen.dart
 //
-// UnBot Delivery — Splash Screen
+// MARMITRON 3000 — Splash Screen
 // ─────────────────────────────────────────────────────────────────────────────
 // CHANGE: _navigate() now routes to LoginScreen instead of ClientHomeScreen.
 //         SplashScreen is a pure brand moment + gatekeeper; auth state lives
@@ -157,9 +157,9 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 36),
 
-                    // App name — "UnBot Delivery"
+                    // App name — "MARMITRON 3000"
                     Text(
-                      'UnBot Delivery',
+                      'MARMITRON 3000',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 38,
                         fontWeight: FontWeight.w700,
