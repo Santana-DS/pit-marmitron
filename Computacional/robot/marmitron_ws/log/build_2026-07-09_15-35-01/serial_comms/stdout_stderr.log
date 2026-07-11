@@ -1,0 +1,29 @@
+[ 11%] Built target image_restamper_node
+[ 16%] [32mBuilding CXX object CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o[0m
+[ 22%] [32mBuilding CXX object CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o[0m
+[ 27%] [32m[1mLinking CXX executable serial_sensors_node[0m
+[ 61%] Built target serial_sensors_node
+[ 66%] [32m[1mLinking CXX executable serial_motors_node[0m
+[100%] Built target serial_motors_node
+-- Install configuration: ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_sensors_node
+-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_sensors_node" to ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_motors_node
+-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_motors_node" to ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/image_restamper_node
+-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/image_restamper_node" to ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.bash
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.zsh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.xml

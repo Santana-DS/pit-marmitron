@@ -1,0 +1,53 @@
+[0.021s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms -- -j16 -l16
+[0.153s] [ 11%] Built target image_restamper_node
+[0.158s] [ 16%] [32mBuilding CXX object CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o[0m
+[0.178s] [ 61%] Built target serial_sensors_node
+[4.033s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:211:33:[m[K [01;31m[Kerror: [m[K‘[01m[Kstd_msgs::msg::Float32[m[K’ has not been declared
+[4.033s]   211 |     void CommandSubEsq_callback([01;31m[Kstd_msgs[m[K::msg::Float32 msg)
+[4.033s]       |                                 [01;31m[K^~~~~~~~[m[K
+[4.034s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:222:33:[m[K [01;31m[Kerror: [m[K‘[01m[Kstd_msgs::msg::Float32[m[K’ has not been declared
+[4.034s]   222 |     void CommandSubDir_callback([01;31m[Kstd_msgs[m[K::msg::Float32 msg)
+[4.034s]       |                                 [01;31m[K^~~~~~~~[m[K
+[4.041s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In constructor ‘[01m[KSerialMotorsNode::[01;32m[KSerialMotorsNode[m[K()[m[K’:
+[4.041s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:40:69:[m[K [01;31m[Kerror: [m[K‘[01m[KFloat32[m[K’ is not a member of ‘[01m[Kstd_msgs::msg[m[K’
+[4.041s]    40 |         commandsEsq_sub_ = this->create_subscription<std_msgs::msg::[01;31m[KFloat32[m[K>(commandsEsq_topic_, 10, std::bind(&SerialMotorsNode::CommandSubEsq_callback, this, std::placeholders::_1));
+[4.042s]       |                                                                     [01;31m[K^~~~~~~[m[K
+[4.048s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:40:77:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KSerialMotorsNode::create_subscription<<expression error> >(std::string&, int, std::_Bind_helper<false, void (SerialMotorsNode::*)(int), SerialMotorsNode*, const std::_Placeholder<1>&>::type)[m[K’
+[4.048s]    40 |         commandsEsq_sub_ = [01;31m[Kthis->create_subscription<std_msgs::msg::Float32>(commandsEsq_topic_, 10, std::bind(&SerialMotorsNode::CommandSubEsq_callback, this, std::placeholders::_1))[m[K;
+[4.048s]       |                            [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[4.049s] In file included from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28[m[K,
+[4.049s]                  from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/executors.hpp:22[m[K,
+[4.049s]                  from [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:172[m[K,
+[4.049s]                  from [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:1[m[K:
+[4.049s] [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node.hpp:222:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class MessageT, class CallbackT, class AllocatorT, class SubscriptionT, class MessageMemoryStrategyT> std::shared_ptr<ROSMessageT> rclcpp::Node::[01;32m[Kcreate_subscription[m[K(const std::string&, const rclcpp::QoS&, CallbackT&&, const rclcpp::SubscriptionOptionsWithAllocator<AllocatorT>&, typename MessageMemoryStrategyT::SharedPtr)[m[K’
+[4.050s]   222 |   [01;36m[Kcreate_subscription[m[K(
+[4.050s]       |   [01;36m[K^~~~~~~~~~~~~~~~~~~[m[K
+[4.050s] [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node.hpp:222:3:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[4.050s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:40:77:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[4.050s]    40 |         commandsEsq_sub_ = [01;31m[Kthis->create_subscription<std_msgs::msg::Float32>(commandsEsq_topic_, 10, std::bind(&SerialMotorsNode::CommandSubEsq_callback, this, std::placeholders::_1))[m[K;
+[4.050s]       |                            [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[4.051s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:41:69:[m[K [01;31m[Kerror: [m[K‘[01m[KFloat32[m[K’ is not a member of ‘[01m[Kstd_msgs::msg[m[K’
+[4.051s]    41 |         commandsDir_sub_ = this->create_subscription<std_msgs::msg::[01;31m[KFloat32[m[K>(commandsDir_topic_, 10, std::bind(&SerialMotorsNode::CommandSubDir_callback, this, std::placeholders::_1));
+[4.051s]       |                                                                     [01;31m[K^~~~~~~[m[K
+[4.057s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:41:77:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KSerialMotorsNode::create_subscription<<expression error> >(std::string&, int, std::_Bind_helper<false, void (SerialMotorsNode::*)(int), SerialMotorsNode*, const std::_Placeholder<1>&>::type)[m[K’
+[4.057s]    41 |         commandsDir_sub_ = [01;31m[Kthis->create_subscription<std_msgs::msg::Float32>(commandsDir_topic_, 10, std::bind(&SerialMotorsNode::CommandSubDir_callback, this, std::placeholders::_1))[m[K;
+[4.057s]       |                            [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[4.058s] [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node.hpp:222:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class MessageT, class CallbackT, class AllocatorT, class SubscriptionT, class MessageMemoryStrategyT> std::shared_ptr<ROSMessageT> rclcpp::Node::[01;32m[Kcreate_subscription[m[K(const std::string&, const rclcpp::QoS&, CallbackT&&, const rclcpp::SubscriptionOptionsWithAllocator<AllocatorT>&, typename MessageMemoryStrategyT::SharedPtr)[m[K’
+[4.058s]   222 |   [01;36m[Kcreate_subscription[m[K(
+[4.058s]       |   [01;36m[K^~~~~~~~~~~~~~~~~~~[m[K
+[4.058s] [01m[K/opt/ros/kilted/include/rclcpp/rclcpp/node.hpp:222:3:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[4.058s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:41:77:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+[4.059s]    41 |         commandsDir_sub_ = [01;31m[Kthis->create_subscription<std_msgs::msg::Float32>(commandsDir_topic_, 10, std::bind(&SerialMotorsNode::CommandSubDir_callback, this, std::placeholders::_1))[m[K;
+[4.059s]       |                            [01;31m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[4.080s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In member function ‘[01m[Kvoid SerialMotorsNode::[01;32m[KCommandSubEsq_callback[m[K(int)[m[K’:
+[4.080s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:213:61:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ is not a pointer
+[4.080s]   213 |         const std::string rpm_ref_esq_s = std::to_string(msg[01;31m[K->[m[Kdata);
+[4.081s]       |                                                             [01;31m[K^~[m[K
+[4.081s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:[m[K In member function ‘[01m[Kvoid SerialMotorsNode::[01;32m[KCommandSubDir_callback[m[K(int)[m[K’:
+[4.081s] [01m[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:224:61:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ is not a pointer
+[4.082s]   224 |         const std::string rpm_ref_dir_s = std::to_string(msg[01;31m[K->[m[Kdata);
+[4.082s]       |                                                             [01;31m[K^~[m[K
+[5.697s] gmake[2]: *** [CMakeFiles/serial_motors_node.dir/build.make:76: CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o] Error 1
+[5.698s] gmake[1]: *** [CMakeFiles/Makefile2:167: CMakeFiles/serial_motors_node.dir/all] Error 2
+[5.698s] gmake: *** [Makefile:146: all] Error 2
+[5.704s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms -- -j16 -l16

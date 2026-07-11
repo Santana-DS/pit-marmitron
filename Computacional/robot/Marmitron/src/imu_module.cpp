@@ -55,7 +55,7 @@ void imu_update() {
   // 1. Leituras brutas
   xyzFloat gValue = myMPU9250.getGValues();
   xyzFloat gyrValue = myMPU9250.getGyrValues();
-  xyzFloat magValue = myMPU9250.getMagValues(); 
+  //xyzFloat magValue = myMPU9250.getMagValues(); 
 
   // 2. Converte para m/s²
   acc_x_ms2 = gValue.x * 9.80665;
@@ -68,24 +68,24 @@ void imu_update() {
   gyr_z_rads = gyrValue.z * DEG_TO_RAD;
 
   // 4. Converte microTeslas para Teslas
-  mag_x_T = magValue.x / 1000000.0;
-  mag_y_T = magValue.y / 1000000.0;
-  mag_z_T = magValue.z / 1000000.0;
+  //mag_x_T = magValue.x / 1000000.0;
+  //mag_y_T = magValue.y / 1000000.0;
+  //mag_z_T = magValue.z / 1000000.0;
 }
 
 void imu_print_ros_format() {
   // Acelerômetro
-  Serial.print(acc_x_ms2, 4); Serial.print(",");
-  Serial.print(acc_y_ms2, 4); Serial.print(",");
-  Serial.print(acc_z_ms2, 4); Serial.print(",");
+  //Serial.print(acc_x_ms2, 4); Serial.print(",");
+  //Serial.print(acc_y_ms2, 4); Serial.print(",");
+  //Serial.print(acc_z_ms2, 4); Serial.print(",");
 
   // Giroscópio
-  Serial.print(gyr_x_rads, 4); Serial.print(",");
-  Serial.print(gyr_y_rads, 4); Serial.print(",");
-  Serial.print(gyr_z_rads, 4); Serial.print(",");
+  //Serial.print(gyr_x_rads, 4); Serial.print(",");
+  //Serial.print(gyr_y_rads, 4); Serial.print(",");
+  //Serial.print(gyr_z_rads, 4); Serial.print(",");
 
   // Magnetômetro
-  Serial.print(mag_x_T, 8); Serial.print(",");
-  Serial.print(mag_y_T, 8); Serial.print(",");
-  Serial.print(mag_z_T, 8); Serial.print(",");
+  //Serial.print(0.0, 8); Serial.print(",");
+  //Serial.print(0.0, 8); Serial.print(",");
+  //Serial.println(0.0, 8); //Serial.print(",");
 }

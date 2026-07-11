@@ -1,35 +1,37 @@
 #include "motor_module.h"
+#include <Arduino.h>
 
-motor::motor(int renable, int lenable, int rpwm, int lpwm){
-  this->renable = renable;
-  this->lenable = lenable;
+const int FREQUENCIA_PWM = 20000; // 20 kHz tentativa de eliminar ruido do motor 
+const int RESOLUCAO_PWM = 8;      // 8 bits (valores de comando vão de 0 a 255)
+
+motor::motor(int rpwm, int lpwm){
   this->rpwm = rpwm;
   this->lpwm = lpwm;
 }
 
 void motor::init(){
-  pinMode(renable, OUTPUT);
-  pinMode(lenable, OUTPUT);
   pinMode(rpwm, OUTPUT);
   pinMode(lpwm, OUTPUT);
 
-  digitalWrite(renable, HIGH);
-  digitalWrite(lenable, HIGH);
+  // ledcAttach(pino, frequência, resolução)
+  ledcAttach(rpwm, FREQUENCIA_PWM, RESOLUCAO_PWM);
+  ledcAttach(lpwm, FREQUENCIA_PWM, RESOLUCAO_PWM);
 
-  analogWrite(rpwm, 0);
-  analogWrite(lpwm, 0);
+  // Garante que o motor inicie totalmente parado
+  ledcWrite(rpwm, 0);
+  ledcWrite(lpwm, 0);
 }
 
 void motor::acionaMotor(int pwm){
   if(pwm > 0){
-    analogWrite(lpwm, 0);
-    analogWrite(rpwm, pwm);
+    ledcWrite(lpwm, 0);
+    ledcWrite(rpwm, pwm);
   }
   else if(pwm < 0){
-    analogWrite(rpwm, 0);
-    analogWrite(lpwm, abs(pwm));
+    ledcWrite(rpwm, 0);
+    ledcWrite(lpwm, abs(pwm));
   }else{
-    analogWrite(rpwm, 0);
-    analogWrite(lpwm, 0);
+    ledcWrite(rpwm, 0);
+    ledcWrite(lpwm, 0);
   }
 }

@@ -1,0 +1,108 @@
+[0.000000] (-) TimerEvent: {}
+[0.000912] (serial_comms) JobQueued: {'identifier': 'serial_comms', 'dependencies': OrderedDict()}
+[0.001024] (serial_comms) JobStarted: {'identifier': 'serial_comms'}
+[0.008356] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'cmake'}
+[0.009344] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'build'}
+[0.010260] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', '--', '-j16', '-l16'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'HOME': '/home/gabriel', 'OLDPWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src', 'DESKTOP_SESSION': 'ubuntu', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4016', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d482852d1e10ff9d667c3d776a442742', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4016,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4016', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/51043476_fe0f_4895_b29f_f125bdb52e1e', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.J0LPR3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.275', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d482852d1e10ff9d667c3d776a442742', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600'}), 'shell': False}
+[0.090097] (serial_comms) StdoutLine: {'line': b'[ 20%] Built target image_restamper_node\n'}
+[0.099338] (-) TimerEvent: {}
+[0.100802] (serial_comms) StdoutLine: {'line': b'[ 30%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial_imu_node.cpp.o\x1b[0m\n'}
+[0.199705] (-) TimerEvent: {}
+[0.300130] (-) TimerEvent: {}
+[0.372915] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:230:9:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K"/*" within comment [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wcomment\x07-Wcomment\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[0.373326] (serial_comms) StderrLine: {'line': b'  230 |         /*\n'}
+[0.373491] (serial_comms) StderrLine: {'line': b'      |          \n'}
+[0.400253] (-) TimerEvent: {}
+[0.500650] (-) TimerEvent: {}
+[0.601112] (-) TimerEvent: {}
+[0.701539] (-) TimerEvent: {}
+[0.801984] (-) TimerEvent: {}
+[0.902581] (-) TimerEvent: {}
+[1.003063] (-) TimerEvent: {}
+[1.103494] (-) TimerEvent: {}
+[1.203951] (-) TimerEvent: {}
+[1.304372] (-) TimerEvent: {}
+[1.404900] (-) TimerEvent: {}
+[1.505303] (-) TimerEvent: {}
+[1.605722] (-) TimerEvent: {}
+[1.706165] (-) TimerEvent: {}
+[1.806606] (-) TimerEvent: {}
+[1.907091] (-) TimerEvent: {}
+[2.007523] (-) TimerEvent: {}
+[2.107970] (-) TimerEvent: {}
+[2.208406] (-) TimerEvent: {}
+[2.308856] (-) TimerEvent: {}
+[2.409264] (-) TimerEvent: {}
+[2.509647] (-) TimerEvent: {}
+[2.610007] (-) TimerEvent: {}
+[2.666451] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[2.666767] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27\x1b[m\x1b[K,\n'}
+[2.666924] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171\x1b[m\x1b[K,\n'}
+[2.667068] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:1\x1b[m\x1b[K:\n'}
+[2.667214] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialImuNode::\x1b[01;32m\x1b[KReadPub_callback\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[2.667364] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:154:45:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%i\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99, but argument 6 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<double, std::allocator<double> >::size_type\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[2.667549] (serial_comms) StderrLine: {'line': b'  154 |             RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: %i"\x1b[m\x1b[K, line.c_str(), \x1b[32m\x1b[Kvalores.size()\x1b[m\x1b[K);\n'}
+[2.667704] (serial_comms) StderrLine: {'line': b'      |                                             \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K                \x1b[32m\x1b[K~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[2.667851] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[K|\x1b[m\x1b[K\n'}
+[2.667996] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}\x1b[m\x1b[K\n'}
+[2.668143] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:154:109:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[2.668287] (serial_comms) StderrLine: {'line': b'  154 |             RCLCPP_INFO(this->get_logger(), "Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: \x1b[01;36m\x1b[K%i\x1b[m\x1b[K", line.c_str(), valores.size());\n'}
+[2.668432] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[2.668577] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[2.668817] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[Kint\x1b[m\x1b[K\n'}
+[2.668897] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[32m\x1b[K%li\x1b[m\x1b[K\n'}
+[2.668956] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:166:18:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Ksequencia\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[2.669024] (serial_comms) StderrLine: {'line': b'  166 |         uint32_t \x1b[01;35m\x1b[Ksequencia\x1b[m\x1b[K = (uint32_t) valores[0];\n'}
+[2.669083] (serial_comms) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K^~~~~~~~~\x1b[m\x1b[K\n'}
+[2.710129] (-) TimerEvent: {}
+[2.810506] (-) TimerEvent: {}
+[2.910867] (-) TimerEvent: {}
+[3.011220] (-) TimerEvent: {}
+[3.111566] (-) TimerEvent: {}
+[3.211931] (-) TimerEvent: {}
+[3.312514] (-) TimerEvent: {}
+[3.412952] (-) TimerEvent: {}
+[3.513309] (-) TimerEvent: {}
+[3.613926] (-) TimerEvent: {}
+[3.714646] (-) TimerEvent: {}
+[3.815387] (-) TimerEvent: {}
+[3.915907] (-) TimerEvent: {}
+[4.016376] (-) TimerEvent: {}
+[4.116818] (-) TimerEvent: {}
+[4.217251] (-) TimerEvent: {}
+[4.317685] (-) TimerEvent: {}
+[4.418045] (-) TimerEvent: {}
+[4.518394] (-) TimerEvent: {}
+[4.618753] (-) TimerEvent: {}
+[4.719078] (-) TimerEvent: {}
+[4.819401] (-) TimerEvent: {}
+[4.856770] (serial_comms) StdoutLine: {'line': b'[ 40%] \x1b[32m\x1b[1mLinking CXX executable serial_imu_node\x1b[0m\n'}
+[4.919541] (-) TimerEvent: {}
+[5.019935] (-) TimerEvent: {}
+[5.120553] (-) TimerEvent: {}
+[5.142338] (serial_comms) StdoutLine: {'line': b'[100%] Built target serial_imu_node\n'}
+[5.156063] (serial_comms) CommandEnded: {'returncode': 0}
+[5.156943] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'install'}
+[5.167444] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'HOME': '/home/gabriel', 'OLDPWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src', 'DESKTOP_SESSION': 'ubuntu', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4016', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d482852d1e10ff9d667c3d776a442742', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4016,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4016', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/51043476_fe0f_4895_b29f_f125bdb52e1e', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.J0LPR3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.275', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d482852d1e10ff9d667c3d776a442742', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600'}), 'shell': False}
+[5.176466] (serial_comms) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[5.177624] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node\n'}
+[5.179444] (serial_comms) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node" to ""\n'}
+[5.180031] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/image_restamper_node\n'}
+[5.180206] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms\n'}
+[5.180292] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms\n'}
+[5.180388] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh\n'}
+[5.180454] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv\n'}
+[5.180553] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.sh\n'}
+[5.180622] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.dsv\n'}
+[5.180696] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.bash\n'}
+[5.180784] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.sh\n'}
+[5.180844] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.zsh\n'}
+[5.180903] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.dsv\n'}
+[5.180961] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.dsv\n'}
+[5.181041] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms\n'}
+[5.181140] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake\n'}
+[5.181211] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake\n'}
+[5.181266] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.xml\n'}
+[5.183122] (serial_comms) CommandEnded: {'returncode': 0}
+[5.198125] (serial_comms) JobEnded: {'identifier': 'serial_comms', 'rc': 0}
+[5.199248] (-) EventReactorShutdown: {}

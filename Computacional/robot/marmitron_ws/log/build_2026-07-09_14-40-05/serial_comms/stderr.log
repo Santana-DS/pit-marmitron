@@ -1,0 +1,74 @@
+[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+  ament_target_dependencies() is deprecated.  Use target_link_libraries()
+  with modern CMake targets instead.  Try replacing this call with:
+
+    target_link_libraries(serial_imu_node PUBLIC
+      ${geometry_msgs_TARGETS}
+      ${sensor_msgs_TARGETS}
+      rclcpp::rclcpp
+      sensor_msgs::sensor_msgs_library
+    )
+
+Call Stack (most recent call first):
+  CMakeLists.txt:48 (ament_target_dependencies)
+
+[0m
+[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+  ament_target_dependencies() is deprecated.  Use target_link_libraries()
+  with modern CMake targets instead.  Try replacing this call with:
+
+    target_link_libraries(serial_sensors_node PUBLIC
+      ${geometry_msgs_TARGETS}
+      ${sensor_msgs_TARGETS}
+      rclcpp::rclcpp
+      sensor_msgs::sensor_msgs_library
+    )
+
+Call Stack (most recent call first):
+  CMakeLists.txt:68 (ament_target_dependencies)
+
+[0m
+[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+  ament_target_dependencies() is deprecated.  Use target_link_libraries()
+  with modern CMake targets instead.  Try replacing this call with:
+
+    target_link_libraries(serial_motors_node PUBLIC
+      ${geometry_msgs_TARGETS}
+      ${sensor_msgs_TARGETS}
+      rclcpp::rclcpp
+      sensor_msgs::sensor_msgs_library
+    )
+
+Call Stack (most recent call first):
+  CMakeLists.txt:88 (ament_target_dependencies)
+
+[0m
+[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+  ament_target_dependencies() is deprecated.  Use target_link_libraries()
+  with modern CMake targets instead.  Try replacing this call with:
+
+    target_link_libraries(image_restamper_node PUBLIC
+      ${sensor_msgs_TARGETS}
+      rclcpp::rclcpp
+      sensor_msgs::sensor_msgs_library
+    )
+
+Call Stack (most recent call first):
+  CMakeLists.txt:97 (ament_target_dependencies)
+
+[0m
+[31mCMake Error at CMakeLists.txt:34 (add_executable):
+  Cannot find source file:
+
+    src/serial_imu_node.cpp
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm
+  .ccm .cxxm .c++m .h .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90
+  .f95 .f03 .hip .ispc
+
+[0m
+[31mCMake Error at CMakeLists.txt:34 (add_executable):
+  No SOURCES given to target: serial_imu_node
+
+[0m
+[0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m

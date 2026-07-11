@@ -1,0 +1,1 @@
+/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms/ament_cmake_core/serial_commsConfig-version.cmake

@@ -4,10 +4,10 @@
 // ==========================================
 // MPU9250 - BARRAMENTO VSPI
 // ==========================================
-constexpr uint8_t PIN_SPI_MOSI = 23;
-constexpr uint8_t PIN_SPI_MISO = 19;
-constexpr uint8_t PIN_SPI_SCK  = 18;
-constexpr uint8_t PIN_SPI_CS   = 5;
+constexpr uint8_t PIN_SPI_MOSI = 23; // SDA
+constexpr uint8_t PIN_SPI_MISO = 19; // AD0
+constexpr uint8_t PIN_SPI_SCK  = 18; // SCL
+constexpr uint8_t PIN_SPI_CS   = 5;  // NCS
 
 // ==========================================
 // UBLOX NEO-6M - UART2
@@ -24,8 +24,8 @@ constexpr uint8_t PIN_SONAR_ECHO = 33;
 // ==========================================
 // Encoders - GPIO (PCNT)
 // ==========================================
-constexpr uint8_t PIN_ENC_ESQ = 34;
-constexpr uint8_t PIN_ENC_DIR = 36; // Também conhecido como VP
+constexpr uint8_t PIN_ENC_ESQ = 33;
+constexpr uint8_t PIN_ENC_DIR = 32;
 
 // ==========================================
 // Ponte H - GPIO (PWM)
@@ -34,7 +34,3 @@ constexpr uint8_t PIN_PWMR_ESQ = 25;
 constexpr uint8_t PIN_PWML_ESQ = 26;
 constexpr uint8_t PIN_PWMR_DIR = 27;
 constexpr uint8_t PIN_PWML_DIR = 14;
-constexpr uint8_t PIN_ENR_ESQ = 12;
-constexpr uint8_t PIN_ENL_ESQ = 13;
-constexpr uint8_t PIN_ENR_DIR = 26;
-constexpr uint8_t PIN_ENL_DIR = 25;

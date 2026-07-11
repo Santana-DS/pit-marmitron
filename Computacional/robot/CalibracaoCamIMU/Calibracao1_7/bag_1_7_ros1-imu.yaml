@@ -1,0 +1,14 @@
+imu0:
+  T_i_b:
+  - [1.0, 0.0, 0.0, 0.0]
+  - [0.0, 1.0, 0.0, 0.0]
+  - [0.0, 0.0, 1.0, 0.0]
+  - [0.0, 0.0, 0.0, 1.0]
+  accelerometer_noise_density: 0.016541342577078063
+  accelerometer_random_walk: 0.002415541876746225
+  gyroscope_noise_density: 0.0011503473194962085
+  gyroscope_random_walk: 0.00020398868158043806
+  model: calibrated
+  rostopic: /imu
+  time_offset: 0.0
+  update_rate: 200.0
