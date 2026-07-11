@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"unbot-gateway/internal/catalog"
+	"unbot-gateway/internal/database"
 	"unbot-gateway/internal/mqtt"
 	"unbot-gateway/internal/orders"
 	"unbot-gateway/internal/services"
@@ -35,13 +36,14 @@ func NewServer(
 	ordersSvc *orders.Service,
 	mqttClient *mqtt.Client,
 	robotState *RobotState,
+	telemetryRepo *database.TelemetryRepository,
 ) *Server {
 	s := &Server{
 		addr: addr,
 		log:  log,
 		mux:  http.NewServeMux(),
 	}
-	s.routes(otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttClient, robotState)
+	s.routes(otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttClient, robotState, telemetryRepo)
 	s.server = &http.Server{
 		Addr:         addr,
 		Handler:      s.corsMiddleware(s.mux),
@@ -94,6 +96,7 @@ func (s *Server) routes(
 	ordersSvc *orders.Service,
 	mqttClient *mqtt.Client,
 	robotState *RobotState,
+	telemetryRepo telemetryHistoryReader,
 ) {
 	s.mux.HandleFunc("GET /health", s.handleHealth)
 	s.mux.HandleFunc("POST /api/validate-code", s.validateCodeHandler(otpSvc))
@@ -109,6 +112,12 @@ func (s *Server) routes(
 	}
 	s.mux.HandleFunc("GET /api/robot/telemetry", s.telemetryHandler(robotState))
 	s.mux.HandleFunc("GET /api/robot/camera", s.cameraConfigHandler())
+	if telemetryRepo != nil {
+		s.mux.HandleFunc(
+			"GET /api/operator/deliveries/{order_id}/telemetry",
+			s.operatorTelemetryHistoryHandler(telemetryRepo),
+		)
+	}
 
 	if catalogSvc != nil {
 		s.mux.HandleFunc("GET /api/restaurants", s.listRestaurantsHandler(catalogSvc))

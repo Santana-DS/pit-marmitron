@@ -427,7 +427,7 @@ class _RoleSelector extends StatelessWidget {
       child: Row(
         children: [
           _RolePill(
-            label: 'Sou Cliente',
+            label: 'Cliente',
             icon: Icons.person_rounded,
             active: selected == _Role.client,
             onTap: () {
@@ -436,7 +436,7 @@ class _RoleSelector extends StatelessWidget {
             },
           ),
           _RolePill(
-            label: 'Sou Restaurante',
+            label: 'Restaurante',
             icon: Icons.store_rounded,
             active: selected == _Role.restaurant,
             onTap: () {

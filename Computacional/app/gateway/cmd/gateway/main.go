@@ -77,7 +77,7 @@ func main() {
 	ordersRepo := orders.NewRepository(dbPool, orderItemsRepo)
 	ordersSvc := orders.NewService(ordersRepo, orderItemsSvc, log)
 
-	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState)
+	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState, telemetryRepo)
 	srv.Start()
 
 	log.Info("gateway ready",
@@ -95,6 +95,7 @@ func main() {
 			"POST  /api/orders/{id}/wake-display",
 			"POST  /api/robot/estop",
 			"GET   /api/robot/telemetry",
+			"GET   /api/operator/deliveries/{order_id}/telemetry",
 		},
 	)
 

@@ -68,6 +68,19 @@ final class TelemetryError extends TelemetryResult {
   const TelemetryError(this.message);
 }
 
+sealed class TelemetryHistoryResult {
+  const TelemetryHistoryResult();
+}
+
+final class TelemetryHistoryOk extends TelemetryHistoryResult {
+  final List<RobotPose> poses;
+  const TelemetryHistoryOk(this.poses);
+}
+
+final class TelemetryHistoryError extends TelemetryHistoryResult {
+  const TelemetryHistoryError();
+}
+
 // Camera stream config.
 sealed class CameraConfigResult {
   const CameraConfigResult();
@@ -118,8 +131,7 @@ class RobotCameraConfig {
       label: json['label'] as String? ?? 'C920 front camera',
       latencyTargetMs: json['latency_target_ms'] as int? ?? 500,
       rosImageTopic: json['ros_image_topic'] as String? ?? '/camera/image_raw',
-      rosCompressedTopic:
-          json['ros_compressed_topic'] as String? ??
+      rosCompressedTopic: json['ros_compressed_topic'] as String? ??
           '/camera/image_raw/compressed',
     );
   }
@@ -206,6 +218,38 @@ class OperatorService {
     } on Exception catch (e) {
       debugPrint('[OperatorService] fetchTelemetry error: $e');
       return const TelemetryError('Erro de conexão.');
+    }
+  }
+
+  /// Loads the persisted trail for a delivery after an operator app refresh.
+  /// Points without a ROS pose are deliberately excluded from the map trail.
+  Future<TelemetryHistoryResult> fetchTelemetryHistory(String orderId) async {
+    final encodedOrderId = Uri.encodeComponent(orderId);
+    final url = Uri.parse(
+      '$_base/api/operator/deliveries/$encodedOrderId/telemetry',
+    );
+    try {
+      final response = await http.get(url).timeout(_kTimeout);
+      if (response.statusCode != 200) return const TelemetryHistoryError();
+
+      final json = _tryParseJson(response.body);
+      final rawPoints = json?['points'] as List<dynamic>?;
+      if (rawPoints == null) return const TelemetryHistoryError();
+
+      final poses = <RobotPose>[];
+      for (final rawPoint in rawPoints) {
+        if (rawPoint is! Map<String, dynamic>) continue;
+        final rawPose = rawPoint['pose'];
+        if (rawPose is Map<String, dynamic>) {
+          poses.add(RobotPose.fromJson(rawPose));
+        }
+      }
+      return TelemetryHistoryOk(poses);
+    } on TimeoutException {
+      return const TelemetryHistoryError();
+    } on Exception catch (e) {
+      debugPrint('[OperatorService] fetchTelemetryHistory error: $e');
+      return const TelemetryHistoryError();
     }
   }
 
