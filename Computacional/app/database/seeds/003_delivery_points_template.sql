@@ -1,0 +1,12 @@
+-- Populate only with surveyed values supplied by the navigation team.
+-- latitude/longitude are for the campus map UI; map_x/map_y/map_theta are
+-- the calibrated ROS 2 map-frame pose sent to Nav2.
+--
+-- INSERT INTO delivery_points (
+--   point_key, label, display_address, latitude, longitude,
+--   map_x, map_y, map_theta, map_frame, sort_order
+-- ) VALUES (
+--   'FT_ENTRADA', 'FT - Entrada principal', 'Faculdade de Tecnologia - Entrada',
+--   -15.000000, -47.000000,
+--   12.0, -3.5, 0.0, 'map', 10
+-- );

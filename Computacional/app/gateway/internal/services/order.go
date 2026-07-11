@@ -27,6 +27,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -78,6 +79,12 @@ type Waypoint struct {
 	// MapFrame is the ROS 2 TF frame for this waypoint.
 	// Almost always "map" — only differs if using a multi-floor setup.
 	MapFrame string
+}
+
+// WaypointResolver owns the calibrated delivery-point source. The gateway
+// resolves a stable key server-side so a mobile client never handles ROS poses.
+type WaypointResolver interface {
+	ResolveWaypoint(context.Context, string) (Waypoint, error)
 }
 
 // waypointRegistry is the campus waypoint lookup table.
@@ -244,13 +251,20 @@ type OrderService struct {
 	otpSvc    *OTPService
 	publisher Publisher
 	log       *slog.Logger
+	waypoints WaypointResolver
 }
 
-func NewOrderService(otpSvc *OTPService, publisher Publisher, log *slog.Logger) *OrderService {
+func NewOrderService(
+	otpSvc *OTPService,
+	publisher Publisher,
+	log *slog.Logger,
+	waypoints WaypointResolver,
+) *OrderService {
 	return &OrderService{
 		otpSvc:    otpSvc,
 		publisher: publisher,
 		log:       log,
+		waypoints: waypoints,
 	}
 }
 
@@ -264,11 +278,18 @@ func NewOrderService(otpSvc *OTPService, publisher Publisher, log *slog.Logger) 
 //
 //	If dest.WaypointName is empty, X/Y/Theta/MapFrame must already be set
 //	(used in tests or when the caller has pre-resolved coordinates).
-func (s *OrderService) Dispatch(orderID string, dest Destination) (*DispatchResult, error) {
+func (s *OrderService) Dispatch(
+	ctx context.Context,
+	orderID string,
+	dest Destination,
+) (*DispatchResult, error) {
 	// ── Step 0: Resolve waypoint if named ────────────────────────────────
 	resolvedWaypointName := dest.WaypointName
 	if dest.WaypointName != "" {
-		wp, err := LookupWaypoint(dest.WaypointName)
+		if s.waypoints == nil {
+			return nil, fmt.Errorf("%w: delivery point source unavailable", ErrUnknownWaypoint)
+		}
+		wp, err := s.waypoints.ResolveWaypoint(ctx, dest.WaypointName)
 		if err != nil {
 			s.log.Error("waypoint lookup failed",
 				"order_id", orderID,

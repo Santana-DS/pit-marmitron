@@ -50,6 +50,7 @@ func main() {
 	defer dbPool.Close()
 
 	telemetryRepo := database.NewTelemetryRepository(dbPool)
+	deliveryPointsRepo := database.NewDeliveryPointRepository(dbPool)
 	telemetryIngestSvc := services.NewTelemetryIngestService(telemetryRepo, log)
 	mqttCfg.SetTelemetryIngest(telemetryIngestSvc)
 
@@ -65,7 +66,7 @@ func main() {
 	}
 
 	otpSvc := services.NewOTPService(mqttCfg)
-	orderSvc := services.NewOrderService(otpSvc, mqttCfg, log)
+	orderSvc := services.NewOrderService(otpSvc, mqttCfg, log, deliveryPointsRepo)
 	wakeSvc := services.NewWakeDisplayService(otpSvc, mqttCfg, log)
 
 	catalogRepo := catalog.NewRepository(dbPool)
@@ -77,7 +78,7 @@ func main() {
 	ordersRepo := orders.NewRepository(dbPool, orderItemsRepo)
 	ordersSvc := orders.NewService(ordersRepo, orderItemsSvc, log)
 
-	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState, telemetryRepo)
+	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState, telemetryRepo, deliveryPointsRepo)
 	srv.Start()
 
 	log.Info("gateway ready",
@@ -95,6 +96,7 @@ func main() {
 			"POST  /api/orders/{id}/wake-display",
 			"POST  /api/robot/estop",
 			"GET   /api/robot/telemetry",
+			"GET   /api/delivery-points",
 			"GET   /api/operator/deliveries/{order_id}/telemetry",
 		},
 	)
