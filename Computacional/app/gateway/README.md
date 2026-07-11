@@ -1,6 +1,6 @@
-# UnBot Gateway V2.1 (Security & Cloud Ready)
+# MARMITRON 3000 Gateway V2.1 (Security & Cloud Ready)
 
-Backend em Go e Gateway MQTT para o sistema de entregas autônomas UnBot Delivery.
+Backend em Go e Gateway MQTT para o sistema de entregas autônomas MARMITRON 3000.
 
 ## 🌩️ Arquitetura e Nuvem (MFA Óptico e Resiliência)
 

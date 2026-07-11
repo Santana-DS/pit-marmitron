@@ -191,7 +191,7 @@ class _HomeTabState extends State<_HomeTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'UnBot Delivery',
+                        'MARMITRON 3000',
                         style: GoogleFonts.spaceGrotesk(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
