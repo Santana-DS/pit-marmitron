@@ -44,6 +44,21 @@ pending rather than publishing a command the daemon cannot execute safely.
 
 ## Data supplied by Computacao
 
-For every approved route provide `route_id`, destination key, version, active
-status and ordered geographic preview nodes. Also specify where the edge
-obtains its executable route and how it persists/synchronizes revisions.
+Computacao owns the physical-navigation decision. For every approved route,
+they must survey/rehearse a safe path in the current simulation or robot map
+and provide the following data to the app team:
+
+```text
+route_id: FT_ENTRADA_V1
+destination_point_key: FT_ENTRADA
+version: 1
+nodes:
+  - sequence: 0, latitude: -15.xxxxxx, longitude: -47.xxxxxx, theta: 0.0
+  - sequence: 1, latitude: -15.xxxxxx, longitude: -47.xxxxxx, theta: 1.57
+```
+
+They must also confirm that `/fromLL` resolves against the same datum used by
+their `navsat_transform_node`. The app team owns inserting the approved route
+into `navigation_routes` and `navigation_route_nodes`, publishing it through
+the gateway, and maintaining the app/edge contracts. Do not invent nodes from
+the final destination, a map screenshot, or a latitude/longitude guess.
