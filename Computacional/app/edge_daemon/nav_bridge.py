@@ -105,6 +105,17 @@ class NavBridge:
                 self._nav_goal_queue.task_done()
                 continue
 
+            if goal.route_nodes:
+                # Route nodes are geographic. Never treat their absence of a
+                # local map pose as (0, 0): conversion via navsat_transform is
+                # required before any Nav2 goal can be issued.
+                await self._state.trigger_fault("route_coordinate_conversion_not_ready")
+                await self._publish_nav_status(
+                    goal, state="REJECTED", progress=0.0, remaining_m=0.0
+                )
+                self._nav_goal_queue.task_done()
+                continue
+
             await self._publish_nav_status(
                 goal, state="NAVIGATING", progress=0.0, remaining_m=0.0
             )
