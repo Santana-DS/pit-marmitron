@@ -5,15 +5,41 @@
 
 #include "display_manager.h"
 
+#if __has_include(<esp_arduino_version.h>)
+#include <esp_arduino_version.h>
+#endif
+
+#ifndef ESP_ARDUINO_VERSION_MAJOR
+#define ESP_ARDUINO_VERSION_MAJOR 2
+#endif
+
+namespace {
+void setupBacklight() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcAttach(PIN_BL, BL_FREQ_HZ, BL_RESOLUTION);
+#else
+    ledcSetup(BL_CHANNEL, BL_FREQ_HZ, BL_RESOLUTION);
+    ledcAttachPin(PIN_BL, BL_CHANNEL);
+#endif
+}
+
+void writeBacklight(uint8_t value) {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcWrite(PIN_BL, value);
+#else
+    ledcWrite(BL_CHANNEL, value);
+#endif
+}
+}  // namespace
+
 // =============================================================================
 // begin()
 // =============================================================================
 bool DisplayManager::begin() {
 
     // ── Backlight ─────────────────────────────────────────────────────────────
-    ledcSetup(BL_CHANNEL, BL_FREQ_HZ, BL_RESOLUTION);
-    ledcAttachPin(PIN_BL, BL_CHANNEL);
-    ledcWrite(BL_CHANNEL, 0);
+    setupBacklight();
+    writeBacklight(0);
 
     // ── Panel ─────────────────────────────────────────────────────────────────
     _tft.init();
@@ -43,17 +69,17 @@ bool DisplayManager::begin() {
 
     // ── Backlight fade-in ─────────────────────────────────────────────────────
     for (uint16_t v = 0; v <= 255; v += 5) {
-        ledcWrite(BL_CHANNEL, v);
+        writeBacklight(v);
         delay(6);
     }
 
     return true;
 }
 
-void DisplayManager::setBrightness(uint8_t v) { ledcWrite(BL_CHANNEL, v); }
+void DisplayManager::setBrightness(uint8_t v) { writeBacklight(v); }
 
 void DisplayManager::_fullBlack() {
-    ledcWrite(BL_CHANNEL, 255);
+    writeBacklight(255);
     _tft.fillScreen(C_BLACK);
 }
 
@@ -87,13 +113,13 @@ void DisplayManager::showBooting() {
     _tft.setTextColor(C_WHITE, C_BLACK);
     _tft.drawString("Iniciando...", PANEL_W / 2, PANEL_H - 5, 4);
 
-    ledcWrite(BL_CHANNEL, _breathLUT[0]);
+    writeBacklight(_breathLUT[0]);
 }
 
 void DisplayManager::tickBooting() {
     if (!_ready || _mode != ScreenMode::BOOTING) return;
 
-    ledcWrite(BL_CHANNEL, _breathLUT[_breathIdx]);
+    writeBacklight(_breathLUT[_breathIdx]);
 
     if (_breathUp) {
         if (++_breathIdx >= 32) { _breathIdx = 30; _breathUp = false; }
