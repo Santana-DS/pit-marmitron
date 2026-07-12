@@ -179,6 +179,25 @@ void DisplayManager::showIdle() {
     tickIdle();
 }
 
+void DisplayManager::showOffline() {
+    if (!_ready) return;
+    _mode = ScreenMode::OFFLINE;
+    _sprMain.deleteSprite();
+    _fullBlack();
+
+    _tft.setTextDatum(TC_DATUM);
+    _tft.setTextColor(C_UNB_GREEN, C_BLACK);
+    _tft.drawString("MARMITRON", PANEL_W / 2, 28, 4);
+    _tft.setTextColor(C_UNB_BLUE, C_BLACK);
+    _tft.drawString("3000", PANEL_W / 2, 70, 4);
+
+    _tft.setTextColor(C_AMBER, C_BLACK);
+    _tft.drawString("SEM CONEXAO", PANEL_W / 2, 125, 4);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString("Display operacional", PANEL_W / 2, 170, 2);
+    _tft.drawString("Aguardando Wi-Fi e MQTT", PANEL_W / 2, 195, 2);
+}
+
 // =============================================================================
 // _drawTrack() — UnB gradient road, drawn ONCE in showIdle()
 // -----------------------------------------------------------------------------
