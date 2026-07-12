@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Marmitron">
+    <xacro:include filename="robot_design.xacro"/>
+    <xacro:include filename="lidar.xacro"/>
+    <xacro:include filename="imu.xacro"/>
+    <xacro:include filename="gps.xacro"/>
+    <xacro:include filename="robot_controller.xacro"/> <!-- O local com as configurações para simulação -->
+    <xacro:include filename="ultrasound.xacro"/>
+
+    <xacro:ultrasound_sensor name="ultrasound_frente"   parent="chassi" xyz="0.45 0.0 0.075"    rpy="0 0 0"          topic="ultrasound/front"/>
+    <xacro:ultrasound_sensor name="ultrasound_tras"     parent="chassi" xyz="-0.15 0.0 0.075"   rpy="0 0 ${pi}"      topic="ultrasound/rear"/>
+    <xacro:ultrasound_sensor name="ultrasound_esquerda" parent="chassi" xyz="0.15 0.175 0.075"  rpy="0 0 ${pi/2}"    topic="ultrasound/left"/>
+    <xacro:ultrasound_sensor name="ultrasound_direita"  parent="chassi" xyz="0.15 -0.175 0.075" rpy="0 0 ${-pi/2}"   topic="ultrasound/right"/>
+    <xacro:ultrasound_sensor name="ultrasound_fe"       parent="chassi" xyz="0.45 0.175 0.075"  rpy="0 0 ${pi/4}"    topic="ultrasound/fe"/>
+    <xacro:ultrasound_sensor name="ultrasound_fd"       parent="chassi" xyz="0.45 -0.175 0.075" rpy="0 0 ${-pi/4}"   topic="ultrasound/fd"/>
+    <xacro:ultrasound_sensor name="ultrasound_te"       parent="chassi" xyz="-0.15 0.175 0.075" rpy="0 0 ${3*pi/4}"  topic="ultrasound/te"/>
+    <xacro:ultrasound_sensor name="ultrasound_td"       parent="chassi" xyz="-0.15 -0.175 0.075" rpy="0 0 ${-3*pi/4}" topic="ultrasound/td"/>
+
+</robot>
