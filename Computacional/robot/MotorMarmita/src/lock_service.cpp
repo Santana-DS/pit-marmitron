@@ -20,6 +20,7 @@ constexpr uint32_t kActuatorHoldMs = 5000;
 constexpr uint32_t kWifiRetryMs = 15000;
 constexpr uint32_t kMqttRetryMs = 5000;
 constexpr uint32_t kHeartbeatMs = 30000;
+constexpr uint32_t kBootFallbackMs = 5000;
 
 constexpr char kDisplayQrTopic[] = "robot/commands/display_qr";
 constexpr char kUnlockTopic[] = "robot/commands/unlock";
@@ -35,6 +36,7 @@ uint32_t lastWifiAttemptAt = 0;
 uint32_t lastMqttAttemptAt = 0;
 uint32_t lastHeartbeatAt = 0;
 uint32_t lastDisplayTickAt = 0;
+uint32_t bootStartedAt = 0;
 
 void onMqttMessage(char* topic, uint8_t* payload, unsigned int length) {
   JsonDocument document;
@@ -163,7 +165,10 @@ void LockService::begin() {
   pinMode(kActuatorPin, OUTPUT);
   digitalWrite(kActuatorPin, LOW);
 
-  if (display.begin()) display.showBooting();
+  if (display.begin()) {
+    display.showBooting();
+    bootStartedAt = millis();
+  }
 
 #if LOCK_MQTT_CONFIGURED
   // Preserve the existing Marmitron access point while connecting to the broker.
@@ -180,6 +185,10 @@ void LockService::begin() {
 void LockService::tick() {
   updateActuator();
   updateDisplay();
+  if (display.mode() == ScreenMode::BOOTING &&
+      millis() - bootStartedAt >= kBootFallbackMs) {
+    display.showOffline();
+  }
 #if LOCK_MQTT_CONFIGURED
   updateMqtt();
 #endif
