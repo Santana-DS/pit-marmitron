@@ -1,0 +1,275 @@
+[0.000000] (-) TimerEvent: {}
+[0.000897] (serial_comms) JobQueued: {'identifier': 'serial_comms', 'dependencies': OrderedDict()}
+[0.000975] (serial_comms) JobStarted: {'identifier': 'serial_comms'}
+[0.017993] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'cmake'}
+[0.019569] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'build'}
+[0.021058] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', '--', '-j16', '-l16'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4071', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4071,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4071', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/70b6fa97_6bf4_4c8e_bba6_498cd64f18c5', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.V103R3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.752', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[0.099562] (-) TimerEvent: {}
+[0.149257] (serial_comms) StdoutLine: {'line': b'[ 11%] Built target image_restamper_node\n'}
+[0.170885] (serial_comms) StdoutLine: {'line': b'[ 16%] \x1b[32mBuilding CXX object CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o\x1b[0m\n'}
+[0.173619] (serial_comms) StdoutLine: {'line': b'[ 22%] \x1b[32mBuilding CXX object CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o\x1b[0m\n'}
+[0.199788] (-) TimerEvent: {}
+[0.300653] (-) TimerEvent: {}
+[0.401187] (-) TimerEvent: {}
+[0.502033] (-) TimerEvent: {}
+[0.602605] (-) TimerEvent: {}
+[0.703481] (-) TimerEvent: {}
+[0.804002] (-) TimerEvent: {}
+[0.904832] (-) TimerEvent: {}
+[1.005472] (-) TimerEvent: {}
+[1.106073] (-) TimerEvent: {}
+[1.206940] (-) TimerEvent: {}
+[1.307704] (-) TimerEvent: {}
+[1.408179] (-) TimerEvent: {}
+[1.508989] (-) TimerEvent: {}
+[1.609713] (-) TimerEvent: {}
+[1.710485] (-) TimerEvent: {}
+[1.811006] (-) TimerEvent: {}
+[1.911744] (-) TimerEvent: {}
+[2.012510] (-) TimerEvent: {}
+[2.113233] (-) TimerEvent: {}
+[2.214040] (-) TimerEvent: {}
+[2.314553] (-) TimerEvent: {}
+[2.415046] (-) TimerEvent: {}
+[2.515559] (-) TimerEvent: {}
+[2.616024] (-) TimerEvent: {}
+[2.716688] (-) TimerEvent: {}
+[2.817506] (-) TimerEvent: {}
+[2.918230] (-) TimerEvent: {}
+[3.018783] (-) TimerEvent: {}
+[3.119276] (-) TimerEvent: {}
+[3.220025] (-) TimerEvent: {}
+[3.320743] (-) TimerEvent: {}
+[3.421633] (-) TimerEvent: {}
+[3.522302] (-) TimerEvent: {}
+[3.622851] (-) TimerEvent: {}
+[3.723359] (-) TimerEvent: {}
+[3.824107] (-) TimerEvent: {}
+[3.851616] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:\x1b[m\x1b[K In constructor \xe2\x80\x98\x1b[01m\x1b[KSerialMotorsNode::\x1b[01;32m\x1b[KSerialMotorsNode\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.852193] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:40:114:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[KCommandSubEsq_callback\x1b[m\x1b[K\xe2\x80\x99 is not a member of \xe2\x80\x98\x1b[01m\x1b[KSerialMotorsNode\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.852649] (serial_comms) StderrLine: {'line': b'   40 |         commandsEsq_sub_ = this->create_subscription<float>(commandsEsq_topic_, 10, std::bind(&SerialMotorsNode::\x1b[01;31m\x1b[KCommandSubEsq_callback\x1b[m\x1b[K, this, std::placeholders::_1));\n'}
+[3.853057] (serial_comms) StderrLine: {'line': b'      |                                                                                                                  \x1b[01;31m\x1b[K^~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.853283] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:41:114:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[KCommandSubDir_callback\x1b[m\x1b[K\xe2\x80\x99 is not a member of \xe2\x80\x98\x1b[01m\x1b[KSerialMotorsNode\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.853533] (serial_comms) StderrLine: {'line': b'   41 |         commandsDir_sub_ = this->create_subscription<float>(commandsDir_topic_, 10, std::bind(&SerialMotorsNode::\x1b[01;31m\x1b[KCommandSubDir_callback\x1b[m\x1b[K, this, std::placeholders::_1));\n'}
+[3.853751] (serial_comms) StderrLine: {'line': b'      |                                                                                                                  \x1b[01;31m\x1b[K^~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.877808] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialMotorsNode::\x1b[01;32m\x1b[KReadPub_callback\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.878364] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:142:31:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected primary-expression before \xe2\x80\x98\x1b[01m\x1b[K)\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[3.879152] (serial_comms) StderrLine: {'line': b'  142 |         if (valores.size() != \x1b[01;31m\x1b[K)\x1b[m\x1b[K\n'}
+[3.879625] (serial_comms) StderrLine: {'line': b'      |                               \x1b[01;31m\x1b[K^\x1b[m\x1b[K\n'}
+[3.879997] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[3.880366] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27\x1b[m\x1b[K,\n'}
+[3.880759] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171\x1b[m\x1b[K,\n'}
+[3.881109] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:1\x1b[m\x1b[K:\n'}
+[3.881326] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:144:45:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%i\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99, but argument 6 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<double, std::allocator<double> >::size_type\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.881590] (serial_comms) StderrLine: {'line': b'  144 |             RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: %i"\x1b[m\x1b[K, line.c_str(), \x1b[32m\x1b[Kvalores.size()\x1b[m\x1b[K);\n'}
+[3.881809] (serial_comms) StderrLine: {'line': b'      |                                             \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K                \x1b[32m\x1b[K~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.882024] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[K|\x1b[m\x1b[K\n'}
+[3.882276] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}\x1b[m\x1b[K\n'}
+[3.882515] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:144:109:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[3.882728] (serial_comms) StderrLine: {'line': b'  144 |             RCLCPP_INFO(this->get_logger(), "Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: \x1b[01;36m\x1b[K%i\x1b[m\x1b[K", line.c_str(), valores.size());\n'}
+[3.882966] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[3.883195] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[3.883407] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[Kint\x1b[m\x1b[K\n'}
+[3.883639] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[32m\x1b[K%li\x1b[m\x1b[K\n'}
+[3.890458] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:156:13:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Ksequencia_encoders\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Ksequencia_encoderEsq\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[3.890982] (serial_comms) StderrLine: {'line': b'  156 |         if (\x1b[01;31m\x1b[Ksequencia_encoders\x1b[m\x1b[K>ultima_seq_encoders){\n'}
+[3.891354] (serial_comms) StderrLine: {'line': b'      |             \x1b[01;31m\x1b[K^~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.891738] (serial_comms) StderrLine: {'line': b'      |             \x1b[32m\x1b[Ksequencia_encoderEsq\x1b[m\x1b[K\n'}
+[3.899573] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:156:32:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kultima_seq_encoders\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Kultima_seq_encoder\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[3.900103] (serial_comms) StderrLine: {'line': b'  156 |         if (sequencia_encoders>\x1b[01;31m\x1b[Kultima_seq_encoders\x1b[m\x1b[K){\n'}
+[3.900511] (serial_comms) StderrLine: {'line': b'      |                                \x1b[01;31m\x1b[K^~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.900875] (serial_comms) StderrLine: {'line': b'      |                                \x1b[32m\x1b[Kultima_seq_encoder\x1b[m\x1b[K\n'}
+[3.911891] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:171:13:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[KencoderMsg\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[KencodersMsg\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[3.912418] (serial_comms) StderrLine: {'line': b'  171 |             \x1b[01;31m\x1b[KencoderMsg\x1b[m\x1b[K->header.frame_id = axis_frame_;\n'}
+[3.912838] (serial_comms) StderrLine: {'line': b'      |             \x1b[01;31m\x1b[K^~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.913205] (serial_comms) StderrLine: {'line': b'      |             \x1b[32m\x1b[KencodersMsg\x1b[m\x1b[K\n'}
+[3.920846] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:205:17:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kencoder_pub_\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Kencoders_pub_\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[3.921538] (serial_comms) StderrLine: {'line': b'  205 |                 \x1b[01;31m\x1b[Kencoder_pub_\x1b[m\x1b[K->publish(*encoderMsg);\n'}
+[3.921916] (serial_comms) StderrLine: {'line': b'      |                 \x1b[01;31m\x1b[K^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.922269] (serial_comms) StderrLine: {'line': b'      |                 \x1b[32m\x1b[Kencoders_pub_\x1b[m\x1b[K\n'}
+[3.922887] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:206:27:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected \xe2\x80\x98\x1b[01m\x1b[K{\x1b[m\x1b[K\xe2\x80\x99 before \xe2\x80\x98\x1b[01m\x1b[Kdo\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.923275] (serial_comms) StderrLine: {'line': b'  206 |             } catch (...) \x1b[01;31m\x1b[KRCLCPP_WARN\x1b[m\x1b[K(this->get_logger(), "Mensagem encoders n\xc3\xa3o publicada");\n'}
+[3.924558] (-) TimerEvent: {}
+[3.924733] (serial_comms) StderrLine: {'line': b'      |                           \x1b[01;31m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.924976] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:154:18:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Ksequencia_encoderEsq\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.925205] (serial_comms) StderrLine: {'line': b'  154 |         uint32_t \x1b[01;35m\x1b[Ksequencia_encoderEsq\x1b[m\x1b[K = (uint32_t) valores[1];\n'}
+[3.925483] (serial_comms) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.925704] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialMotorsNode::\x1b[01;32m\x1b[KCommandSub_callback\x1b[m\x1b[K(geometry_msgs::msg::Twist)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.925925] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:231:46:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno matching function for call to \xe2\x80\x98\x1b[01m\x1b[Kserial::Serial::write(const std::string*)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.926142] (serial_comms) StderrLine: {'line': b'  231 |         size_t bytes_escritos = \x1b[01;31m\x1b[Kserial_.write(&marcador_esq)\x1b[m\x1b[K;\n'}
+[3.926366] (serial_comms) StderrLine: {'line': b'      |                                 \x1b[01;31m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.926605] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:8\x1b[m\x1b[K:\n'}
+[3.926856] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const uint8_t*, size_t)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.927095] (serial_comms) StderrLine: {'line': b'  372 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const uint8_t *data, size_t size);\n'}
+[3.927306] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.927568] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  candidate expects 2 arguments, 1 provided\n'}
+[3.927812] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.928057] (serial_comms) StderrLine: {'line': b'  387 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::vector<uint8_t> &data);\n'}
+[3.928266] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.928507] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.928728] (serial_comms) StderrLine: {'line': b'  387 |   write (\x1b[01;36m\x1b[Kconst std::vector<uint8_t> &data\x1b[m\x1b[K);\n'}
+[3.928936] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.929144] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.929359] (serial_comms) StderrLine: {'line': b'  402 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::string &data);\n'}
+[3.929607] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.929811] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::string&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[3.930038] (serial_comms) StderrLine: {'line': b'  402 |   write (\x1b[01;36m\x1b[Kconst std::string &data\x1b[m\x1b[K);\n'}
+[3.930246] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.930473] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:232:40:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno matching function for call to \xe2\x80\x98\x1b[01m\x1b[Kserial::Serial::write(const std::string*)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.930692] (serial_comms) StderrLine: {'line': b'  232 |         bytes_escritos += \x1b[01;31m\x1b[Kserial_.write(&rpm_ref_esq_s)\x1b[m\x1b[K;\n'}
+[3.930905] (serial_comms) StderrLine: {'line': b'      |                           \x1b[01;31m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.931120] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const uint8_t*, size_t)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.931367] (serial_comms) StderrLine: {'line': b'  372 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const uint8_t *data, size_t size);\n'}
+[3.931608] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.931821] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  candidate expects 2 arguments, 1 provided\n'}
+[3.932042] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.932267] (serial_comms) StderrLine: {'line': b'  387 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::vector<uint8_t> &data);\n'}
+[3.932517] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.932727] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.932982] (serial_comms) StderrLine: {'line': b'  387 |   write (\x1b[01;36m\x1b[Kconst std::vector<uint8_t> &data\x1b[m\x1b[K);\n'}
+[3.933191] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.933425] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.933666] (serial_comms) StderrLine: {'line': b'  402 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::string &data);\n'}
+[3.933873] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.934080] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::string&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[3.934307] (serial_comms) StderrLine: {'line': b'  402 |   write (\x1b[01;36m\x1b[Kconst std::string &data\x1b[m\x1b[K);\n'}
+[3.934555] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.934768] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:233:40:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno matching function for call to \xe2\x80\x98\x1b[01m\x1b[Kserial::Serial::write(const std::string*)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.934986] (serial_comms) StderrLine: {'line': b'  233 |         bytes_escritos += \x1b[01;31m\x1b[Kserial_.write(&linebreak)\x1b[m\x1b[K;\n'}
+[3.935198] (serial_comms) StderrLine: {'line': b'      |                           \x1b[01;31m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.935457] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const uint8_t*, size_t)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.935681] (serial_comms) StderrLine: {'line': b'  372 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const uint8_t *data, size_t size);\n'}
+[3.935904] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.936116] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  candidate expects 2 arguments, 1 provided\n'}
+[3.936332] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.936576] (serial_comms) StderrLine: {'line': b'  387 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::vector<uint8_t> &data);\n'}
+[3.936784] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.936988] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.937223] (serial_comms) StderrLine: {'line': b'  387 |   write (\x1b[01;36m\x1b[Kconst std::vector<uint8_t> &data\x1b[m\x1b[K);\n'}
+[3.937450] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.937660] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.937874] (serial_comms) StderrLine: {'line': b'  402 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::string &data);\n'}
+[3.938074] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.938278] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::string&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[3.938515] (serial_comms) StderrLine: {'line': b'  402 |   write (\x1b[01;36m\x1b[Kconst std::string &data\x1b[m\x1b[K);\n'}
+[3.938717] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.938918] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:234:40:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno matching function for call to \xe2\x80\x98\x1b[01m\x1b[Kserial::Serial::write(const std::string*)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.939154] (serial_comms) StderrLine: {'line': b'  234 |         bytes_escritos += \x1b[01;31m\x1b[Kserial_.write(&marcador_dir)\x1b[m\x1b[K;\n'}
+[3.939364] (serial_comms) StderrLine: {'line': b'      |                           \x1b[01;31m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.939599] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const uint8_t*, size_t)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.939803] (serial_comms) StderrLine: {'line': b'  372 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const uint8_t *data, size_t size);\n'}
+[3.940007] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.940214] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  candidate expects 2 arguments, 1 provided\n'}
+[3.940446] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.940679] (serial_comms) StderrLine: {'line': b'  387 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::vector<uint8_t> &data);\n'}
+[3.940891] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.941101] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.941319] (serial_comms) StderrLine: {'line': b'  387 |   write (\x1b[01;36m\x1b[Kconst std::vector<uint8_t> &data\x1b[m\x1b[K);\n'}
+[3.941555] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.941767] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.941982] (serial_comms) StderrLine: {'line': b'  402 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::string &data);\n'}
+[3.942195] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.942405] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::string&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[3.942660] (serial_comms) StderrLine: {'line': b'  402 |   write (\x1b[01;36m\x1b[Kconst std::string &data\x1b[m\x1b[K);\n'}
+[3.942891] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.943114] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:235:40:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno matching function for call to \xe2\x80\x98\x1b[01m\x1b[Kserial::Serial::write(const std::string*)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.943329] (serial_comms) StderrLine: {'line': b'  235 |         bytes_escritos += \x1b[01;31m\x1b[Kserial_.write(&rpm_ref_dir_s)\x1b[m\x1b[K;\n'}
+[3.943566] (serial_comms) StderrLine: {'line': b'      |                           \x1b[01;31m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.943783] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const uint8_t*, size_t)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.943998] (serial_comms) StderrLine: {'line': b'  372 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const uint8_t *data, size_t size);\n'}
+[3.944212] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.944423] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:372:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  candidate expects 2 arguments, 1 provided\n'}
+[3.944659] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::vector<unsigned char, std::allocator<unsigned char> >&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.944880] (serial_comms) StderrLine: {'line': b'  387 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::vector<uint8_t> &data);\n'}
+[3.945093] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.945305] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:387:38:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::vector<unsigned char, std::allocator<unsigned char> >&\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.945582] (serial_comms) StderrLine: {'line': b'  387 |   write (\x1b[01;36m\x1b[Kconst std::vector<uint8_t> &data\x1b[m\x1b[K);\n'}
+[3.945795] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.946006] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:3:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate: \xe2\x80\x98\x1b[01m\x1b[Ksize_t serial::Serial::\x1b[01;32m\x1b[Kwrite\x1b[m\x1b[K(const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.946222] (serial_comms) StderrLine: {'line': b'  402 |   \x1b[01;36m\x1b[Kwrite\x1b[m\x1b[K (const std::string &data);\n'}
+[3.946447] (serial_comms) StderrLine: {'line': b'      |   \x1b[01;36m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[3.946661] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms/serial/serial.h:402:29:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K  no known conversion for argument 1 from \xe2\x80\x98\x1b[01m\x1b[Kconst std::string*\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>*\x1b[m\x1b[K\xe2\x80\x99} to \xe2\x80\x98\x1b[01m\x1b[Kconst std::string&\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kconst std::__cxx11::basic_string<char>&\x1b[m\x1b[K\xe2\x80\x99}\n'}
+[3.946894] (serial_comms) StderrLine: {'line': b'  402 |   write (\x1b[01;36m\x1b[Kconst std::string &data\x1b[m\x1b[K);\n'}
+[3.947106] (serial_comms) StderrLine: {'line': b'      |          \x1b[01;36m\x1b[K~~~~~~~~~~~~~~~~~~~^~~~\x1b[m\x1b[K\n'}
+[3.947315] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:213:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_linearx\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.947552] (serial_comms) StderrLine: {'line': b'  213 |         float \x1b[01;35m\x1b[Kvel_linearx\x1b[m\x1b[K = msg.linear.x;\n'}
+[3.947765] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.947977] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:214:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_lineary\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.948196] (serial_comms) StderrLine: {'line': b'  214 |         float \x1b[01;35m\x1b[Kvel_lineary\x1b[m\x1b[K = msg.linear.y;\n'}
+[3.948408] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.948639] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:215:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_linearz\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.948870] (serial_comms) StderrLine: {'line': b'  215 |         float \x1b[01;35m\x1b[Kvel_linearz\x1b[m\x1b[K = msg.linear.z;\n'}
+[3.949085] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.949297] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:217:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_angx\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.949536] (serial_comms) StderrLine: {'line': b'  217 |         float \x1b[01;35m\x1b[Kvel_angx\x1b[m\x1b[K = msg.angular.x;\n'}
+[3.949750] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[3.949967] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:218:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_angy\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.950182] (serial_comms) StderrLine: {'line': b'  218 |         float \x1b[01;35m\x1b[Kvel_angy\x1b[m\x1b[K = msg.angular.y;\n'}
+[3.950393] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[3.950625] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_motors_node.cpp:219:15:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kvel_angz\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.950869] (serial_comms) StderrLine: {'line': b'  219 |         float \x1b[01;35m\x1b[Kvel_angz\x1b[m\x1b[K = msg.angular.z;\n'}
+[3.951081] (serial_comms) StderrLine: {'line': b'      |               \x1b[01;35m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[3.952768] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[3.953062] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27\x1b[m\x1b[K,\n'}
+[3.953304] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171\x1b[m\x1b[K,\n'}
+[3.953548] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:1\x1b[m\x1b[K:\n'}
+[3.953778] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialSensorsNode::\x1b[01;32m\x1b[KReadPub_callback\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.953996] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:171:45:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%i\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99, but argument 6 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<double, std::allocator<double> >::size_type\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.954225] (serial_comms) StderrLine: {'line': b'  171 |             RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: %i"\x1b[m\x1b[K, line.c_str(), \x1b[32m\x1b[Kvalores.size()\x1b[m\x1b[K);\n'}
+[3.954459] (serial_comms) StderrLine: {'line': b'      |                                             \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K                \x1b[32m\x1b[K~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.954677] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[K|\x1b[m\x1b[K\n'}
+[3.954889] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}\x1b[m\x1b[K\n'}
+[3.955103] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:171:109:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[3.955316] (serial_comms) StderrLine: {'line': b'  171 |             RCLCPP_INFO(this->get_logger(), "Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: \x1b[01;36m\x1b[K%i\x1b[m\x1b[K", line.c_str(), valores.size());\n'}
+[3.955555] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[3.955801] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[3.956013] (serial_comms) StderrLine: {'line': b'      |                                                                                                             \x1b[01;36m\x1b[Kint\x1b[m\x1b[K\n'}
+[3.956224] (serial_comms) StderrLine: {'line': b'      |                                                                                                            \x1b[32m\x1b[K%li\x1b[m\x1b[K\n'}
+[3.966589] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:315:1:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected primary-expression before \xe2\x80\x98\x1b[01m\x1b[K->\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[3.967111] (serial_comms) StderrLine: {'line': b'  315 | \x1b[01;31m\x1b[K->\x1b[m\x1b[K\n'}
+[3.967508] (serial_comms) StderrLine: {'line': b'      | \x1b[01;31m\x1b[K^~\x1b[m\x1b[K\n'}
+[3.967865] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:321:1:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected primary-expression before \xe2\x80\x98\x1b[01m\x1b[K->\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[3.968222] (serial_comms) StderrLine: {'line': b'  321 | \x1b[01;31m\x1b[K->\x1b[m\x1b[K\n'}
+[3.968619] (serial_comms) StderrLine: {'line': b'      | \x1b[01;31m\x1b[K^~\x1b[m\x1b[K\n'}
+[3.968969] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src/serial_sensors_node.cpp:327:1:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected primary-expression before \xe2\x80\x98\x1b[01m\x1b[K->\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[3.969298] (serial_comms) StderrLine: {'line': b'  327 | \x1b[01;31m\x1b[K->\x1b[m\x1b[K\n'}
+[3.969526] (serial_comms) StderrLine: {'line': b'      | \x1b[01;31m\x1b[K^~\x1b[m\x1b[K\n'}
+[4.024767] (-) TimerEvent: {}
+[4.125310] (-) TimerEvent: {}
+[4.226190] (-) TimerEvent: {}
+[4.326784] (-) TimerEvent: {}
+[4.427580] (-) TimerEvent: {}
+[4.528294] (-) TimerEvent: {}
+[4.628835] (-) TimerEvent: {}
+[4.729564] (-) TimerEvent: {}
+[4.830073] (-) TimerEvent: {}
+[4.930583] (-) TimerEvent: {}
+[5.031092] (-) TimerEvent: {}
+[5.131927] (-) TimerEvent: {}
+[5.232670] (-) TimerEvent: {}
+[5.333467] (-) TimerEvent: {}
+[5.434001] (-) TimerEvent: {}
+[5.465076] (serial_comms) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/serial_motors_node.dir/build.make:76: CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o] Error 1\n'}
+[5.465761] (serial_comms) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:167: CMakeFiles/serial_motors_node.dir/all] Error 2\n'}
+[5.466159] (serial_comms) StderrLine: {'line': b'gmake[1]: *** Waiting for unfinished jobs....\n'}
+[5.534202] (-) TimerEvent: {}
+[5.634781] (-) TimerEvent: {}
+[5.735327] (-) TimerEvent: {}
+[5.835909] (-) TimerEvent: {}
+[5.936503] (-) TimerEvent: {}
+[6.037090] (-) TimerEvent: {}
+[6.137540] (-) TimerEvent: {}
+[6.237979] (-) TimerEvent: {}
+[6.338414] (-) TimerEvent: {}
+[6.438891] (-) TimerEvent: {}
+[6.539327] (-) TimerEvent: {}
+[6.639761] (-) TimerEvent: {}
+[6.740182] (-) TimerEvent: {}
+[6.840694] (-) TimerEvent: {}
+[6.941156] (-) TimerEvent: {}
+[6.986256] (serial_comms) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/serial_sensors_node.dir/build.make:76: CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o] Error 1\n'}
+[6.986902] (serial_comms) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:141: CMakeFiles/serial_sensors_node.dir/all] Error 2\n'}
+[6.987452] (serial_comms) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Error 2\n'}
+[6.992583] (serial_comms) CommandEnded: {'returncode': 2}
+[7.005615] (serial_comms) JobEnded: {'identifier': 'serial_comms', 'rc': 2}
+[7.016769] (-) EventReactorShutdown: {}

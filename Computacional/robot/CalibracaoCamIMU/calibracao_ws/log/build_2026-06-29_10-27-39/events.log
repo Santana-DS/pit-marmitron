@@ -1,0 +1,231 @@
+[0.000000] (-) TimerEvent: {}
+[0.001066] (serial_comms) JobQueued: {'identifier': 'serial_comms', 'dependencies': OrderedDict()}
+[0.001199] (serial_comms) JobStarted: {'identifier': 'serial_comms'}
+[0.012941] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'cmake'}
+[0.022422] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'build'}
+[0.022561] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', '--', '-j16', '-l16'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '3998', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=f6d9015d0ee0eb061c49ceb76a35b57b', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/3998,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/3998', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/0d2e1f03_7af2_492b_92a1_9220204ab52a', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.1YWBR3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.1573', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=f6d9015d0ee0eb061c49ceb76a35b57b', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[0.099710] (-) TimerEvent: {}
+[0.115812] (serial_comms) StdoutLine: {'line': b'-- Found ament_cmake: 2.7.5 (/opt/ros/kilted/share/ament_cmake/cmake)\n'}
+[0.199869] (-) TimerEvent: {}
+[0.300380] (-) TimerEvent: {}
+[0.367025] (serial_comms) StdoutLine: {'line': b'-- Found rclcpp: 29.5.8 (/opt/ros/kilted/share/rclcpp/cmake)\n'}
+[0.393524] (serial_comms) StdoutLine: {'line': b'-- Found rosidl_generator_c: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_c/cmake)\n'}
+[0.400610] (-) TimerEvent: {}
+[0.405646] (serial_comms) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_cpp/cmake)\n'}
+[0.438054] (serial_comms) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.466571] (serial_comms) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.500809] (-) TimerEvent: {}
+[0.540827] (serial_comms) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 7.8.2 (/opt/ros/kilted/share/rmw_implementation_cmake/cmake)\n'}
+[0.542786] (serial_comms) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 9.3.4 (/opt/ros/kilted/share/rmw_fastrtps_cpp/cmake)\n'}
+[0.601016] (-) TimerEvent: {}
+[0.608911] (serial_comms) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[0.701415] (-) TimerEvent: {}
+[0.714312] (serial_comms) StdoutLine: {'line': b'-- Found sensor_msgs: 5.5.2 (/opt/ros/kilted/share/sensor_msgs/cmake)\n'}
+[0.773131] (serial_comms) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.19.3 (/opt/ros/kilted/share/ament_lint_auto/cmake)\n'}
+[0.801632] (-) TimerEvent: {}
+[0.886738] (serial_comms) StderrLine: {'line': b'\x1b[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):\n'}
+[0.887159] (serial_comms) StderrLine: {'line': b'  ament_target_dependencies() is deprecated.  Use target_link_libraries()\n'}
+[0.887359] (serial_comms) StderrLine: {'line': b'  with modern CMake targets instead.  Try replacing this call with:\n'}
+[0.887583] (serial_comms) StderrLine: {'line': b'\n'}
+[0.888014] (serial_comms) StderrLine: {'line': b'    target_link_libraries(serial_imu_node PUBLIC\n'}
+[0.888233] (serial_comms) StderrLine: {'line': b'      ${sensor_msgs_TARGETS}\n'}
+[0.888410] (serial_comms) StderrLine: {'line': b'      rclcpp::rclcpp\n'}
+[0.888528] (serial_comms) StderrLine: {'line': b'      sensor_msgs::sensor_msgs_library\n'}
+[0.888615] (serial_comms) StderrLine: {'line': b'    )\n'}
+[0.888711] (serial_comms) StderrLine: {'line': b'\n'}
+[0.888800] (serial_comms) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[0.888893] (serial_comms) StderrLine: {'line': b'  CMakeLists.txt:46 (ament_target_dependencies)\n'}
+[0.888995] (serial_comms) StderrLine: {'line': b'\n'}
+[0.889091] (serial_comms) StderrLine: {'line': b'\x1b[0m\n'}
+[0.889186] (serial_comms) StderrLine: {'line': b'\x1b[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):\n'}
+[0.889279] (serial_comms) StderrLine: {'line': b'  ament_target_dependencies() is deprecated.  Use target_link_libraries()\n'}
+[0.889373] (serial_comms) StderrLine: {'line': b'  with modern CMake targets instead.  Try replacing this call with:\n'}
+[0.889464] (serial_comms) StderrLine: {'line': b'\n'}
+[0.889573] (serial_comms) StderrLine: {'line': b'    target_link_libraries(image_restamper_node PUBLIC\n'}
+[0.889666] (serial_comms) StderrLine: {'line': b'      ${sensor_msgs_TARGETS}\n'}
+[0.889757] (serial_comms) StderrLine: {'line': b'      rclcpp::rclcpp\n'}
+[0.889850] (serial_comms) StderrLine: {'line': b'      sensor_msgs::sensor_msgs_library\n'}
+[0.889939] (serial_comms) StderrLine: {'line': b'    )\n'}
+[0.890027] (serial_comms) StderrLine: {'line': b'\n'}
+[0.890119] (serial_comms) StderrLine: {'line': b'Call Stack (most recent call first):\n'}
+[0.890210] (serial_comms) StderrLine: {'line': b'  CMakeLists.txt:54 (ament_target_dependencies)\n'}
+[0.890301] (serial_comms) StderrLine: {'line': b'\n'}
+[0.890395] (serial_comms) StderrLine: {'line': b'\x1b[0m\n'}
+[0.896874] (serial_comms) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[0.897218] (serial_comms) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/include;/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/include/serial_comms;/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src\n'}
+[0.897418] (serial_comms) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[0.899588] (serial_comms) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[0.901698] (-) TimerEvent: {}
+[0.904769] (serial_comms) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[0.905127] (serial_comms) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[0.906124] (serial_comms) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[0.908039] (serial_comms) StdoutLine: {'line': b'-- Configuring done (0.8s)\n'}
+[0.934202] (serial_comms) StdoutLine: {'line': b'-- Generating done (0.0s)\n'}
+[0.941215] (serial_comms) StdoutLine: {'line': b'-- Build files have been written to: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms\n'}
+[0.998032] (serial_comms) StdoutLine: {'line': b'[ 10%] \x1b[32mBuilding CXX object CMakeFiles/image_restamper_node.dir/src/image_restamper_node.cpp.o\x1b[0m\n'}
+[1.001845] (-) TimerEvent: {}
+[1.096984] (serial_comms) StdoutLine: {'line': b'[ 40%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/unix.cc.o\x1b[0m\n'}
+[1.097368] (serial_comms) StdoutLine: {'line': b'[ 40%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/win.cc.o\x1b[0m\n'}
+[1.097517] (serial_comms) StdoutLine: {'line': b'[ 40%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial_imu_node.cpp.o\x1b[0m\n'}
+[1.097633] (serial_comms) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial.cc.o\x1b[0m\n'}
+[1.098311] (serial_comms) StdoutLine: {'line': b'[ 70%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_linux.cc.o\x1b[0m\n'}
+[1.098474] (serial_comms) StdoutLine: {'line': b'[ 70%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_osx.cc.o\x1b[0m\n'}
+[1.100849] (serial_comms) StdoutLine: {'line': b'[ 80%] \x1b[32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_win.cc.o\x1b[0m\n'}
+[1.101954] (-) TimerEvent: {}
+[1.202382] (-) TimerEvent: {}
+[1.303010] (-) TimerEvent: {}
+[1.403708] (-) TimerEvent: {}
+[1.504392] (-) TimerEvent: {}
+[1.519117] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<std::__cxx11::basic_string<char> >\x1b[01;32m\x1b[K glob\x1b[m\x1b[K(const std::vector<std::__cxx11::basic_string<char> >&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[1.519892] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:66:40:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare\x07-Wsign-compare\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[1.520279] (serial_comms) StderrLine: {'line': b'   66 |     for(int path_index = 0; \x1b[01;35m\x1b[Kpath_index < glob_results.gl_pathc\x1b[m\x1b[K; path_index++)\n'}
+[1.520620] (serial_comms) StderrLine: {'line': b'      |                             \x1b[01;35m\x1b[K~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[1.520877] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:57:9:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kvariable \xe2\x80\x98\x1b[01m\x1b[Kglob_retval\x1b[m\x1b[K\xe2\x80\x99 set but not used [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable\x07-Wunused-but-set-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[1.521116] (serial_comms) StderrLine: {'line': b'   57 |     int \x1b[01;35m\x1b[Kglob_retval\x1b[m\x1b[K = glob(patterns[0].c_str(), 0, NULL, &glob_results);\n'}
+[1.521344] (serial_comms) StderrLine: {'line': b'      |         \x1b[01;35m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[1.521597] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:223:9:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K"/*" within comment [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wcomment\x07-Wcomment\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[1.521728] (serial_comms) StderrLine: {'line': b'  223 |         /*\n'}
+[1.521843] (serial_comms) StderrLine: {'line': b'      |          \n'}
+[1.523014] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kstd::string\x1b[01;32m\x1b[K format\x1b[m\x1b[K(const char*, ...)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[1.523328] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:246:31:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare\x07-Wsign-compare\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[1.523517] (serial_comms) StderrLine: {'line': b'  246 |         else if( \x1b[01;35m\x1b[Kreturn_value >= buffer_size_bytes\x1b[m\x1b[K )\n'}
+[1.523650] (serial_comms) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[1.604681] (-) TimerEvent: {}
+[1.705384] (-) TimerEvent: {}
+[1.806032] (-) TimerEvent: {}
+[1.906544] (-) TimerEvent: {}
+[2.007281] (-) TimerEvent: {}
+[2.108071] (-) TimerEvent: {}
+[2.208477] (-) TimerEvent: {}
+[2.308917] (-) TimerEvent: {}
+[2.409666] (-) TimerEvent: {}
+[2.510329] (-) TimerEvent: {}
+[2.611053] (-) TimerEvent: {}
+[2.711719] (-) TimerEvent: {}
+[2.812173] (-) TimerEvent: {}
+[2.912844] (-) TimerEvent: {}
+[3.013587] (-) TimerEvent: {}
+[3.114275] (-) TimerEvent: {}
+[3.215217] (-) TimerEvent: {}
+[3.315905] (-) TimerEvent: {}
+[3.375670] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[3.375978] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27\x1b[m\x1b[K,\n'}
+[3.376147] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171\x1b[m\x1b[K,\n'}
+[3.376305] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:1\x1b[m\x1b[K:\n'}
+[3.376507] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:\x1b[m\x1b[K In constructor \xe2\x80\x98\x1b[01m\x1b[KImageRestamperNode::\x1b[01;32m\x1b[KImageRestamperNode\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.376670] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:16:41:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%s\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kchar*\x1b[m\x1b[K\xe2\x80\x99, but argument 5 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::string\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kstd::__cxx11::basic_string<char>\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.376861] (serial_comms) StderrLine: {'line': b'   16 |         RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"N\xc3\xb3 image_restamper_node iniciado com inscri\xc3\xa7\xc3\xa3o em %s e publicando em %s"\x1b[m\x1b[K, sub_topic_, pub_topic_);\n'}
+[3.377021] (serial_comms) StderrLine: {'line': b'      |                                         \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.377182] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:16:93:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[3.377342] (serial_comms) StderrLine: {'line': b'   16 |         RCLCPP_INFO(this->get_logger(), "N\xc3\xb3 image_restamper_node iniciado com inscri\xc3\xa7\xc3\xa3o em \x1b[01;36m\x1b[K%s\x1b[m\x1b[K e publicando em %s", sub_topic_, pub_topic_);\n'}
+[3.377516] (serial_comms) StderrLine: {'line': b'      |                                                                                            \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[3.377695] (serial_comms) StderrLine: {'line': b'      |                                                                                             \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[3.377860] (serial_comms) StderrLine: {'line': b'      |                                                                                             \x1b[01;36m\x1b[Kchar*\x1b[m\x1b[K\n'}
+[3.378012] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:16:41:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%s\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kchar*\x1b[m\x1b[K\xe2\x80\x99, but argument 6 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::string\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Kstd::__cxx11::basic_string<char>\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.378129] (serial_comms) StderrLine: {'line': b'   16 |         RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"N\xc3\xb3 image_restamper_node iniciado com inscri\xc3\xa7\xc3\xa3o em %s e publicando em %s"\x1b[m\x1b[K, sub_topic_, pub_topic_);\n'}
+[3.378207] (serial_comms) StderrLine: {'line': b'      |                                         \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.378285] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/image_restamper_node.cpp:16:112:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[3.378364] (serial_comms) StderrLine: {'line': b'   16 |         RCLCPP_INFO(this->get_logger(), "N\xc3\xb3 image_restamper_node iniciado com inscri\xc3\xa7\xc3\xa3o em %s e publicando em \x1b[01;36m\x1b[K%s\x1b[m\x1b[K", sub_topic_, pub_topic_);\n'}
+[3.378441] (serial_comms) StderrLine: {'line': b'      |                                                                                                               \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[3.378531] (serial_comms) StderrLine: {'line': b'      |                                                                                                                \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[3.378609] (serial_comms) StderrLine: {'line': b'      |                                                                                                                \x1b[01;36m\x1b[Kchar*\x1b[m\x1b[K\n'}
+[3.416084] (-) TimerEvent: {}
+[3.436608] (serial_comms) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[3.436912] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/copy_all_parameter_values.hpp:27\x1b[m\x1b[K,\n'}
+[3.437080] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/kilted/include/rclcpp/rclcpp/rclcpp.hpp:171\x1b[m\x1b[K,\n'}
+[3.437239] (serial_comms) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:1\x1b[m\x1b[K:\n'}
+[3.437397] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid SerialImuNode::\x1b[01;32m\x1b[KReadPub_callback\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[3.437576] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:153:45:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kformat \xe2\x80\x98\x1b[01m\x1b[K%i\x1b[m\x1b[K\xe2\x80\x99 expects argument of type \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99, but argument 6 has type \xe2\x80\x98\x1b[01m\x1b[Kstd::vector<double, std::allocator<double> >::size_type\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat=\x07-Wformat=\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.437794] (serial_comms) StderrLine: {'line': b'  153 |             RCLCPP_INFO(this->get_logger(), \x1b[01;35m\x1b[K"Leitura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: %i"\x1b[m\x1b[K, line.c_str(), \x1b[32m\x1b[Kvalores.size()\x1b[m\x1b[K);\n'}
+[3.437953] (serial_comms) StderrLine: {'line': b'      |                                             \x1b[01;35m\x1b[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K                \x1b[32m\x1b[K~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.438113] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[K|\x1b[m\x1b[K\n'}
+[3.438269] (serial_comms) StderrLine: {'line': b'      |                                                                                                                                           \x1b[32m\x1b[Kstd::vector<double, std::allocator<double> >::size_type {aka long unsigned int}\x1b[m\x1b[K\n'}
+[3.438429] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:153:109:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kformat string is defined here\n'}
+[3.438608] (serial_comms) StderrLine: {'line': b'  153 | tura de n\xc3\xbamero errado de valores. Linha: %s, n de valores: \x1b[01;36m\x1b[K%i\x1b[m\x1b[K", line.c_str(), valores.size());\n'}
+[3.438780] (serial_comms) StderrLine: {'line': b'      |                                                            \x1b[01;36m\x1b[K~^\x1b[m\x1b[K\n'}
+[3.438957] (serial_comms) StderrLine: {'line': b'      |                                                             \x1b[01;36m\x1b[K|\x1b[m\x1b[K\n'}
+[3.439121] (serial_comms) StderrLine: {'line': b'      |                                                             \x1b[01;36m\x1b[Kint\x1b[m\x1b[K\n'}
+[3.439242] (serial_comms) StderrLine: {'line': b'      |                                                            \x1b[32m\x1b[K%li\x1b[m\x1b[K\n'}
+[3.439453] (serial_comms) StderrLine: {'line': b'\x1b[01m\x1b[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/serial_imu_node.cpp:165:18:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Ksequencia\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K\x1b]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-variable\x07-Wunused-variable\x1b]8;;\x07\x1b[m\x1b[K]\n'}
+[3.439603] (serial_comms) StderrLine: {'line': b'  165 |         uint32_t \x1b[01;35m\x1b[Ksequencia\x1b[m\x1b[K = (uint32_t) valores[0];\n'}
+[3.439686] (serial_comms) StderrLine: {'line': b'      |                  \x1b[01;35m\x1b[K^~~~~~~~~\x1b[m\x1b[K\n'}
+[3.516251] (-) TimerEvent: {}
+[3.616965] (-) TimerEvent: {}
+[3.717610] (-) TimerEvent: {}
+[3.818039] (-) TimerEvent: {}
+[3.918682] (-) TimerEvent: {}
+[4.019412] (-) TimerEvent: {}
+[4.119891] (-) TimerEvent: {}
+[4.220461] (-) TimerEvent: {}
+[4.321350] (-) TimerEvent: {}
+[4.422159] (-) TimerEvent: {}
+[4.522734] (-) TimerEvent: {}
+[4.623156] (-) TimerEvent: {}
+[4.723574] (-) TimerEvent: {}
+[4.824002] (-) TimerEvent: {}
+[4.924623] (-) TimerEvent: {}
+[5.025283] (-) TimerEvent: {}
+[5.125949] (-) TimerEvent: {}
+[5.226375] (-) TimerEvent: {}
+[5.326804] (-) TimerEvent: {}
+[5.327834] (serial_comms) StdoutLine: {'line': b'[ 90%] \x1b[32m\x1b[1mLinking CXX executable serial_imu_node\x1b[0m\n'}
+[5.426978] (-) TimerEvent: {}
+[5.527692] (-) TimerEvent: {}
+[5.628173] (-) TimerEvent: {}
+[5.648420] (serial_comms) StdoutLine: {'line': b'[ 90%] Built target serial_imu_node\n'}
+[5.728333] (-) TimerEvent: {}
+[5.828764] (-) TimerEvent: {}
+[5.929465] (-) TimerEvent: {}
+[6.029953] (-) TimerEvent: {}
+[6.130330] (-) TimerEvent: {}
+[6.230719] (-) TimerEvent: {}
+[6.331119] (-) TimerEvent: {}
+[6.431544] (-) TimerEvent: {}
+[6.531936] (-) TimerEvent: {}
+[6.632317] (-) TimerEvent: {}
+[6.732728] (-) TimerEvent: {}
+[6.833125] (-) TimerEvent: {}
+[6.933538] (-) TimerEvent: {}
+[7.033942] (-) TimerEvent: {}
+[7.134340] (-) TimerEvent: {}
+[7.234776] (-) TimerEvent: {}
+[7.335187] (-) TimerEvent: {}
+[7.435586] (-) TimerEvent: {}
+[7.535994] (-) TimerEvent: {}
+[7.636403] (-) TimerEvent: {}
+[7.736867] (-) TimerEvent: {}
+[7.837318] (-) TimerEvent: {}
+[7.937802] (-) TimerEvent: {}
+[8.038295] (-) TimerEvent: {}
+[8.066706] (serial_comms) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable image_restamper_node\x1b[0m\n'}
+[8.138478] (-) TimerEvent: {}
+[8.238990] (-) TimerEvent: {}
+[8.339378] (-) TimerEvent: {}
+[8.402510] (serial_comms) StdoutLine: {'line': b'[100%] Built target image_restamper_node\n'}
+[8.417352] (serial_comms) CommandEnded: {'returncode': 0}
+[8.418193] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'install'}
+[8.428504] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '3998', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=f6d9015d0ee0eb061c49ceb76a35b57b', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/3998,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/3998', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/0d2e1f03_7af2_492b_92a1_9220204ab52a', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.1YWBR3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.1573', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=f6d9015d0ee0eb061c49ceb76a35b57b', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[8.437339] (serial_comms) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[8.437913] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node\n'}
+[8.439447] (-) TimerEvent: {}
+[8.440078] (serial_comms) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node" to ""\n'}
+[8.440249] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/image_restamper_node\n'}
+[8.447180] (serial_comms) StdoutLine: {'line': b'-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/image_restamper_node" to ""\n'}
+[8.447559] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms\n'}
+[8.447895] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms\n'}
+[8.448103] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh\n'}
+[8.448309] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv\n'}
+[8.448635] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.sh\n'}
+[8.448805] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.dsv\n'}
+[8.448970] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.bash\n'}
+[8.449137] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.sh\n'}
+[8.449302] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.zsh\n'}
+[8.449467] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.dsv\n'}
+[8.449653] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.dsv\n'}
+[8.449800] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms\n'}
+[8.449883] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake\n'}
+[8.449968] (serial_comms) StdoutLine: {'line': b'-- Up-to-date: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake\n'}
+[8.450108] (serial_comms) StdoutLine: {'line': b'-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.xml\n'}
+[8.450870] (serial_comms) CommandEnded: {'returncode': 0}
+[8.473037] (serial_comms) JobEnded: {'identifier': 'serial_comms', 'rc': 0}
+[8.474418] (-) EventReactorShutdown: {}

@@ -4,43 +4,60 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/queue.h>
 
-// Importa a nossa caixa de correio criada lá no main.cpp!
+// Importa a caixa de correio criada no main.cpp
 extern QueueHandle_t filaVelocidade;
 
 // Cria o objeto do servidor na porta padrão HTTP (80)
 static AsyncWebServer server(80);
 
 // ==========================================
-// INTERFACE WEB (HTML + CSS + JavaScript)
+// INTERFACE WEB INTERAGINDO VIA FETCH (SEM RELOAD)
 // ==========================================
 const char* html_page = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
   <title>Controle do Robô</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; background-color: #1e1e1e; color: #ffffff; padding-top: 50px;}
-    h1 { color: #00d2ff; }
-    .slider { -webkit-appearance: none; width: 80%; height: 25px; border-radius: 12px; background: #333; outline: none; margin-top: 20px;}
-    .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 35px; height: 35px; border-radius: 50%; background: #00d2ff; cursor: pointer; }
-    .valor { font-size: 2em; font-weight: bold; margin-top: 20px; color: #ffeb3b;}
+    body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; background-color: #222; color: white; margin: 0; padding: 20px; }
+    h2 { margin-bottom: 30px; color: #f1c40f; }
+    
+    /* Grid e estilo dos botões de controle de direção */
+    .control-container { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 15px; justify-content: center; margin: 0 auto; }
+    .btn { width: 100px; height: 100px; font-size: 18px; border: none; border-radius: 50%; color: white; cursor: pointer; font-weight: bold; transition: 0.2s; }
+    .btn-dir { background-color: #3498db; }
+    .btn-dir:active { background-color: #2980b9; }
+    .btn-stop { background-color: #e74c3c; width: 100%; grid-column: span 3; border-radius: 10px; height: 60px; margin-top: 15px; }
+    .btn-stop:active { background-color: #c0392b; }
+    .empty { width: 100px; height: 100px; }
   </style>
 </head>
 <body>
-  <h1>Controle de Velocidade</h1>
-  <p>Deslize para alterar a velocidade dos motores</p>
+
+  <h2>Controle Remoto do Carrinho</h2>
+  <p>Toque nos botões para direcionar o robô</p>
   
-  <input type="range" min="-5.0" max="5.0" step="0.1" value="0.0" class="slider" id="sliderVel" oninput="enviarVelocidade(this.value)">
-  
-  <div class="valor">V: <span id="mostrador">0.0</span></div>
+  <div class='control-container'>
+    <div class='empty'></div>
+    <button class='btn btn-dir' onclick="enviarComando('1.0')">▲<br>Frente</button>
+    <div class='empty'></div>
+    
+    <button class='btn btn-dir' onclick="enviarComando('2.0')">◀<br>Esq</button>
+    <div class='empty'></div>
+    <button class='btn btn-dir' onclick="enviarComando('3.0')">▶<br>Dir</button>
+    
+    <div class='empty'></div>
+    <button class='btn btn-dir' onclick="enviarComando('-1.0')">▼<br>Trás</button>
+    <div class='empty'></div>
+    
+    <button class='btn btn-stop' onclick="enviarComando('0.0')">🛑 PARAR</button>
+  </div>
 
   <script>
-    // Quando o usuário arrasta o dedo, essa função avisa o ESP32 em tempo real
-    function enviarVelocidade(val) {
-      document.getElementById('mostrador').innerText = val;
-      // Faz uma requisição GET invisível para o robô (Ex: /set_speed?v=2.5)
-      fetch('/set_speed?v=' + val);
+    // Envia o comando via requisição HTTP assíncrona (Background)
+    function enviarComando(valor) {
+      fetch('/set_speed?v=' + valor);
     }
   </script>
 </body>
@@ -52,45 +69,36 @@ const char* html_page = R"rawliteral(
 // ==========================================
 
 void webserver_init(const char* ssid, const char* password) {
-  // 1. Conecta no Wi-Fi
-  Serial.print("Conectando ao Wi-Fi: ");
+  // 1. Configura a ESP32 como Access Point (Rede própria), igual ao código 1
+  Serial.print("Criando rede Wi-Fi: ");
   Serial.println(ssid);
-  WiFi.begin(ssid, password);
+  WiFi.softAP(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  
-  Serial.println("\nWiFi conectado!");
+  IPAddress IP = WiFi.softAPIP();
   Serial.print("Abra o navegador no celular e digite este IP: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(IP);
 
-  // 2. Rota Principal ("/"): O que acontece quando o usuário acessa o IP
+  // 2. Rota Principal ("/"): Serve a interface com os botões
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "text/html", html_page);
   });
 
-  // 3. Rota de Controle ("/set_speed"): Onde o JavaScript bate para enviar dados
+  // 3. Rota de Controle ("/set_speed"): Captura o código da direção e joga na Fila
   server.on("/set_speed", HTTP_GET, [](AsyncWebServerRequest *request){
     
-    // Verifica se a mensagem veio com o parâmetro "v" (velocidade)
     if(request->hasParam("v")) {
       String valor_string = request->getParam("v")->value();
-      float nova_velocidade = valor_string.toFloat();
+      float comando_direcao = valor_string.toFloat();
 
-      // MÁGICA DO FREERTOS AQUI:
-      // Se a fila existe, "joga" o número float lá dentro para a Task de Motores pegar!
-      // O "(TickType_t)0" significa: Não perca tempo esperando, jogue na fila e fuja.
+      // Envia o float para a Task de Motores processar de forma assíncrona
       if(filaVelocidade != NULL) {
-        xQueueSend(filaVelocidade, &nova_velocidade, (TickType_t)0);
+        xQueueSend(filaVelocidade, &comando_direcao, (TickType_t)0);
       }
     }
-    // Responde ao navegador que deu tudo certo para ele não travar
     request->send(200, "text/plain", "OK"); 
   });
 
-  // 4. Liga o servidor de vez
+  // 4. Inicia o servidor
   server.begin();
-  Serial.println("Webserver online rodando");
+  Serial.println("Webserver assíncrono online!");
 }

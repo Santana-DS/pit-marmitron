@@ -1,0 +1,109 @@
+[0.021s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms -DCMAKE_INSTALL_PREFIX=/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms
+[0.333s] -- The C compiler identification is GNU 13.3.0
+[0.486s] -- The CXX compiler identification is GNU 13.3.0
+[0.544s] -- Detecting C compiler ABI info
+[0.757s] -- Detecting C compiler ABI info - done
+[0.778s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.780s] -- Detecting C compile features
+[0.781s] -- Detecting C compile features - done
+[0.802s] -- Detecting CXX compiler ABI info
+[1.005s] -- Detecting CXX compiler ABI info - done
+[1.025s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.026s] -- Detecting CXX compile features
+[1.026s] -- Detecting CXX compile features - done
+[1.038s] -- Found ament_cmake: 2.7.5 (/opt/ros/kilted/share/ament_cmake/cmake)
+[1.332s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[1.567s] -- Found rclcpp: 29.5.8 (/opt/ros/kilted/share/rclcpp/cmake)
+[1.653s] -- Found rosidl_generator_c: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_c/cmake)
+[1.688s] -- Found rosidl_generator_cpp: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_cpp/cmake)
+[1.732s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.777s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.964s] -- Found rmw_implementation_cmake: 7.8.2 (/opt/ros/kilted/share/rmw_implementation_cmake/cmake)
+[1.972s] -- Found rmw_fastrtps_cpp: 9.3.4 (/opt/ros/kilted/share/rmw_fastrtps_cpp/cmake)
+[2.189s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[2.213s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[2.425s] -- Found sensor_msgs: 5.5.2 (/opt/ros/kilted/share/sensor_msgs/cmake)
+[2.562s] -- Found ament_lint_auto: 0.19.3 (/opt/ros/kilted/share/ament_lint_auto/cmake)
+[2.798s] [0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+[2.798s]   ament_target_dependencies() is deprecated.  Use target_link_libraries()
+[2.798s]   with modern CMake targets instead.  Try replacing this call with:
+[2.799s] 
+[2.799s]     target_link_libraries(serial_imu_node PUBLIC
+[2.799s]       ${geometry_msgs_TARGETS}
+[2.799s]       ${sensor_msgs_TARGETS}
+[2.800s]       rclcpp::rclcpp
+[2.800s]       sensor_msgs::sensor_msgs_library
+[2.800s]     )
+[2.800s] 
+[2.801s] Call Stack (most recent call first):
+[2.801s]   CMakeLists.txt:48 (ament_target_dependencies)
+[2.801s] 
+[2.801s] [0m
+[2.801s] [0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+[2.801s]   ament_target_dependencies() is deprecated.  Use target_link_libraries()
+[2.802s]   with modern CMake targets instead.  Try replacing this call with:
+[2.802s] 
+[2.802s]     target_link_libraries(serial_sensors_node PUBLIC
+[2.802s]       ${geometry_msgs_TARGETS}
+[2.802s]       ${sensor_msgs_TARGETS}
+[2.802s]       rclcpp::rclcpp
+[2.802s]       sensor_msgs::sensor_msgs_library
+[2.802s]     )
+[2.803s] 
+[2.803s] Call Stack (most recent call first):
+[2.803s]   CMakeLists.txt:68 (ament_target_dependencies)
+[2.803s] 
+[2.803s] [0m
+[2.805s] [0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+[2.805s]   ament_target_dependencies() is deprecated.  Use target_link_libraries()
+[2.805s]   with modern CMake targets instead.  Try replacing this call with:
+[2.805s] 
+[2.806s]     target_link_libraries(serial_motors_node PUBLIC
+[2.806s]       ${geometry_msgs_TARGETS}
+[2.806s]       ${sensor_msgs_TARGETS}
+[2.806s]       rclcpp::rclcpp
+[2.806s]       sensor_msgs::sensor_msgs_library
+[2.806s]     )
+[2.806s] 
+[2.806s] Call Stack (most recent call first):
+[2.807s]   CMakeLists.txt:88 (ament_target_dependencies)
+[2.807s] 
+[2.807s] [0m
+[2.808s] [0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+[2.808s]   ament_target_dependencies() is deprecated.  Use target_link_libraries()
+[2.808s]   with modern CMake targets instead.  Try replacing this call with:
+[2.808s] 
+[2.808s]     target_link_libraries(image_restamper_node PUBLIC
+[2.809s]       ${sensor_msgs_TARGETS}
+[2.809s]       rclcpp::rclcpp
+[2.809s]       sensor_msgs::sensor_msgs_library
+[2.809s]     )
+[2.809s] 
+[2.810s] Call Stack (most recent call first):
+[2.810s]   CMakeLists.txt:97 (ament_target_dependencies)
+[2.810s] 
+[2.810s] [0m
+[2.825s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.826s] -- Configured cppcheck include dirs: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include;/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/include/serial_comms;/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms/src
+[2.827s] -- Configured cppcheck exclude dirs and/or files: 
+[2.831s] -- Added test 'lint_cmake' to check CMake code style
+[2.842s] -- Added test 'uncrustify' to check C / C++ code style
+[2.843s] -- Configured uncrustify additional arguments: 
+[2.845s] -- Added test 'xmllint' to check XML markup files
+[2.848s] -- Configuring done (2.8s)
+[2.856s] [31mCMake Error at CMakeLists.txt:34 (add_executable):
+[2.856s]   Cannot find source file:
+[2.856s] 
+[2.857s]     src/serial_imu_node.cpp
+[2.857s] 
+[2.857s]   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm
+[2.857s]   .ccm .cxxm .c++m .h .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90
+[2.857s]   .f95 .f03 .hip .ispc
+[2.858s] 
+[2.858s] [0m
+[2.866s] [31mCMake Error at CMakeLists.txt:34 (add_executable):
+[2.866s]   No SOURCES given to target: serial_imu_node
+[2.867s] 
+[2.867s] [0m
+[2.867s] [0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m
+[2.887s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/src/serial_comms -DCMAKE_INSTALL_PREFIX=/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms

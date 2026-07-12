@@ -1,0 +1,29 @@
+[0.023s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms -- -j16 -l16
+[0.150s] [ 27%] Built target image_restamper_node
+[0.151s] [ 55%] Built target serial_sensors_node
+[0.180s] [ 61%] [32mBuilding CXX object CMakeFiles/serial_motors_node.dir/src/serial_motors_node.cpp.o[0m
+[10.679s] [ 66%] [32m[1mLinking CXX executable serial_motors_node[0m
+[11.104s] [100%] Built target serial_motors_node
+[11.120s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms -- -j16 -l16
+[11.132s] Invoking command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms
+[11.140s] -- Install configuration: ""
+[11.141s] -- Execute custom install script
+[11.141s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_sensors_node
+[11.154s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_motors_node
+[11.167s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/image_restamper_node
+[11.179s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms
+[11.189s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms
+[11.200s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh
+[11.212s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv
+[11.222s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.sh
+[11.232s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.dsv
+[11.243s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.bash
+[11.255s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.sh
+[11.268s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.zsh
+[11.280s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.dsv
+[11.290s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.dsv
+[11.301s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms
+[11.313s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake
+[11.323s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake
+[11.334s] -- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.xml
+[11.347s] Invoked command in '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms

@@ -1,0 +1,161 @@
+[0.000000] (-) TimerEvent: {}
+[0.000647] (serial_comms) JobQueued: {'identifier': 'serial_comms', 'dependencies': OrderedDict()}
+[0.001213] (serial_comms) JobStarted: {'identifier': 'serial_comms'}
+[0.027308] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'cmake'}
+[0.030875] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'build'}
+[0.031184] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', '--', '-j16', '-l16'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4071', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4071,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4071', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/70b6fa97_6bf4_4c8e_bba6_498cd64f18c5', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.V103R3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.752', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[0.099411] (-) TimerEvent: {}
+[0.200026] (-) TimerEvent: {}
+[0.273133] (serial_comms) StdoutLine: {'line': b'[  5%] \x1b[32mBuilding CXX object CMakeFiles/serial_sensors_node.dir/src/serial_sensors_node.cpp.o\x1b[0m\n'}
+[0.276283] (serial_comms) StdoutLine: {'line': b'[ 16%] Built target image_restamper_node\n'}
+[0.300208] (-) TimerEvent: {}
+[0.315898] (serial_comms) StdoutLine: {'line': b'[ 61%] Built target serial_motors_node\n'}
+[0.400662] (-) TimerEvent: {}
+[0.501261] (-) TimerEvent: {}
+[0.601825] (-) TimerEvent: {}
+[0.702350] (-) TimerEvent: {}
+[0.802979] (-) TimerEvent: {}
+[0.903794] (-) TimerEvent: {}
+[1.004328] (-) TimerEvent: {}
+[1.104925] (-) TimerEvent: {}
+[1.205524] (-) TimerEvent: {}
+[1.306138] (-) TimerEvent: {}
+[1.406740] (-) TimerEvent: {}
+[1.507309] (-) TimerEvent: {}
+[1.607837] (-) TimerEvent: {}
+[1.708363] (-) TimerEvent: {}
+[1.808917] (-) TimerEvent: {}
+[1.909384] (-) TimerEvent: {}
+[2.009862] (-) TimerEvent: {}
+[2.110350] (-) TimerEvent: {}
+[2.210826] (-) TimerEvent: {}
+[2.311307] (-) TimerEvent: {}
+[2.411807] (-) TimerEvent: {}
+[2.512281] (-) TimerEvent: {}
+[2.612784] (-) TimerEvent: {}
+[2.713280] (-) TimerEvent: {}
+[2.813740] (-) TimerEvent: {}
+[2.914181] (-) TimerEvent: {}
+[3.014614] (-) TimerEvent: {}
+[3.115085] (-) TimerEvent: {}
+[3.215543] (-) TimerEvent: {}
+[3.316053] (-) TimerEvent: {}
+[3.416550] (-) TimerEvent: {}
+[3.517136] (-) TimerEvent: {}
+[3.617605] (-) TimerEvent: {}
+[3.718111] (-) TimerEvent: {}
+[3.818808] (-) TimerEvent: {}
+[3.919283] (-) TimerEvent: {}
+[4.019810] (-) TimerEvent: {}
+[4.120289] (-) TimerEvent: {}
+[4.220792] (-) TimerEvent: {}
+[4.321232] (-) TimerEvent: {}
+[4.421951] (-) TimerEvent: {}
+[4.522403] (-) TimerEvent: {}
+[4.622815] (-) TimerEvent: {}
+[4.723306] (-) TimerEvent: {}
+[4.823787] (-) TimerEvent: {}
+[4.924259] (-) TimerEvent: {}
+[5.024772] (-) TimerEvent: {}
+[5.125263] (-) TimerEvent: {}
+[5.225790] (-) TimerEvent: {}
+[5.326256] (-) TimerEvent: {}
+[5.426772] (-) TimerEvent: {}
+[5.527227] (-) TimerEvent: {}
+[5.627734] (-) TimerEvent: {}
+[5.728235] (-) TimerEvent: {}
+[5.828731] (-) TimerEvent: {}
+[5.929213] (-) TimerEvent: {}
+[6.029709] (-) TimerEvent: {}
+[6.130215] (-) TimerEvent: {}
+[6.230742] (-) TimerEvent: {}
+[6.331256] (-) TimerEvent: {}
+[6.431765] (-) TimerEvent: {}
+[6.532284] (-) TimerEvent: {}
+[6.632759] (-) TimerEvent: {}
+[6.733265] (-) TimerEvent: {}
+[6.833798] (-) TimerEvent: {}
+[6.934307] (-) TimerEvent: {}
+[7.034787] (-) TimerEvent: {}
+[7.135271] (-) TimerEvent: {}
+[7.235796] (-) TimerEvent: {}
+[7.336238] (-) TimerEvent: {}
+[7.437077] (-) TimerEvent: {}
+[7.537558] (-) TimerEvent: {}
+[7.638081] (-) TimerEvent: {}
+[7.738577] (-) TimerEvent: {}
+[7.839096] (-) TimerEvent: {}
+[7.939586] (-) TimerEvent: {}
+[8.040101] (-) TimerEvent: {}
+[8.140554] (-) TimerEvent: {}
+[8.241103] (-) TimerEvent: {}
+[8.341604] (-) TimerEvent: {}
+[8.442139] (-) TimerEvent: {}
+[8.542629] (-) TimerEvent: {}
+[8.643142] (-) TimerEvent: {}
+[8.743643] (-) TimerEvent: {}
+[8.844172] (-) TimerEvent: {}
+[8.944668] (-) TimerEvent: {}
+[9.045208] (-) TimerEvent: {}
+[9.145681] (-) TimerEvent: {}
+[9.246226] (-) TimerEvent: {}
+[9.346750] (-) TimerEvent: {}
+[9.447233] (-) TimerEvent: {}
+[9.547751] (-) TimerEvent: {}
+[9.648194] (-) TimerEvent: {}
+[9.748728] (-) TimerEvent: {}
+[9.849174] (-) TimerEvent: {}
+[9.949756] (-) TimerEvent: {}
+[10.050199] (-) TimerEvent: {}
+[10.150632] (-) TimerEvent: {}
+[10.251097] (-) TimerEvent: {}
+[10.351587] (-) TimerEvent: {}
+[10.452041] (-) TimerEvent: {}
+[10.552507] (-) TimerEvent: {}
+[10.652967] (-) TimerEvent: {}
+[10.753374] (-) TimerEvent: {}
+[10.853783] (-) TimerEvent: {}
+[10.954188] (-) TimerEvent: {}
+[11.054664] (-) TimerEvent: {}
+[11.155131] (-) TimerEvent: {}
+[11.255541] (-) TimerEvent: {}
+[11.356023] (-) TimerEvent: {}
+[11.456490] (-) TimerEvent: {}
+[11.556975] (-) TimerEvent: {}
+[11.657428] (-) TimerEvent: {}
+[11.757971] (-) TimerEvent: {}
+[11.858614] (-) TimerEvent: {}
+[11.959186] (-) TimerEvent: {}
+[12.059654] (-) TimerEvent: {}
+[12.118172] (serial_comms) StdoutLine: {'line': b'[ 66%] \x1b[32m\x1b[1mLinking CXX executable serial_sensors_node\x1b[0m\n'}
+[12.159772] (-) TimerEvent: {}
+[12.260115] (-) TimerEvent: {}
+[12.360498] (-) TimerEvent: {}
+[12.460887] (-) TimerEvent: {}
+[12.481655] (serial_comms) StdoutLine: {'line': b'[100%] Built target serial_sensors_node\n'}
+[12.496854] (serial_comms) CommandEnded: {'returncode': 0}
+[12.497924] (serial_comms) JobProgress: {'identifier': 'serial_comms', 'progress': 'install'}
+[12.509481] (serial_comms) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms'], 'cwd': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'gabriel', 'GZ_CONFIG_PATH': '/opt/ros/kilted/opt/sdformat_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/kilted/opt/sdformat_vendor/lib:/opt/ros/kilted/opt/gz_math_vendor/lib:/opt/ros/kilted/opt/gz_utils_vendor/lib:/opt/ros/kilted/opt/rviz_ogre_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/opt/gz_tools_vendor/lib:/opt/ros/kilted/opt/gz_cmake_vendor/lib:/opt/ros/kilted/lib', 'HOME': '/home/gabriel', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '4071', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'COLCON_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install', 'ROS_DISTRO': 'kilted', 'LOGNAME': 'gabriel', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/app-gnome\\x2dsession\\x2dmanager.slice/gnome-session-manager@ubuntu.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'gabriel', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/kilted/opt/gz_tools_vendor/bin:/opt/ros/kilted/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/gabriel/.local/bin:/home/gabriel/.local/bin', 'SESSION_MANAGER': 'local/gabriel-Aspire-A515-45:@/tmp/.ICE-unix/4071,unix/gabriel-Aspire-A515-45:/tmp/.ICE-unix/4071', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/70b6fa97_6bf4_4c8e_bba6_498cd64f18c5', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.V103R3', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.752', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/build/serial_comms', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=58a89fa85518c6fd3ce4b7806a4d4031', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/kilted/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms:/opt/ros/kilted/opt/sdformat_vendor:/opt/ros/kilted/opt/gz_math_vendor:/opt/ros/kilted/opt/gz_utils_vendor:/opt/ros/kilted/opt/gz_tools_vendor:/opt/ros/kilted/opt/gz_cmake_vendor:/opt/ros/kilted'}), 'shell': False}
+[12.518487] (serial_comms) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[12.519068] (serial_comms) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[12.519750] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_sensors_node\n'}
+[12.520197] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/serial_motors_node\n'}
+[12.520707] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/lib/serial_comms/image_restamper_node\n'}
+[12.520833] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms\n'}
+[12.520982] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms\n'}
+[12.521179] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh\n'}
+[12.521455] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv\n'}
+[12.521748] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.sh\n'}
+[12.522015] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/environment/path.dsv\n'}
+[12.522280] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.bash\n'}
+[12.522555] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.sh\n'}
+[12.522872] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.zsh\n'}
+[12.523147] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/local_setup.dsv\n'}
+[12.523371] (serial_comms) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.dsv\n'}
+[12.534009] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms\n'}
+[12.534709] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake\n'}
+[12.535077] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake\n'}
+[12.535653] (serial_comms) StdoutLine: {'line': b'-- Up-to-date symlink: /home/gabriel/repos/lunch-delivery-robot/robot/marmitron_ws/install/serial_comms/share/serial_comms/package.xml\n'}
+[12.537861] (serial_comms) CommandEnded: {'returncode': 0}
+[12.554218] (serial_comms) JobEnded: {'identifier': 'serial_comms', 'rc': 0}
+[12.555708] (-) EventReactorShutdown: {}

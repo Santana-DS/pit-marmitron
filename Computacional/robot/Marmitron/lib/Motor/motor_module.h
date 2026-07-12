@@ -3,10 +3,10 @@
 
 class motor{
   private:
-    int renable, rpwm, lpwm, lenable;
+    int rpwm, lpwm;
 
   public:
-    motor(int enabler, int enablel, int pwmr, int pwml);
+    motor(int pwmr, int pwml);
 
     void init();
     void acionaMotor(int pwm);

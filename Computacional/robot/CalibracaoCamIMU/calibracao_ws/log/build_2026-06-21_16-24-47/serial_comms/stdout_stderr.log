@@ -1,0 +1,87 @@
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 2.7.5 (/opt/ros/kilted/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+-- Found rclcpp: 29.5.8 (/opt/ros/kilted/share/rclcpp/cmake)
+-- Found rosidl_generator_c: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_c/cmake)
+-- Found rosidl_generator_cpp: 4.9.6 (/opt/ros/kilted/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rmw_implementation_cmake: 7.8.2 (/opt/ros/kilted/share/rmw_implementation_cmake/cmake)
+-- Found rmw_fastrtps_cpp: 9.3.4 (/opt/ros/kilted/share/rmw_fastrtps_cpp/cmake)
+-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.13")  
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+-- Found sensor_msgs: 5.5.2 (/opt/ros/kilted/share/sensor_msgs/cmake)
+-- Found ament_lint_auto: 0.19.3 (/opt/ros/kilted/share/ament_lint_auto/cmake)
+[0mCMake Deprecation Warning at /opt/ros/kilted/share/ament_cmake_target_dependencies/cmake/ament_target_dependencies.cmake:87 (message):
+  ament_target_dependencies() is deprecated.  Use target_link_libraries()
+  with modern CMake targets instead.  Try replacing this call with:
+
+    target_link_libraries(serial_imu_node PUBLIC
+      ${sensor_msgs_TARGETS}
+      rclcpp::rclcpp
+      sensor_msgs::sensor_msgs_library
+    )
+
+Call Stack (most recent call first):
+  CMakeLists.txt:46 (ament_target_dependencies)
+
+[0m
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/include;/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/include/serial_comms;/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done (1.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/build/serial_comms
+[ 37%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial.cc.o[0m
+[ 37%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/serial_imu_node.cpp.o[0m
+[ 37%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/win.cc.o[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_osx.cc.o[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_linux.cc.o[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/list_ports/list_ports_win.cc.o[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/serial_imu_node.dir/src/impl/unix.cc.o[0m
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:[m[K In function ‘[01m[Kstd::vector<std::__cxx11::basic_string<char> >[01;32m[K glob[m[K(const std::vector<std::__cxx11::basic_string<char> >&)[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:66:40:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Ksize_t[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+   66 |     for(int path_index = 0; [01;35m[Kpath_index < glob_results.gl_pathc[m[K; path_index++)
+      |                             [01;35m[K~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:57:9:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[Kglob_retval[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+   57 |     int [01;35m[Kglob_retval[m[K = glob(patterns[0].c_str(), 0, NULL, &glob_results);
+      |         [01;35m[K^~~~~~~~~~~[m[K
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:[m[K In function ‘[01m[Kstd::string[01;32m[K format[m[K(const char*, ...)[m[K’:
+[01m[K/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/src/serial_comms/src/impl/list_ports/list_ports_linux.cc:246:31:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Ksize_t[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+  246 |         else if( [01;35m[Kreturn_value >= buffer_size_bytes[m[K )
+      |                  [01;35m[K~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~[m[K
+[100%] [32m[1mLinking CXX executable serial_imu_node[0m
+[100%] Built target serial_imu_node
+-- Install configuration: ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node
+-- Set non-toolchain portion of runtime path of "/home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/lib/serial_comms/serial_imu_node" to ""
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/package_run_dependencies/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/parent_prefix_path/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/ament_prefix_path.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/environment/path.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.bash
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.sh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.zsh
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/local_setup.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.dsv
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/ament_index/resource_index/packages/serial_comms
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig.cmake
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/cmake/serial_commsConfig-version.cmake
+-- Installing: /home/gabriel/repos/lunch-delivery-robot/robot/CalibracaoCamIMU/calibracao_ws/install/serial_comms/share/serial_comms/package.xml
