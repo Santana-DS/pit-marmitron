@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+
+<!-- Corpo base do robo, suas juntas e localização de sensores -->
+<!-- Dimensões são em metros -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="materials.xacro"/>
+    <xacro:include filename="inertials.xacro"/>
+
+    <!-- Chassi -->
+    <xacro:property name="chassi_x" value="0.6"/>
+    <xacro:property name="chassi_y" value="0.35"/>
+    <xacro:property name="chassi_z" value="0.1"/>
+    <xacro:property name="chassi_massa" value="5.3"/>
+    <xacro:property name="chassi_origem" value="0.15 0.0 0.075"/>
+    <xacro:property name="chassi_joint_xyz" value="-0.1 0 0"/>
+
+    <!-- Rodas trazeiras -->
+    <xacro:property name="roda_raio" value="0.05"/>
+    <xacro:property name="roda_comprimento" value="0.04"/>
+    <xacro:property name="roda_massa" value="0.5"/>
+    <xacro:property name="roda_y" value="0.215"/>
+    <xacro:property name="roda_mu1" value="0.65"/>
+    <xacro:property name="roda_mu2" value="0.65"/>
+
+    <!-- Roda(as) de apio -->
+    <xacro:property name="apoio_raio" value="0.05"/>
+    <xacro:property name="apoio_massa" value="0.5"/>
+    <xacro:property name="apoio_x" value="0.24"/>
+    <xacro:property name="apoio_mu1" value="0.2"/>
+    <xacro:property name="apoio_mu2" value="0.2"/>
+
+
+    <link name="base_link"/>
+
+    <!-- Chassi -->
+    <joint name="junta_chassi" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassi"/>
+        <origin xyz="${chassi_joint_xyz}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="chassi">
+        <visual>
+            <origin xyz="${chassi_origem}"/>
+            <geometry>
+                <box size="${chassi_x} ${chassi_y} ${chassi_z}"/>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <origin xyz="${chassi_origem}"/>
+            <geometry>
+                <box size="${chassi_x} ${chassi_y} ${chassi_z}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${chassi_massa}" x="${chassi_x}" y="${chassi_y}" z="${chassi_z}">
+            <origin xyz="${chassi_origem}" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <!-- Roda Esquerda Traseira -->
+    <joint name="roda_esquerda_joint" type="continuous">
+        <parent link="chassi"/>
+        <child link="roda_esquerda"/>
+        <origin xyz="0 ${roda_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="roda_esquerda">
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+            <geometry><cylinder radius="${roda_raio}" length="${roda_comprimento}"/></geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+            <geometry><cylinder radius="${roda_raio}" length="${roda_comprimento}"/></geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${roda_massa}" length="${roda_comprimento}" radius="${roda_raio}">
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+    <gazebo reference="roda_esquerda">
+        <mu1>${roda_mu1}</mu1>
+        <mu2>${roda_mu2}</mu2>
+    </gazebo>
+
+    <!-- Roda Direita Traseira -->
+    <joint name="roda_direita_joint" type="continuous">
+        <parent link="chassi"/>
+        <child link="roda_direita"/>
+        <origin xyz="0 -${roda_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="roda_direita">
+        <visual>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+            <geometry><cylinder radius="${roda_raio}" length="${roda_comprimento}"/></geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+            <geometry><cylinder radius="${roda_raio}" length="${roda_comprimento}"/></geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${roda_massa}" length="${roda_comprimento}" radius="${roda_raio}">
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+    <gazebo reference="roda_direita">
+        <mu1>${roda_mu1}</mu1>
+        <mu2>${roda_mu2}</mu2>
+    </gazebo>
+
+    <!-- Rodas de Apoio -->
+    <joint name="roda_frente_joint" type="fixed">
+        <parent link="chassi"/>
+        <child link="roda_frente"/>
+        <origin xyz="${apoio_x} 0 0"/>
+    </joint>
+
+    <link name="roda_frente">
+
+        <visual>
+            <geometry>
+                <sphere radius="${apoio_raio}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <collision>
+            <geometry>
+                <sphere radius="${apoio_raio}"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_sphere mass="${apoio_massa}" radius="${apoio_raio}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+
+    </link>
+
+    <gazebo reference="roda_frente">
+        <self_collide>false</self_collide>
+        <mu1>${apoio_mu1}</mu1>
+        <mu2>${apoio_mu2}</mu2>
+    </gazebo>
+
+</robot>

@@ -62,6 +62,14 @@ Two constraints came from the team, both accepted with conditions attached. This
 
 Esses itens nao bloqueiam a demonstracao funcional. Devem ser tratados depois da telemetria, navegacao e video reais ou quando as dependencias externas estiverem aguardando retorno.
 
+## Prioridade alta: integracao fisica App - ESP32
+
+- [ ] Definir e documentar qual ESP32 fisico hospedara o firmware em `hardware/esp32-lock` (display, QR e atuador de retirada).
+- [ ] Validar GPIOs, alimentacao, aterramento comum e isolamento do atuador antes de gravar o firmware.
+- [ ] Provisionar credenciais MQTT exclusivas para o modulo escolhido e validar `display_qr`, `unlock` e heartbeat contra o gateway.
+
+Nao reutilizar a ESP de sensores sem uma auditoria de pinos: ela ja usa SPI para IMU, UART para GPS, GPIOs para sonar/encoders e e sensivel a interferencia de display/atuador. O modulo de trava/display deve permanecer isolado da malha de motores sempre que houver uma terceira ESP disponivel.
+
 ## 2-Week Milestone Roadmap
 
 Given the compressed timeline, here's the priority order. Items marked **[BLOCKING]** are required for the security model to hold — do not defer them to "after the demo."
