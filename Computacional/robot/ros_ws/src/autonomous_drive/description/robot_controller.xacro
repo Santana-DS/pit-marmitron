@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Todos os topicos publicados possuem /demo antes, isso é para ser redirecionado na bridge-->
+
+    <!-- Arquivo dos plugins necessários para simualr cada componente, usado APENAS para a simulação-->
+    <!--{nome_update} é a taxa de atualizações do topico-->
+    <!-- Constantes da Camera/Lidar -->
+    <xacro:property name="lazer_update" value="10"/>
+    <xacro:property name="lazer_samples" value="150"/>
+    <xacro:property name="lazer_min_angle" value="-0.785"/> <!-- -0.785-->
+    <xacro:property name="lazer_max_angle" value="0.785"/>
+    <xacro:property name="lazer_min_range" value="0.5"/>
+    <xacro:property name="lazer_max_range" value="12"/>
+    <xacro:property name="lazer_topic" value="lidar"/>
+
+    <!-- Constantes do IMU -->
+    <xacro:property name="update_imu" value="100"/>
+    <xacro:property name="imu_giroscopio" value="0.009"/>
+    <xacro:property name="imu_acelera" value="0.021"/>
+    <xacro:property name="imu_topic" value="imu"/>
+
+    <!-- Constantes do driver diferencial do gazebo-->
+    <xacro:property name="dist_rodas" value="0.215"/>
+    <xacro:property name="raio_rodas" value="0.05"/>
+    <xacro:property name="cmd_vel_topic" value="cmd_vel"/>
+    <xacro:property name="odom_topic" value="odom"/>
+    <xacro:property name="odom_frame" value="odom"/>
+    <xacro:property name="base_frame" value="base_link"/>
+    <xacro:property name="publish_odom_tf" value="false"/>
+    <xacro:property name="taxa_update_controlador" value="50"/>
+
+
+    <!-- Lidar/Camera -->
+    <gazebo reference="lazer_frame">
+        <sensor name="lazer_sensor" type="ray">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>${lazer_update}</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>${lazer_samples}</samples>
+                        <resolution>1</resolution>
+                        <min_angle>${lazer_min_angle}</min_angle>
+                        <max_angle>${lazer_max_angle}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>${lazer_min_range}</min>
+                    <max>${lazer_max_range}</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </ray>
+            <plugin name="lazer_controller" filename="libgazebo_ros_ray_sensor.so">
+                <ros>
+                    <namespace>/</namespace>
+                    <remapping>~/out:=${lazer_topic}</remapping>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>lazer_frame</frame_name>
+            </plugin>
+            <always_on>1</always_on>
+        </sensor>
+    </gazebo>
+
+    <!-- IMU -->
+    <gazebo reference="imu_frame">
+        <sensor name="imu" type="imu">
+            <always_on>1</always_on>
+            <update_rate>${update_imu}</update_rate>
+            <imu>
+                <angular_velocity>
+                    <x><noise type="gaussian"><mean>0</mean><stddev>${imu_giroscopio}</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0</mean><stddev>${imu_giroscopio}</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0</mean><stddev>${imu_giroscopio}</stddev></noise></z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x><noise type="gaussian"><mean>0</mean><stddev>${imu_acelera}</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0</mean><stddev>${imu_acelera}</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0</mean><stddev>${imu_acelera}</stddev></noise></z>
+                </linear_acceleration>
+            </imu>
+            <plugin name="imu_controller" filename="libgazebo_ros_imu_sensor.so">
+                <ros>
+                    <namespace>/</namespace>
+                    <remapping>~/out:=${imu_topic}</remapping>
+                </ros>
+                <initial_orientation_as_reference>false</initial_orientation_as_reference>
+                <frame_name>imu_frame</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- Diff Drive e o Joint State Publisher, para a simulação possuir a posição das rodas -->
+    <gazebo>
+        <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
+
+            <ros>
+                <namespace>/</namespace>
+                <remapping>cmd_vel:=${cmd_vel_topic}</remapping>
+                <remapping>odom:=${odom_topic}</remapping>
+            </ros>
+
+            <left_joint>roda_esquerda_joint</left_joint>
+            <right_joint>roda_direita_joint</right_joint>
+
+            <wheel_separation>${dist_rodas}</wheel_separation>
+            <wheel_diameter>${raio_rodas * 2}</wheel_diameter>
+
+            <odom_publish_frequency>${taxa_update_controlador}</odom_publish_frequency>
+
+            <publish_odom>true</publish_odom>
+            <publish_odom_tf>${publish_odom_tf}</publish_odom_tf>
+            <publish_wheel_tf>false</publish_wheel_tf>
+
+            <odometry_frame>${odom_frame}</odometry_frame>
+            <robot_base_frame>${base_frame}</robot_base_frame>
+
+        </plugin>
+
+        <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <ros>
+                <namespace>/</namespace>
+            </ros>
+            <joint_name>roda_esquerda_joint</joint_name>
+            <joint_name>roda_direita_joint</joint_name>
+            <update_rate>${taxa_update_controlador}</update_rate>
+        </plugin>
+    </gazebo>
+
+</robot>
