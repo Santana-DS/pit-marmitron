@@ -27,8 +27,17 @@ func newTestOrderService(pub *mockPublisher) (*OrderService, *OTPService) {
 		Level: slog.LevelError, // suppress info logs during tests
 	}))
 	otpSvc := NewOTPService(pub)
-	orderSvc := NewOrderService(otpSvc, pub, log, nil)
+	routes := testRouteResolver{}
+	orderSvc := NewOrderService(otpSvc, pub, log, nil, routes)
 	return orderSvc, otpSvc
+}
+
+type testRouteResolver struct{}
+
+func (testRouteResolver) ResolveRoute(context.Context, string) (NavigationRoute, error) {
+	return NavigationRoute{RouteID: "test_route_v1", Nodes: []RouteNode{
+		{Sequence: 0, Latitude: -15.0, Longitude: -47.0},
+	}}, nil
 }
 
 var testDest = Destination{X: 12.0, Y: -3.5}

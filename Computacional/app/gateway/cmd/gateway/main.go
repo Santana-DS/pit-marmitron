@@ -51,6 +51,7 @@ func main() {
 
 	telemetryRepo := database.NewTelemetryRepository(dbPool)
 	deliveryPointsRepo := database.NewDeliveryPointRepository(dbPool)
+	routesRepo := database.NewNavigationRouteRepository(dbPool)
 	telemetryIngestSvc := services.NewTelemetryIngestService(telemetryRepo, log)
 	mqttCfg.SetTelemetryIngest(telemetryIngestSvc)
 
@@ -66,7 +67,7 @@ func main() {
 	}
 
 	otpSvc := services.NewOTPService(mqttCfg)
-	orderSvc := services.NewOrderService(otpSvc, mqttCfg, log, deliveryPointsRepo)
+	orderSvc := services.NewOrderService(otpSvc, mqttCfg, log, deliveryPointsRepo, routesRepo)
 	wakeSvc := services.NewWakeDisplayService(otpSvc, mqttCfg, log)
 
 	catalogRepo := catalog.NewRepository(dbPool)
