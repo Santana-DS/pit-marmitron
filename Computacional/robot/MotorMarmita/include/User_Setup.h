@@ -23,8 +23,8 @@
 // using ST7789_DRIVER covers both silicon revisions.
 // Hardware real: ST7789V. For Wokwi/ILI9341 simulation, swap these defines
 // locally; do not enable both drivers in the same build.
-#define ST7789_DRIVER
-//#define ILI9341_DRIVER
+//#define ST7789_DRIVER
+#define ILI9341_DRIVER
 
 // ── Step 2: Display geometry ──────────────────────────────────────────────────
 // Physical pixel dimensions — independent of rotation.
