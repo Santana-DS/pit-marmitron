@@ -49,13 +49,13 @@ static constexpr uint16_t C_UNB_BLUE  = 0x0194;
 static constexpr uint8_t  QR_VERSION = 2;
 static constexpr uint8_t  QR_ECC     = 1;
 static constexpr uint8_t  QR_MODULES = 25;
-static constexpr uint8_t  QR_MOD_PX  = 8;
-static constexpr uint16_t QR_SIDE    = QR_MODULES * QR_MOD_PX;  // 200
-static constexpr uint16_t QR_QUIET   = 10;
-static constexpr uint16_t QR_LEFT    = QR_QUIET;
-static constexpr uint16_t QR_TOP     = (PANEL_H - QR_SIDE) / 2;  // 20
-static constexpr uint16_t OTP_COL_X  = QR_SIDE + QR_QUIET * 2;   // 220
-static constexpr uint16_t OTP_COL_W  = PANEL_W - OTP_COL_X;      // 100
+static constexpr uint8_t  QR_MOD_PX  = 6;
+static constexpr uint16_t QR_SIDE    = QR_MODULES * QR_MOD_PX;  // 150
+static constexpr uint16_t QR_QUIET   = 8;
+static constexpr uint16_t QR_LEFT    = 16;
+static constexpr uint16_t QR_TOP     = 62;
+static constexpr uint16_t OTP_COL_X  = 184;
+static constexpr uint16_t OTP_COL_W  = PANEL_W - OTP_COL_X;
 
 // ── Cart animation ────────────────────────────────────────────────────────────
 static constexpr uint16_t CART_W     = 70;
