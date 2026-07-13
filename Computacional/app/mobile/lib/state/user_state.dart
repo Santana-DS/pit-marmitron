@@ -166,8 +166,8 @@ class UserModel {
 
 // ─── Default seed data ────────────────────────────────────────────────────────
 //
-// Hardcoded defaults replace every scattered 'Maria Silva' / 'Rua das Acácias'
-// string across the codebase. All screens read from userStateNotifier.value.
+// Hardcoded defaults provide a consistent initial identity and UnB delivery
+// location. All screens read from userStateNotifier.value.
 class MockRestaurantProfile {
   final String adminUserId;
   final String restaurantId;
@@ -241,7 +241,7 @@ const UserModel _kDefaultUser = UserModel(
   name: 'Maria Silva',
   email: 'maria.unb@gmail.com',
   phone: '(61) 99999-1234',
-  address: 'Rua das Acácias, 42 - Asa Sul',
+  address: 'SG-11, Faculdade de Tecnologia - UnB',
   role: 'client',
 );
 
