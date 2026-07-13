@@ -20,6 +20,8 @@ services:
       - ./database/030_products.up.sql:/docker-entrypoint-initdb.d/030_products.sql:ro
       - ./database/040_orders.up.sql:/docker-entrypoint-initdb.d/040_orders.sql:ro
       - ./database/050_order_items.up.sql:/docker-entrypoint-initdb.d/050_order_items.sql:ro
+      - ./database/070_delivery_points.up.sql:/docker-entrypoint-initdb.d/070_delivery_points.sql:ro
+      - ./database/080_navigation_routes.up.sql:/docker-entrypoint-initdb.d/080_navigation_routes.sql:ro
       # Não incluir seeds em produção
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-unbot} -d ${POSTGRES_DB:-unbot_delivery}"]
@@ -45,7 +47,7 @@ services:
     container_name: unbot-gateway-prod
     environment:
       HTTP_ADDR: 0.0.0.0:8080
-      DATABASE_URL: postgres://${POSTGRES_USER:-unbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-unbot_delivery}?sslmode=require
+      DATABASE_URL: postgres://${POSTGRES_USER:-unbot}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-unbot_delivery}?sslmode=disable
       MQTT_HOST: ${MQTT_HOST:?MQTT_HOST must be set}
       MQTT_PORT: ${MQTT_PORT:-1883}
       MQTT_USER: ${MQTT_USER:?MQTT_USER must be set}
