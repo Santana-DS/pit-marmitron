@@ -95,6 +95,7 @@ enum class ScreenMode : uint8_t {
     BOOTING,
     IDLE,
     OFFLINE,
+    NAVIGATING,
     QR_CODE,
     UNLOCK_SUCCESS,
     ERROR_FAULT,
@@ -109,6 +110,7 @@ public:
     void showBooting();
     void showIdle();
     void showOffline();
+    void showNavigation(const char* state, const char* destination, float progress);
     void showQrCode(const char* otp);
     void showUnlockSuccess(const char* orderId);
     void showError();

@@ -25,6 +25,7 @@ constexpr uint32_t kBootFallbackMs = 5000;
 constexpr char kDisplayQrTopic[] = "robot/commands/display_qr";
 constexpr char kUnlockTopic[] = "robot/commands/unlock";
 constexpr char kHeartbeatTopic[] = "robot/status/heartbeat";
+constexpr char kNavStatusTopic[] = "robot/nav/status";
 
 DisplayManager display;
 WiFiClient wifiClient;
@@ -46,6 +47,17 @@ void onMqttMessage(char* topic, uint8_t* payload, unsigned int length) {
   }
 
   const char* orderId = document["order_id"] | "";
+  if (strcmp(topic, kNavStatusTopic) == 0) {
+    const char* state = document["state"] | "NAVIGATING";
+    const char* destination = document["waypoint_name"] | "";
+    if (strcmp(state, "FAULT") == 0 || strcmp(state, "FAILED") == 0 ||
+        strcmp(state, "CANCELLED") == 0 || strcmp(state, "REJECTED") == 0) {
+      display.showError();
+      return;
+    }
+    display.showNavigation(state, destination, document["progress_pct"] | 0.0f);
+    return;
+  }
   if (orderId[0] == '\0' || document["issued_at"].isNull()) {
     display.showError();
     return;
@@ -149,6 +161,7 @@ void updateMqtt() {
                      "{\"source\":\"esp32\",\"status\":\"offline\"}")) {
       mqtt.subscribe(kDisplayQrTopic, 1);
       mqtt.subscribe(kUnlockTopic, 1);
+      mqtt.subscribe(kNavStatusTopic, 1);
       mqtt.publish(kHeartbeatTopic, "{\"source\":\"esp32\",\"status\":\"online\"}");
       display.showIdle();
     }

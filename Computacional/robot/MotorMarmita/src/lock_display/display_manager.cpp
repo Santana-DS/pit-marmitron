@@ -195,6 +195,28 @@ void DisplayManager::showOffline() {
     _tft.drawString("Aguardando Wi-Fi e MQTT", PANEL_W / 2, 195, 2);
 }
 
+void DisplayManager::showNavigation(const char* state, const char* destination, float progress) {
+    if (!_ready) return;
+    _mode = ScreenMode::NAVIGATING;
+    _sprMain.deleteSprite();
+    _fullBlack();
+    progress = constrain(progress, 0.0f, 100.0f);
+
+    _tft.setTextDatum(TC_DATUM);
+    _tft.setTextColor(C_CYAN, C_BLACK);
+    _tft.drawString("MARMITRON EM ROTA", PANEL_W / 2, 22, 4);
+    _tft.setTextColor(C_WHITE, C_BLACK);
+    _tft.drawString(state, PANEL_W / 2, 72, 4);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString(destination[0] ? destination : "Destino aprovado", PANEL_W / 2, 112, 2);
+    _tft.drawRoundRect(30, 150, 260, 24, 4, C_GREY);
+    _tft.fillRoundRect(32, 152, (int16_t)(256 * progress / 100.0f), 20, 3, C_UNB_GREEN);
+    char percentage[12];
+    snprintf(percentage, sizeof(percentage), "%.0f%%", progress);
+    _tft.setTextColor(C_WHITE, C_BLACK);
+    _tft.drawString(percentage, PANEL_W / 2, 190, 4);
+}
+
 // =============================================================================
 // _drawTrack() — UnB gradient road, drawn ONCE in showIdle()
 // -----------------------------------------------------------------------------
