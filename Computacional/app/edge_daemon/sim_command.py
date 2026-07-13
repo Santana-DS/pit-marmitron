@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
 import os
 import sys
 import time
@@ -92,6 +93,47 @@ def build_route_payload(args: argparse.Namespace) -> dict[str, Any]:
             "issued_at": int(time.time())}
 
 
+def build_demo_telemetry(args: argparse.Namespace, progress: float, state: str) -> dict[str, Any]:
+    progress = max(0.0, min(progress, 100.0))
+    ratio = progress / 100.0
+    remaining_m = max(args.distance_m * (1.0 - ratio), 0.0)
+    speed_mps = args.speed_mps if state == "NAVIGATING" else 0.0
+    return {
+        "source": "simulation_cli",
+        "timestamp": int(time.time()),
+        "pose": {
+            "x": round(args.start_x + (args.end_x - args.start_x) * ratio, 3),
+            "y": round(args.start_y + (args.end_y - args.start_y) * ratio, 3),
+            "theta": round(args.theta, 4),
+            "frame": args.frame,
+        },
+        "velocity": {"linear_mps": speed_mps},
+        "battery": {"percent": max(args.battery_percent - ratio * 0.5, 0.0)},
+        "nav_state": state,
+        "active_order_id": args.order_id,
+        "remaining_m": round(remaining_m, 2),
+        "progress_pct": round(progress, 1),
+        "eta_seconds": round(remaining_m / speed_mps, 1) if speed_mps > 0 else 0.0,
+        "route_id": args.route_id,
+        "route_node": 0,
+        "cpu_pct": 18.0,
+        "mem_pct": 36.0,
+    }
+
+
+def build_demo_nav_status(args: argparse.Namespace, progress: float, state: str) -> dict[str, Any]:
+    return {
+        "order_id": args.order_id,
+        "route_id": args.route_id,
+        "route_node": 0,
+        "waypoint_name": args.destination,
+        "state": state,
+        "progress_pct": round(max(0.0, min(progress, 100.0)), 1),
+        "remaining_m": round(max(args.distance_m * (1.0 - progress / 100.0), 0.0), 2),
+        "issued_at": int(time.time()),
+    }
+
+
 async def _publish(topic: str, payload: dict[str, Any], qos: int) -> None:
     encoded = json.dumps(payload, separators=(",", ":"))
     async with aiomqtt.Client(**_mqtt_options()) as client:
@@ -127,6 +169,34 @@ async def _listen(seconds: float, topics: list[str]) -> None:
                 print(payload)
 
 
+async def _run_demo(args: argparse.Namespace) -> None:
+    steps = max(1, math.ceil(args.duration_seconds / args.interval_seconds))
+    async with aiomqtt.Client(**_mqtt_options()) as client:
+        heartbeat = {
+            "source": "simulation_cli",
+            "status": "online",
+            "nav_state": "NAVIGATING",
+            "active_order": args.order_id,
+            "mqtt_connected": True,
+        }
+        await client.publish(Topics.HEARTBEAT, json.dumps(heartbeat), qos=1, retain=False)
+
+        print(f"demo started: {steps} updates for {args.destination}")
+        for step in range(steps + 1):
+            progress = step * 100.0 / steps
+            telemetry = build_demo_telemetry(args, progress, "NAVIGATING")
+            nav_status = build_demo_nav_status(args, progress, "NAVIGATING")
+            await client.publish(Topics.TELEMETRY, json.dumps(telemetry), qos=0, retain=False)
+            await client.publish(Topics.NAV_STATUS, json.dumps(nav_status), qos=1, retain=False)
+            await asyncio.sleep(args.interval_seconds)
+
+        telemetry = build_demo_telemetry(args, 100.0, "ARRIVED")
+        nav_status = build_demo_nav_status(args, 100.0, "ARRIVED")
+        await client.publish(Topics.TELEMETRY, json.dumps(telemetry), qos=0, retain=False)
+        await client.publish(Topics.NAV_STATUS, json.dumps(nav_status), qos=1, retain=False)
+    print("demo finished: ARRIVED published")
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m edge_daemon.sim_command",
@@ -155,6 +225,22 @@ def _parser() -> argparse.ArgumentParser:
     estop.add_argument("--source", default="validation_cli")
     estop.add_argument("--qos", type=int, default=2)
 
+    demo = sub.add_parser("demo", help="simulate telemetry and navigation status without ROS")
+    demo.add_argument("--order-id", default="SIM-DEMO-001")
+    demo.add_argument("--route-id", default="SIM_DEMO_V1")
+    demo.add_argument("--destination", default="SIM_DEMO")
+    demo.add_argument("--duration-seconds", type=float, default=30.0)
+    demo.add_argument("--interval-seconds", type=float, default=1.0)
+    demo.add_argument("--distance-m", type=float, default=20.0)
+    demo.add_argument("--speed-mps", type=float, default=0.45)
+    demo.add_argument("--battery-percent", type=float, default=86.0)
+    demo.add_argument("--start-x", type=float, default=0.0)
+    demo.add_argument("--start-y", type=float, default=0.0)
+    demo.add_argument("--end-x", type=float, default=12.0)
+    demo.add_argument("--end-y", type=float, default=6.0)
+    demo.add_argument("--theta", type=float, default=0.0)
+    demo.add_argument("--frame", default="map")
+
     listen = sub.add_parser("listen", help="listen to robot telemetry/status topics")
     listen.add_argument("--seconds", type=float, default=30.0)
     listen.add_argument(
@@ -175,6 +261,10 @@ async def _amain(argv: list[str]) -> None:
         await _publish(Topics.NAVIGATE, build_route_payload(args), args.qos)
     elif args.command == "estop":
         await _publish(Topics.ESTOP, build_estop_payload(args), args.qos)
+    elif args.command == "demo":
+        if args.duration_seconds <= 0 or args.interval_seconds <= 0 or args.distance_m < 0:
+            raise SystemExit("duration, interval and distance must be positive")
+        await _run_demo(args)
     elif args.command == "listen":
         topics = args.topics or [Topics.TELEMETRY, Topics.NAV_STATUS, Topics.HEARTBEAT]
         await _listen(args.seconds, topics)

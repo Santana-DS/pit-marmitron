@@ -8,7 +8,7 @@ from argparse import Namespace
 from .__main__ import _estop_observer, _navigation_cancel_observer
 from .config import MQTTConfig
 from .mqtt_bridge import MQTTBridge
-from .sim_command import build_estop_payload, build_navigate_payload
+from .sim_command import build_demo_nav_status, build_demo_telemetry, build_estop_payload, build_navigate_payload
 from .state_machine import RobotState, RobotStateMachine
 
 
@@ -173,6 +173,21 @@ class SafetyNavigationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(payload["source"], "validation_cli")
         self.assertEqual(payload["reason"], "operator_button")
         self.assertIsInstance(payload["timestamp"], int)
+
+    def test_demo_payload_drives_operator_telemetry_and_display_status(self) -> None:
+        args = Namespace(
+            order_id="SIM-DEMO-001", route_id="SIM_DEMO_V1", destination="SIM_DEMO",
+            distance_m=20.0, speed_mps=0.5, battery_percent=86.0,
+            start_x=0.0, start_y=0.0, end_x=12.0, end_y=6.0, theta=0.0, frame="map",
+        )
+        telemetry = build_demo_telemetry(args, 50.0, "NAVIGATING")
+        status = build_demo_nav_status(args, 50.0, "NAVIGATING")
+
+        self.assertEqual(telemetry["nav_state"], "NAVIGATING")
+        self.assertEqual(telemetry["pose"]["x"], 6.0)
+        self.assertEqual(telemetry["remaining_m"], 10.0)
+        self.assertEqual(status["waypoint_name"], "SIM_DEMO")
+        self.assertEqual(status["progress_pct"], 50.0)
 
 
 if __name__ == "__main__":
