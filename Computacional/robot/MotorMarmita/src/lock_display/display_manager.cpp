@@ -458,9 +458,15 @@ void DisplayManager::showQrCode(const char* otp) {
     }
 
     _fullBlack();
+    _tft.fillRect(0, 0, PANEL_W, 8, C_AMBER);
+    _tft.setTextDatum(TC_DATUM);
+    _tft.setTextColor(C_WHITE, C_BLACK);
+    _tft.drawString("RETIRE SEU PEDIDO", PANEL_W / 2, 19, 4);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString("Escaneie o QR ou informe o codigo", PANEL_W / 2, 46, 2);
 
     // ── Left zone: quiet zone + QR ─────────────────────────────────────────────
-    _tft.fillRect(0, QR_TOP - QR_QUIET,
+    _tft.fillRect(QR_LEFT - QR_QUIET, QR_TOP - QR_QUIET,
                   QR_SIDE + QR_QUIET * 2, QR_SIDE + QR_QUIET * 2,
                   C_WHITE);
 
@@ -479,23 +485,18 @@ void DisplayManager::showQrCode(const char* otp) {
 
     // ── Right zone: 4 Font 7 digits stacked ───────────────────────────────────
     // Font 7: 7-segment numerals, 48px tall, centred in the 100px column.
-    static constexpr uint8_t  DIGIT_FONT = 7;
-    static constexpr uint16_t DIGIT_H    = 48;
-    static constexpr uint16_t DIGIT_GAP  = 8;
-    const uint16_t totalH  = 4 * DIGIT_H + 3 * DIGIT_GAP;   // 216
-    uint16_t       startY  = (PANEL_H - totalH) / 2;         // 12
-    const uint16_t colCX   = OTP_COL_X + OTP_COL_W / 2;     // 270
-
+    const uint16_t colCX = OTP_COL_X + OTP_COL_W / 2;
+    _tft.drawFastVLine(OTP_COL_X - 10, QR_TOP - 2, QR_SIDE + 4, C_DKGREY);
     _tft.setTextDatum(TC_DATUM);
+    _tft.setTextColor(C_AMBER, C_BLACK);
+    _tft.drawString("CODIGO", colCX, 83, 2);
     _tft.setTextColor(C_WHITE, C_BLACK);
-
-    for (uint8_t i = 0; i < 4 && otp[i] != '\0'; i++) {
-        char ch[2] = { otp[i], '\0' };
-        _tft.drawString(ch, colCX, startY + i * (DIGIT_H + DIGIT_GAP), DIGIT_FONT);
-    }
+    _tft.drawString(otp, colCX, 112, 7);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString("Use no aplicativo", colCX, 176, 2);
+    _tft.drawString("para liberar", colCX, 198, 2);
 
     // Thin vertical hairline separating zones — barely visible
-    _tft.drawFastVLine(OTP_COL_X - 2, 20, PANEL_H - 40, C_DKGREY);
 }
 
 // =============================================================================
@@ -672,10 +673,10 @@ void DisplayManager::showError() {
     _tft.setTextDatum(TC_DATUM);
     _tft.setTextSize(2);
     _tft.setTextColor(C_WHITE, C_BLACK);
-    _tft.drawString("FALHA", cx, falhaY, 4);
+    _tft.drawString("ERRO", cx, falhaY, 4);
     _tft.setTextSize(1);
 
     // "NO SISTEMA"
     _tft.setTextColor(C_WHITE, C_BLACK);
-    _tft.drawString("NO SISTEMA", cx, nosistemaY, 4);
+    _tft.drawString("COMANDO INVALIDO", cx, nosistemaY, 4);
 }
