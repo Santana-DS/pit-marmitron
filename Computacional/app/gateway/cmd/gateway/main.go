@@ -77,7 +77,7 @@ func main() {
 	orderItemsSvc := order_items.NewService(orderItemsRepo, log)
 
 	ordersRepo := orders.NewRepository(dbPool, orderItemsRepo)
-	ordersSvc := orders.NewService(ordersRepo, orderItemsSvc, log)
+	ordersSvc := orders.NewService(ordersRepo, orderItemsSvc, mqttCfg, log)
 
 	srv := api.NewServer(cfg.HTTPAddr, log, otpSvc, orderSvc, wakeSvc, catalogSvc, ordersSvc, mqttCfg, robotState, telemetryRepo, deliveryPointsRepo)
 	srv.Start()

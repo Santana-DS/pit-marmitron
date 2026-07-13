@@ -5,7 +5,7 @@ import time
 import unittest
 from argparse import Namespace
 
-from .__main__ import _estop_observer
+from .__main__ import _estop_observer, _navigation_cancel_observer
 from .config import MQTTConfig
 from .mqtt_bridge import MQTTBridge
 from .sim_command import build_estop_payload, build_navigate_payload
@@ -25,6 +25,7 @@ def _mqtt_bridge(nav_goal_queue: asyncio.Queue) -> MQTTBridge:
         nav_goal_queue=nav_goal_queue,
         unlock_queue=asyncio.Queue(),
         estop_queue=asyncio.Queue(),
+        cancel_navigation_queue=asyncio.Queue(),
     )
 
 
@@ -108,6 +109,36 @@ class SafetyNavigationTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(nav_bridge.cancel_calls, 1)
             self.assertEqual(state.state, RobotState.FAULT)
             self.assertEqual(state.fault_reason, "estop: operator_button")
+        finally:
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+
+    async def test_navigation_cancel_returns_matching_active_order_to_idle(self) -> None:
+        class FakeNavBridge:
+            def __init__(self) -> None:
+                self.cancel_calls = 0
+                self.status_calls = 0
+
+            async def cancel_current_goal(self) -> None:
+                self.cancel_calls += 1
+
+            async def publish_navigation_cancelled(self, goal) -> None:
+                self.status_calls += 1
+
+        state = RobotStateMachine()
+        await state.start_navigating(type("Goal", (), {"order_id": "ORD-123"})())
+        cancel_queue: asyncio.Queue = asyncio.Queue()
+        nav_bridge = FakeNavBridge()
+        task = asyncio.create_task(_navigation_cancel_observer(cancel_queue, state, nav_bridge))
+
+        try:
+            await cancel_queue.put({"order_id": "ORD-123", "reason": "customer_cancelled"})
+            await asyncio.wait_for(cancel_queue.join(), timeout=1)
+            self.assertEqual(nav_bridge.cancel_calls, 1)
+            self.assertEqual(nav_bridge.status_calls, 1)
+            self.assertEqual(state.state, RobotState.IDLE)
+            self.assertIsNone(state.active_goal)
         finally:
             task.cancel()
             with self.assertRaises(asyncio.CancelledError):

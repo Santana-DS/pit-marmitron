@@ -173,6 +173,14 @@ class RobotStateMachine:
             self._speed_samples.clear()
             self._transition(RobotState.IDLE)
 
+    async def cancel_delivery(self) -> None:
+        """Cancel a non-emergency delivery and clear its active navigation goal."""
+        async with self._lock:
+            self._active_goal = None
+            self._fault_reason = None
+            self._speed_samples.clear()
+            self._transition(RobotState.IDLE)
+
     async def go_offline(self) -> None:
         """
         NAVIGATING / ARRIVED → OFFLINE_HOLD.

@@ -216,6 +216,8 @@ class NavBridge:
             if not self._execute_single_goal_sync(goal, loop):
                 return
 
+        if self._cancel_requested.is_set():
+            return
         loop.call_soon_threadsafe(asyncio.ensure_future, self._on_goal_succeeded(goal))
 
     def _from_ll_sync(self, latitude: float, longitude: float):
@@ -255,6 +257,10 @@ class NavBridge:
         try:
             result_future = goal_handle.get_result_async()
             result = self._wait_for_rclpy_future(result_future)
+
+            if self._cancel_requested.is_set():
+                logger.warning("Nav2 goal cancelled for order %s", goal.order_id)
+                return False
 
             if result.status == GoalStatus.STATUS_SUCCEEDED:
                 logger.info("Nav2 node %d succeeded for order %s", goal.current_node, goal.order_id)
@@ -327,6 +333,14 @@ class NavBridge:
 
     async def cancel_current_goal(self) -> None:
         await self._cancel_current_goal()
+
+    async def publish_navigation_cancelled(self, goal: ActiveGoal) -> None:
+        await self._publish_nav_status(
+            goal,
+            state="CANCELLED",
+            progress=goal.progress_pct,
+            remaining_m=goal.remaining_m,
+        )
 
     async def _cancel_current_goal(self) -> None:
         self._cancel_requested.set()

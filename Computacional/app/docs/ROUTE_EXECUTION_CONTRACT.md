@@ -7,17 +7,19 @@ The Flutter app selects a delivery point. The gateway resolves an approved
 obstacle handling and Nav2 goals. Neither Flutter nor the cloud gateway may
 generate a path or send raw local poses as a substitute for an approved route.
 
-## Command
+## Navigate command
 
-The future route-aware edge executor must accept this payload on
-`robot/commands/navigate`:
+The edge executor accepts this payload on `robot/commands/navigate`:
 
 ```json
 {
   "order_id": "ABC123",
   "route_id": "ft_entrada_v1",
   "destination_point_key": "FT_ENTRADA",
-  "issued_at": 1780000000
+  "issued_at": 1780000000,
+  "nodes": [
+    {"sequence": 0, "latitude": -15.0, "longitude": -47.0, "theta": 0.0}
+  ]
 }
 ```
 
@@ -35,12 +37,31 @@ mutating an active path.
 4. Treat E-stop as higher priority than every route operation.
 5. Never infer a route from only the final destination coordinates.
 
+## Normal cancellation
+
+Cancelling an order in transit publishes `robot/commands/cancel_navigation`
+at QoS 1 before the order is persisted as `cancelled`:
+
+```json
+{
+  "order_id": "ABC123",
+  "source": "order_status_api",
+  "reason": "order_cancelled",
+  "timestamp": 1780000000000
+}
+```
+
+The edge daemon cancels the active Nav2 goal only when `order_id` matches its
+active delivery, publishes `robot/nav/status` with `state: "CANCELLED"`, and
+returns to `IDLE`. This differs from `robot/commands/estop`, which is an
+emergency command and intentionally transitions the robot to `FAULT`.
+
 ## Current integration status
 
-The current edge daemon only accepts `pose.x/y/theta` and forwards one goal to
-Nav2. It is **not route-aware yet**. Until Computacao delivers the resolver,
-the gateway must keep route execution disabled and report the capability as
-pending rather than publishing a command the daemon cannot execute safely.
+The current edge daemon validates an ordered route, converts each GPS node via
+`/fromLL`, and sends the resulting local poses sequentially to Nav2. Physical
+operation remains pending validation of the ROS `navsat_transform_node` datum
+and the safe route data supplied by Computacao.
 
 ## Data supplied by Computacao
 
