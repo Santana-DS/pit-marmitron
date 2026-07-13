@@ -301,7 +301,7 @@ class _OperatorScreenState extends State<OperatorScreen>
             height: 36,
             decoration: BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
               Icons.settings_remote_rounded,
@@ -418,7 +418,7 @@ class _OperatorScreenState extends State<OperatorScreen>
             height: 48,
             decoration: BoxDecoration(
               color: cfg.color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(cfg.icon, color: cfg.color, size: 24),
           ),
