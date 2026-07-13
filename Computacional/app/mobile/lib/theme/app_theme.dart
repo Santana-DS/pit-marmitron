@@ -12,17 +12,18 @@ class AppColors {
   static const card = Color(0xFFFFFFFF);    // Pure white
   static const muted = Color(0xFF8B8B99);
   static const mapBg = Color(0xFFE8EFF8);
-  static const purple = Color(0xFF7B8FF7);
+  static const info = Color(0xFF2D7FF9);
+  // Kept as a compatibility alias while individual screens move to `info`.
+  static const purple = info;
 
   // Dark Mode
   static const darkPrimary = Color(0xFFF8FAFC); // Use surface for dark primary
   static const darkAccent = Color(0xFF00C97A);
-  static const darkSurface = Color(0xFF0F0F1E);
-  static const darkCard = Color(0xFF003366); // Navy for dark card
-  static const darkMuted = Color(0xFF6B6B7D);
-  static const darkMapBg = Color(0xFF2A2A42);
+  static const darkSurface = Color(0xFF101817);
+  static const darkCard = Color(0xFF172321);
+  static const darkMuted = Color(0xFFA6B7B1);
+  static const darkMapBg = Color(0xFF1D302C);
   static const darkTeal = Color(0xFF006633);
-  static const darkPurple = Color(0xFF7B8FF7);
 
   // Status (same in both modes for legibility)
   static const statusPreparing = Color(0xFFFFF3EE);
@@ -51,7 +52,7 @@ class AC {
         : AppColors.primary.withValues(alpha: 0.08);
   static Color accent(BuildContext _) => AppColors.accent;
   static Color teal(BuildContext _) => AppColors.teal;
-  static Color purple(BuildContext _) => AppColors.purple;
+  static Color info(BuildContext _) => AppColors.info;
   static bool _dark(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark;
 }
@@ -77,7 +78,7 @@ class AppTheme {
         surface: surfaceColor,
         primary: AppColors.accent,
         secondary: AppColors.teal,
-        tertiary: AppColors.purple,
+        tertiary: AppColors.info,
       ),
       scaffoldBackgroundColor: surfaceColor,
       cardColor: cardColor,
@@ -116,7 +117,7 @@ class AppTheme {
             ? const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
                 statusBarIconBrightness: Brightness.light,
-                systemNavigationBarColor: Color(0xFF1A1A2E),
+                systemNavigationBarColor: AppColors.darkSurface,
               )
             : const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
@@ -130,7 +131,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 16),
           textStyle:
               GoogleFonts.dmSans(fontSize: 15, fontWeight: FontWeight.w500),
@@ -147,19 +148,19 @@ class AppTheme {
         filled: true,
         fillColor: cardColor,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: textColor.withValues(alpha: 0.1)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: textColor.withValues(alpha: 0.1)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Colors.red, width: 1.5),
         ),
         labelStyle: GoogleFonts.dmSans(fontSize: 12, color: mutedColor),

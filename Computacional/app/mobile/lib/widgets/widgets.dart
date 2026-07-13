@@ -46,7 +46,7 @@ class AppButton extends StatelessWidget {
                   hapticLight();
                   onTap();
                 },
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(8),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.symmetric(vertical: 15),
@@ -55,7 +55,7 @@ class AppButton extends StatelessWidget {
               border: outlined
                   ? Border.all(color: bg, width: 1.5)
                   : null,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: loading
                 ? Center(
@@ -123,12 +123,12 @@ class AppCard extends StatelessWidget {
                 onTap!();
               }
             : null,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: padding ?? const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: color ?? AC.card(context),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: borderColor ?? AC.border(context),
               width: borderWidth,
