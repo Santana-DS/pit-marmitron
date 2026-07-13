@@ -178,6 +178,18 @@ Expected:
 
 ## 8. Send a simulated navigation command
 
+Before real route execution, validate geographic conversion with the route
+datum supplied by Computacao:
+
+```bash
+ros2 service list | grep fromLL
+```
+
+Expected: `/fromLL` is offered by `navsat_transform_node`. The route executor
+uses this service to convert each approved GPS node to the Nav2 `map` frame.
+Computacao must provide the ordered, rehearsed GPS nodes; the app team stores
+and dispatches them, but never generates a route from a destination alone.
+
 Use a safe coordinate in the current Nav2 map:
 
 ```bash

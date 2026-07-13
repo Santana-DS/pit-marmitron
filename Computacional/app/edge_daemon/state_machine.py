@@ -56,6 +56,14 @@ class RobotState(Enum):
 
 
 @dataclass
+class RouteNode:
+    sequence: int
+    latitude: float
+    longitude: float
+    theta: float = 0.0
+
+
+@dataclass
 class ActiveGoal:
     """
     Persisted across state transitions so the daemon can resume publishing
@@ -68,6 +76,9 @@ class ActiveGoal:
     theta:         float
     map_frame:     str
     issued_at:     float    # Unix timestamp when the goal was injected into Nav2
+    route_id:      str = ""
+    route_nodes:   list[RouteNode] = field(default_factory=list)
+    current_node:  int = 0
     # Filled in as Nav2 reports progress.
     remaining_m:   float = 0.0
     progress_pct:  float = 0.0
@@ -249,6 +260,8 @@ class RobotStateMachine:
             "progress_pct":    round(goal.progress_pct, 1) if goal else 0.0,
             "avg_speed_mps":   round(self.avg_speed_mps, 3),
             "eta_seconds":     round(self.compute_eta_seconds() or 0, 1),
+            "route_id":        goal.route_id if goal else "",
+            "route_node":      goal.current_node if goal else 0,
         }
 
     def goal_to_dict(self) -> Optional[dict]:
@@ -264,6 +277,8 @@ class RobotStateMachine:
             "theta":         g.theta,
             "map_frame":     g.map_frame,
             "issued_at":     g.issued_at,
+            "route_id":      g.route_id,
+            "current_node":  g.current_node,
         }
 
     # ── Internal ──────────────────────────────────────────────────────────────
