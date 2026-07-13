@@ -271,7 +271,7 @@ class _RestaurantTrackingScreenState extends State<RestaurantTrackingScreen>
                   Row(children: [
                     Expanded(
                         child: Text(
-                            '1× Marmita Executiva · Rua das Acácias, 42',
+                            '1× Marmita Executiva · SG-11, Faculdade de Tecnologia - UnB',
                             style: GoogleFonts.dmSans(
                                 fontSize: 12, color: AC.muted(context)))),
                   ]),

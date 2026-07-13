@@ -8,10 +8,10 @@ class AppColors {
   static const accent = Color(0xFF00C97A);  // Vibrant Glow Green
   static const accentLight = Color(0xFF00C97A); // Use accent for light variant
   static const teal = Color(0xFF006633);    // Dark UnB Green
-  static const surface = Color(0xFFF8FAFC); // Neutral light background
+  static const surface = Color(0xFFF0F4F2); // Cool light background
   static const card = Color(0xFFFFFFFF);    // Pure white
-  static const muted = Color(0xFF8B8B99);
-  static const mapBg = Color(0xFFE8EFF8);
+  static const muted = Color(0xFF5C6B67);
+  static const mapBg = Color(0xFFDDE8E4);
   static const info = Color(0xFF2D7FF9);
   // Kept as a compatibility alias while individual screens move to `info`.
   static const purple = info;
@@ -49,7 +49,7 @@ class AC {
     static Color border(BuildContext context) =>
       _dark(context)
         ? AppColors.darkPrimary.withValues(alpha: 0.12)
-        : AppColors.primary.withValues(alpha: 0.08);
+        : AppColors.primary.withValues(alpha: 0.14);
   static Color accent(BuildContext _) => AppColors.accent;
   static Color teal(BuildContext _) => AppColors.teal;
   static Color info(BuildContext _) => AppColors.info;
@@ -82,7 +82,7 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: surfaceColor,
       cardColor: cardColor,
-      dividerColor: textColor.withValues(alpha: 0.08),
+      dividerColor: textColor.withValues(alpha: isDark ? 0.12 : 0.14),
       textTheme: GoogleFonts.dmSansTextTheme(
         isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme,
       ).copyWith(
