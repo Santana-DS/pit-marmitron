@@ -897,7 +897,7 @@ class _OperatorScreenState extends State<OperatorScreen>
               color: Colors.transparent,
               child: InkWell(
                 onTap: _estopInProgress ? null : _onEstopPressed,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(vertical: 20),
@@ -905,7 +905,7 @@ class _OperatorScreenState extends State<OperatorScreen>
                     color: _estopInProgress
                         ? Colors.red.shade900
                         : Colors.red.shade700,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.red.shade400, width: 2),
                   ),
                   child: _estopInProgress
@@ -986,7 +986,7 @@ class _OperatorScreenState extends State<OperatorScreen>
         return (color: AppColors.accent, icon: Icons.navigation_rounded);
       case RobotNavState.arrived:
         return (
-          color: AppColors.purple,
+          color: AppColors.info,
           icon: Icons.check_circle_outline_rounded,
         );
       case RobotNavState.offlineHold:
@@ -1403,7 +1403,7 @@ class _MetricCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AC.card(context),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AC.border(context)),
       ),
       child: Column(
