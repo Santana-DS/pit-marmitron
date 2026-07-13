@@ -159,7 +159,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                             color: Color(int.parse(
                                 'FF${order.restaurant.bgColor}',
                                 radix: 16)),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
                             child: Text(order.restaurant.emoji,
@@ -208,7 +208,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: AppColors.accent.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                         color: AppColors.accent.withValues(alpha: 0.25)),
                   ),
@@ -264,7 +264,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                       builder: (ctx) => AlertDialog(
                         backgroundColor: AC.card(context),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
+                            borderRadius: BorderRadius.circular(8)),
                         title: Text('Cancelar pedido?',
                             style: GoogleFonts.spaceGrotesk(
                                 fontSize: 16,

@@ -334,22 +334,8 @@ class _CodeScreenState extends State<CodeScreen>
                 width: 88,
                 height: 88,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AC.accent(context),
-                      AC.accent(context).withValues(alpha: 0.7)
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(26),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AC.accent(context).withValues(alpha: 0.35),
-                      blurRadius: 24,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+                  color: AC.accent(context),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
                   child: Icon(Icons.lock_open_rounded,
@@ -381,7 +367,7 @@ class _CodeScreenState extends State<CodeScreen>
                 padding: const EdgeInsets.symmetric(vertical: 28),
                 decoration: BoxDecoration(
                   color: AC.primary(context),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   children: [
@@ -432,7 +418,7 @@ class _CodeScreenState extends State<CodeScreen>
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
                   color: AC.teal(context).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                       color: AC.teal(context).withValues(alpha: 0.3)),
                 ),
