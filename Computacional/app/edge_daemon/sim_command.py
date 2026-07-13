@@ -52,12 +52,17 @@ def _required_env(key: str) -> str:
 
 def _mqtt_options() -> dict[str, Any]:
     _load_dotenv()
+    client_id = os.environ.get("MQTT_CLIENT_ID", "edge")
     return {
         "hostname": _required_env("MQTT_HOST"),
         "port": int(os.environ.get("MQTT_PORT", "1883")),
         "username": _required_env("MQTT_USER"),
         "password": _required_env("MQTT_PASSWORD"),
-        "identifier": f"{os.environ.get('MQTT_CLIENT_ID', 'edge')}-validation-cli",
+        # A broker disconnects the existing session when a second MQTT client
+        # connects with the same identifier. The listener and demo publisher
+        # intentionally run in parallel during presentations, so use a unique
+        # process-scoped identifier for each CLI invocation.
+        "identifier": f"{client_id}-validation-{os.getpid()}",
     }
 
 
@@ -143,30 +148,38 @@ async def _publish(topic: str, payload: dict[str, Any], qos: int) -> None:
 
 
 async def _listen(seconds: float, topics: list[str]) -> None:
-    async with aiomqtt.Client(**_mqtt_options()) as client:
-        for topic in topics:
-            await client.subscribe(topic)
-            print(f"subscribed topic={topic}")
+    deadline = time.monotonic() + seconds
+    while time.monotonic() < deadline:
+        try:
+            async with aiomqtt.Client(**_mqtt_options()) as client:
+                for topic in topics:
+                    await client.subscribe(topic)
+                    print(f"subscribed topic={topic}")
 
-        messages = client.messages
-        deadline = time.monotonic() + seconds
-        while True:
+                messages = client.messages
+                while True:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        return
+                    try:
+                        message = await asyncio.wait_for(messages.__anext__(), timeout=remaining)
+                    except asyncio.TimeoutError:
+                        return
+
+                    payload = message.payload
+                    if isinstance(payload, bytes):
+                        payload = payload.decode("utf-8", errors="replace")
+                    print(f"\n[{message.topic}]")
+                    try:
+                        print(json.dumps(json.loads(payload), indent=2, sort_keys=True))
+                    except json.JSONDecodeError:
+                        print(payload)
+        except aiomqtt.MqttError as exc:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
                 return
-            try:
-                message = await asyncio.wait_for(messages.__anext__(), timeout=remaining)
-            except asyncio.TimeoutError:
-                return
-
-            payload = message.payload
-            if isinstance(payload, bytes):
-                payload = payload.decode("utf-8", errors="replace")
-            print(f"\n[{message.topic}]")
-            try:
-                print(json.dumps(json.loads(payload), indent=2, sort_keys=True))
-            except json.JSONDecodeError:
-                print(payload)
+            print(f"MQTT disconnected ({exc}); reconnecting...")
+            await asyncio.sleep(min(1.0, remaining))
 
 
 async def _run_demo(args: argparse.Namespace) -> None:
@@ -271,9 +284,16 @@ async def _amain(argv: list[str]) -> None:
 
 
 def main() -> None:
-    if sys.platform == "win32":
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(_amain(sys.argv[1:]))
+    if sys.platform == "win32" and sys.version_info >= (3, 14):
+        # aiomqtt needs add_reader(), which requires a SelectorEventLoop on
+        # Windows. Python 3.14 deprecated the global policy API, so configure
+        # the loop locally using the supported asyncio.Runner API.
+        with asyncio.Runner(loop_factory=asyncio.SelectorEventLoop) as runner:
+            runner.run(_amain(sys.argv[1:]))
+    else:
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        asyncio.run(_amain(sys.argv[1:]))
 
 
 if __name__ == "__main__":
