@@ -2,6 +2,8 @@ package orders
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"log/slog"
 	"os"
 	"testing"
@@ -258,10 +260,55 @@ func TestValidateStatusTransition(t *testing.T) {
 	}
 }
 
+func TestCancelOrderPublishesNavigationAbortBeforePersistingStatus(t *testing.T) {
+	log := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelError}))
+	mockRepo := &mockRepository{order: &OrderWithItems{Order: Order{ID: "ORD-123", Status: StatusOnTheWay}}}
+	publisher := &mockCommandPublisher{}
+	svc := &Service{repo: mockRepo, commandPublisher: publisher, log: log}
+
+	if err := svc.UpdateOrderStatus(context.Background(), "ORD-123", UpdateOrderStatusRequest{Status: StatusCancelled}); err != nil {
+		t.Fatalf("UpdateOrderStatus() error = %v", err)
+	}
+	if publisher.topic != "robot/commands/cancel_navigation" {
+		t.Fatalf("topic = %q", publisher.topic)
+	}
+	if mockRepo.updateCalls != 1 || mockRepo.updatedStatus != StatusCancelled {
+		t.Fatalf("repository update = %d/%q, want one cancelled update", mockRepo.updateCalls, mockRepo.updatedStatus)
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal(publisher.payload, &payload); err != nil {
+		t.Fatalf("decode cancel payload: %v", err)
+	}
+	if payload["order_id"] != "ORD-123" || payload["reason"] != "order_cancelled" {
+		t.Fatalf("unexpected cancel payload: %#v", payload)
+	}
+}
+
+func TestCancelOrderDoesNotPersistWhenMQTTPublishFails(t *testing.T) {
+	log := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelError}))
+	mockRepo := &mockRepository{order: &OrderWithItems{Order: Order{ID: "ORD-123", Status: StatusOnTheWay}}}
+	svc := &Service{
+		repo:             mockRepo,
+		commandPublisher: &mockCommandPublisher{err: errors.New("broker unavailable")},
+		log:              log,
+	}
+
+	err := svc.UpdateOrderStatus(context.Background(), "ORD-123", UpdateOrderStatusRequest{Status: StatusCancelled})
+	if !errors.Is(err, ErrCancelCommandPublish) {
+		t.Fatalf("error = %v, want ErrCancelCommandPublish", err)
+	}
+	if mockRepo.updateCalls != 0 {
+		t.Fatalf("repository update calls = %d, want 0", mockRepo.updateCalls)
+	}
+}
+
 // mockRepository is a simple mock for testing
 type mockRepository struct {
-	order *OrderWithItems
-	err   error
+	order         *OrderWithItems
+	err           error
+	updateCalls   int
+	updatedStatus string
 }
 
 func (m *mockRepository) GetOrderByID(ctx context.Context, orderID string) (*OrderWithItems, error) {
@@ -284,7 +331,21 @@ func (m *mockRepository) ListOrdersByRestaurant(ctx context.Context, restaurantI
 }
 
 func (m *mockRepository) UpdateOrderStatus(ctx context.Context, orderID, status string, cancelReason *string) error {
+	m.updateCalls++
+	m.updatedStatus = status
 	return nil
+}
+
+type mockCommandPublisher struct {
+	topic   string
+	payload []byte
+	err     error
+}
+
+func (m *mockCommandPublisher) Publish(topic string, payload []byte) error {
+	m.topic = topic
+	m.payload = payload
+	return m.err
 }
 
 // mockItemsService is a simple mock for order items service

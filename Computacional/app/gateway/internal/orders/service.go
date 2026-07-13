@@ -2,9 +2,13 @@ package orders
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
+	"unbot-gateway/internal/mqtt"
 	"unbot-gateway/internal/order_items"
 )
 
@@ -18,16 +22,29 @@ type RepositoryInterface interface {
 }
 
 type Service struct {
-	repo     RepositoryInterface
-	itemsSvc order_items.ServiceInterface
-	log      *slog.Logger
+	repo             RepositoryInterface
+	itemsSvc         order_items.ServiceInterface
+	commandPublisher CommandPublisher
+	log              *slog.Logger
 }
 
-func NewService(repo RepositoryInterface, itemsSvc order_items.ServiceInterface, log *slog.Logger) *Service {
+type CommandPublisher interface {
+	Publish(topic string, payload []byte) error
+}
+
+var ErrCancelCommandPublish = errors.New("navigation cancel command could not be delivered to robot")
+
+func NewService(
+	repo RepositoryInterface,
+	itemsSvc order_items.ServiceInterface,
+	commandPublisher CommandPublisher,
+	log *slog.Logger,
+) *Service {
 	return &Service{
-		repo:     repo,
-		itemsSvc: itemsSvc,
-		log:      log,
+		repo:             repo,
+		itemsSvc:         itemsSvc,
+		commandPublisher: commandPublisher,
+		log:              log,
 	}
 }
 
@@ -131,6 +148,15 @@ func (s *Service) UpdateOrderStatus(ctx context.Context, orderID string, req Upd
 		return fmt.Errorf("invalid status transition: %w", err)
 	}
 
+	// A customer cancellation is a normal navigation abort, not an E-stop. Send
+	// it before persisting the terminal order state so a broker failure cannot
+	// leave the robot moving while the app reports the order as cancelled.
+	if req.Status == StatusCancelled {
+		if err := s.publishNavigationCancel(orderID, req.CancelReason); err != nil {
+			return err
+		}
+	}
+
 	// Update status
 	if err := s.repo.UpdateOrderStatus(ctx, orderID, req.Status, req.CancelReason); err != nil {
 		if err == ErrOrderNotFound {
@@ -149,6 +175,32 @@ func (s *Service) UpdateOrderStatus(ctx context.Context, orderID string, req Upd
 		"new_status", req.Status,
 	)
 
+	return nil
+}
+
+func (s *Service) publishNavigationCancel(orderID string, cancelReason *string) error {
+	if s.commandPublisher == nil {
+		return ErrCancelCommandPublish
+	}
+
+	reason := "order_cancelled"
+	if cancelReason != nil && *cancelReason != "" {
+		reason = *cancelReason
+	}
+	payload, err := json.Marshal(map[string]any{
+		"order_id":  orderID,
+		"source":    "order_status_api",
+		"reason":    reason,
+		"timestamp": time.Now().UnixMilli(),
+	})
+	if err != nil {
+		return fmt.Errorf("%w: marshal: %v", ErrCancelCommandPublish, err)
+	}
+	if err := s.commandPublisher.Publish(mqtt.TopicCancelNavigation, payload); err != nil {
+		return fmt.Errorf("%w: %v", ErrCancelCommandPublish, err)
+	}
+
+	s.log.Info("navigation cancel command published", "order_id", orderID, "reason", reason)
 	return nil
 }
 

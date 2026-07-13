@@ -57,6 +57,8 @@ services:
       MQTT_STATUS_TOPIC: robot/status
     ports:
       - "${GATEWAY_PORT:-8080}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy

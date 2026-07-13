@@ -55,12 +55,14 @@ class MQTTBridge:
         nav_goal_queue: asyncio.Queue,
         unlock_queue: asyncio.Queue,
         estop_queue: asyncio.Queue,
+        cancel_navigation_queue: asyncio.Queue,
     ) -> None:
         self._cfg              = cfg
         self._state            = state
         self._nav_goal_queue   = nav_goal_queue
         self._unlock_queue     = unlock_queue
         self._estop_queue      = estop_queue
+        self._cancel_navigation_queue = cancel_navigation_queue
 
         # Internal client reference — set inside connect_loop context.
         self._client: Optional[aiomqtt.Client] = None
@@ -181,6 +183,7 @@ class MQTTBridge:
         """Subscribe to all command topics on (re)connect."""
         subscriptions = [
             (Topics.NAVIGATE,    self._cfg.qos_commands),
+            (Topics.CANCEL_NAVIGATION, self._cfg.qos_commands),
             (Topics.UNLOCK,      self._cfg.qos_commands),
             (Topics.ESTOP,       self._cfg.qos_estop),
         ]
@@ -215,6 +218,9 @@ class MQTTBridge:
 
         if topic == Topics.NAVIGATE:
             await self._handle_navigate(data)
+        elif topic == Topics.CANCEL_NAVIGATION:
+            await self._cancel_navigation_queue.put(data)
+            logger.warning("Navigation cancel received for order %s", data.get("order_id"))
         elif topic == Topics.UNLOCK:
             # The unlock command is directed at the ESP32 via the broker,
             # but the edge daemon also observes it to transition to IDLE.

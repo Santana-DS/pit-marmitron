@@ -8,6 +8,7 @@
 class Topics:
     # ── Cloud → Robot ─────────────────────────────────────────────────────────
     NAVIGATE    = "robot/commands/navigate"
+    CANCEL_NAVIGATION = "robot/commands/cancel_navigation"
     UNLOCK      = "robot/commands/unlock"
     DISPLAY_QR  = "robot/commands/display_qr"
     ESTOP       = "robot/commands/estop"

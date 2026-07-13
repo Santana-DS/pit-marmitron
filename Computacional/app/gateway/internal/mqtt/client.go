@@ -27,11 +27,12 @@ import (
 // Single source of truth for every MQTT topic the gateway touches.
 // ESP32 firmware and the Pi telemetry node must use these exact strings.
 const (
-	TopicTelemetry = "robot/telemetry"
-	TopicHeartbeat = "robot/status/heartbeat"
-	TopicNavigate  = "robot/commands/navigate"
-	TopicUnlock    = "robot/commands/unlock"
-	TopicEstop     = "robot/commands/estop"
+	TopicTelemetry        = "robot/telemetry"
+	TopicHeartbeat        = "robot/status/heartbeat"
+	TopicNavigate         = "robot/commands/navigate"
+	TopicCancelNavigation = "robot/commands/cancel_navigation"
+	TopicUnlock           = "robot/commands/unlock"
+	TopicEstop            = "robot/commands/estop"
 )
 
 // Client is the gateway's MQTT facade.
