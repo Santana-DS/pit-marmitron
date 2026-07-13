@@ -205,6 +205,35 @@ async def _estop_observer(
         raise
 
 
+async def _navigation_cancel_observer(
+    cancel_queue: asyncio.Queue,
+    state: RobotStateMachine,
+    nav_bridge: NavBridge,
+) -> None:
+    """Abort the active delivery without escalating it to an E-stop fault."""
+    logger.info("Navigation cancellation observer started.")
+    try:
+        while True:
+            payload: dict = await cancel_queue.get()
+            order_id = payload.get("order_id", "")
+            active_goal = state.active_goal
+            try:
+                if active_goal is None or active_goal.order_id != order_id:
+                    logger.warning("Ignoring navigation cancel for inactive order %s", order_id)
+                    continue
+                await nav_bridge.cancel_current_goal()
+                await nav_bridge.publish_navigation_cancelled(active_goal)
+                await state.cancel_delivery()
+                logger.warning("Navigation cancelled for order %s", order_id)
+            except Exception as exc:
+                logger.error("Navigation cancellation failed for order %s: %s", order_id, exc, exc_info=True)
+            finally:
+                cancel_queue.task_done()
+    except asyncio.CancelledError:
+        logger.info("Navigation cancellation observer cancelled.")
+        raise
+
+
 async def _fault_monitor(
     state: RobotStateMachine,
     nav_bridge: NavBridge,
@@ -317,6 +346,7 @@ async def _amain() -> None:
     nav_goal_queue: asyncio.Queue = asyncio.Queue()
     unlock_queue:   asyncio.Queue = asyncio.Queue()
     estop_queue:    asyncio.Queue = asyncio.Queue()
+    cancel_navigation_queue: asyncio.Queue = asyncio.Queue()
 
     # ── Component construction ────────────────────────────────────────────────
     mqtt_bridge = MQTTBridge(
@@ -325,6 +355,7 @@ async def _amain() -> None:
         nav_goal_queue=nav_goal_queue,
         unlock_queue=unlock_queue,
         estop_queue=estop_queue,
+        cancel_navigation_queue=cancel_navigation_queue,
     )
 
     nav_bridge = NavBridge(
@@ -356,6 +387,7 @@ async def _amain() -> None:
         ("telemetry",          telemetry_collector.run()),
         ("unlock_observer",    _unlock_observer(unlock_queue, state)),
         ("estop_observer",     _estop_observer(estop_queue, state, nav_bridge)),
+        ("navigation_cancel_observer", _navigation_cancel_observer(cancel_navigation_queue, state, nav_bridge)),
         ("fault_monitor",      _fault_monitor(
                                    state,
                                    nav_bridge,

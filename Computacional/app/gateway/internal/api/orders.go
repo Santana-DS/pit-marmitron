@@ -215,6 +215,10 @@ func (s *Server) updateOrderStatusHandler(orderSvc *orders.Service) http.Handler
 				writeJSON(w, http.StatusBadRequest, errorResponse{Error: err.Error()})
 				return
 			}
+			if errors.Is(err, orders.ErrCancelCommandPublish) {
+				writeJSON(w, http.StatusBadGateway, errorResponse{Error: "navigation cancellation could not be delivered to robot"})
+				return
+			}
 
 			s.log.Error("update order status failed", "order_id", orderID, "error", err)
 			writeJSON(w, http.StatusInternalServerError, errorResponse{Error: "internal server error"})

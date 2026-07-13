@@ -5,10 +5,10 @@ import time
 import unittest
 from argparse import Namespace
 
-from .__main__ import _estop_observer
+from .__main__ import _estop_observer, _navigation_cancel_observer
 from .config import MQTTConfig
 from .mqtt_bridge import MQTTBridge
-from .sim_command import build_estop_payload, build_navigate_payload
+from .sim_command import build_demo_nav_status, build_demo_telemetry, build_estop_payload, build_navigate_payload
 from .state_machine import RobotState, RobotStateMachine
 
 
@@ -25,6 +25,7 @@ def _mqtt_bridge(nav_goal_queue: asyncio.Queue) -> MQTTBridge:
         nav_goal_queue=nav_goal_queue,
         unlock_queue=asyncio.Queue(),
         estop_queue=asyncio.Queue(),
+        cancel_navigation_queue=asyncio.Queue(),
     )
 
 
@@ -113,6 +114,36 @@ class SafetyNavigationTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(asyncio.CancelledError):
                 await task
 
+    async def test_navigation_cancel_returns_matching_active_order_to_idle(self) -> None:
+        class FakeNavBridge:
+            def __init__(self) -> None:
+                self.cancel_calls = 0
+                self.status_calls = 0
+
+            async def cancel_current_goal(self) -> None:
+                self.cancel_calls += 1
+
+            async def publish_navigation_cancelled(self, goal) -> None:
+                self.status_calls += 1
+
+        state = RobotStateMachine()
+        await state.start_navigating(type("Goal", (), {"order_id": "ORD-123"})())
+        cancel_queue: asyncio.Queue = asyncio.Queue()
+        nav_bridge = FakeNavBridge()
+        task = asyncio.create_task(_navigation_cancel_observer(cancel_queue, state, nav_bridge))
+
+        try:
+            await cancel_queue.put({"order_id": "ORD-123", "reason": "customer_cancelled"})
+            await asyncio.wait_for(cancel_queue.join(), timeout=1)
+            self.assertEqual(nav_bridge.cancel_calls, 1)
+            self.assertEqual(nav_bridge.status_calls, 1)
+            self.assertEqual(state.state, RobotState.IDLE)
+            self.assertIsNone(state.active_goal)
+        finally:
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+
     def test_validation_helper_builds_navigate_payload_contract(self) -> None:
         payload = build_navigate_payload(
             Namespace(
@@ -142,6 +173,21 @@ class SafetyNavigationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(payload["source"], "validation_cli")
         self.assertEqual(payload["reason"], "operator_button")
         self.assertIsInstance(payload["timestamp"], int)
+
+    def test_demo_payload_drives_operator_telemetry_and_display_status(self) -> None:
+        args = Namespace(
+            order_id="SIM-DEMO-001", route_id="SIM_DEMO_V1", destination="SIM_DEMO",
+            distance_m=20.0, speed_mps=0.5, battery_percent=86.0,
+            start_x=0.0, start_y=0.0, end_x=12.0, end_y=6.0, theta=0.0, frame="map",
+        )
+        telemetry = build_demo_telemetry(args, 50.0, "NAVIGATING")
+        status = build_demo_nav_status(args, 50.0, "NAVIGATING")
+
+        self.assertEqual(telemetry["nav_state"], "NAVIGATING")
+        self.assertEqual(telemetry["pose"]["x"], 6.0)
+        self.assertEqual(telemetry["remaining_m"], 10.0)
+        self.assertEqual(status["waypoint_name"], "SIM_DEMO")
+        self.assertEqual(status["progress_pct"], 50.0)
 
 
 if __name__ == "__main__":
