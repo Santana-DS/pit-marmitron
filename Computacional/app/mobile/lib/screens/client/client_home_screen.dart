@@ -176,7 +176,7 @@ class _HomeTabState extends State<_HomeTab> {
                 height: 36,
                 decoration: BoxDecoration(
                     color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(8)),
                 child: const RobotIcon(size: 22, color: Colors.white),
               ),
               const SizedBox(width: 10),
@@ -184,33 +184,39 @@ class _HomeTabState extends State<_HomeTab> {
               // Nested ValueListenableBuilder so only this Column rebuilds
               // when the user saves a new address in ProfileScreen — the
               // rest of the SliverAppBar and the entire HomeTab are unaffected.
-              ValueListenableBuilder<UserModel>(
-                valueListenable: userStateNotifier,
-                builder: (ctx, user, _) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'MARMITRON 3000',
-                        style: GoogleFonts.spaceGrotesk(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: AC.primary(ctx)),
-                      ),
-                      Row(children: [
-                        Icon(Icons.location_on_rounded,
-                            size: 11, color: AC.muted(ctx)),
-                        const SizedBox(width: 2),
-                        // REACTIVE: reads user.address from the notifier
+              Expanded(
+                child: ValueListenableBuilder<UserModel>(
+                  valueListenable: userStateNotifier,
+                  builder: (ctx, user, _) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          user.address,
-                          style: GoogleFonts.dmSans(
-                              fontSize: 11, color: AC.muted(ctx)),
+                          'MARMITRON 3000',
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AC.primary(ctx)),
                         ),
-                      ]),
-                    ],
-                  );
-                },
+                        Row(children: [
+                          Icon(Icons.location_on_rounded,
+                              size: 11, color: AC.muted(ctx)),
+                          const SizedBox(width: 2),
+                          // REACTIVE: reads user.address from the notifier
+                          Expanded(
+                            child: Text(
+                              user.address,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.dmSans(
+                                  fontSize: 11, color: AC.muted(ctx)),
+                            ),
+                          ),
+                        ]),
+                      ],
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -332,10 +338,15 @@ class _HomeTabState extends State<_HomeTab> {
           future: _restaurantsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return const SliverToBoxAdapter(
+              return SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Center(child: CircularProgressIndicator()),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  child: AppStatePanel(
+                    icon: Icons.storefront_outlined,
+                    title: 'Carregando restaurantes',
+                    message: 'Buscando opcoes disponiveis perto de voce.',
+                    loading: true,
+                  ),
                 ),
               );
             }
@@ -344,12 +355,10 @@ class _HomeTabState extends State<_HomeTab> {
               return SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Text(
-                    'Não foi possível carregar os restaurantes.',
-                    style: GoogleFonts.dmSans(
-                      fontSize: 14,
-                      color: AC.muted(context),
-                    ),
+                  child: AppStatePanel(
+                    icon: Icons.cloud_off_outlined,
+                    title: 'Restaurantes indisponiveis',
+                    message: 'Nao foi possivel carregar os restaurantes agora. Verifique a conexao e tente novamente.',
                   ),
                 ),
               );
@@ -894,7 +903,7 @@ class _RestaurantCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AC.card(context),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AC.border(context)),
         ),
         child: Column(
@@ -906,7 +915,7 @@ class _RestaurantCard extends StatelessWidget {
                 color:
                     Color(int.parse('FF${restaurant.bgColor}', radix: 16)),
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
+                    const BorderRadius.vertical(top: Radius.circular(8)),
               ),
               child: Center(
                 child: Text(restaurant.emoji,

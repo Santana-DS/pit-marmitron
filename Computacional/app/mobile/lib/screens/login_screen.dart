@@ -420,7 +420,7 @@ class _RoleSelector extends StatelessWidget {
       height: 46,
       decoration: BoxDecoration(
         color: AC.card(context),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AC.border(context)),
       ),
       padding: const EdgeInsets.all(4),
@@ -482,16 +482,7 @@ class _RolePill extends StatelessWidget {
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
             color: active ? AppColors.accent : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: active
-                ? [
-                    BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.30),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    )
-                  ]
-                : null,
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

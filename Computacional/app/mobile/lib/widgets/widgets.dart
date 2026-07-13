@@ -142,6 +142,71 @@ class AppCard extends StatelessWidget {
 }
 
 // ─── STATUS BADGE ──────────────────────────────────────────────────
+class AppStatePanel extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String message;
+  final bool loading;
+
+  const AppStatePanel({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.message,
+    this.loading = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: loading
+                ? const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(icon, color: AppColors.accent, size: 21),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AC.primary(context),
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  message,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 12,
+                    height: 1.35,
+                    color: AC.muted(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class StatusBadge extends StatelessWidget {
   final String label;
   final Color bg;

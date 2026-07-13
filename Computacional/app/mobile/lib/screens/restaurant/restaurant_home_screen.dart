@@ -94,7 +94,7 @@ class _PanelTab extends StatelessWidget {
               height: 36,
               decoration: BoxDecoration(
                   color: AppColors.accent,
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(8)),
               child: const Icon(Icons.store_rounded,
                   color: Colors.white, size: 20),
             ),
@@ -195,20 +195,23 @@ class _PanelTab extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Center(child: CircularProgressIndicator()),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: AppStatePanel(
+                icon: Icons.receipt_long_outlined,
+                title: 'Carregando pedidos',
+                message: 'Consultando os pedidos recentes do restaurante.',
+                loading: true,
+              ),
             ),
           )
         else if (snapshot.hasError)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Text(
-                'Erro ao carregar pedidos',
-                style: GoogleFonts.dmSans(
-                  fontSize: 14,
-                  color: AC.muted(context),
-                ),
+              child: AppStatePanel(
+                icon: Icons.cloud_off_outlined,
+                title: 'Pedidos indisponiveis',
+                message: 'Nao foi possivel consultar os pedidos agora. Tente novamente em instantes.',
               ),
             ),
           )
@@ -216,12 +219,10 @@ class _PanelTab extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Text(
-                'Nenhum pedido recente',
-                style: GoogleFonts.dmSans(
-                  fontSize: 14,
-                  color: AC.muted(context),
-                ),
+              child: AppStatePanel(
+                icon: Icons.inbox_outlined,
+                title: 'Nenhum pedido recente',
+                message: 'Os novos pedidos aparecerao aqui quando forem recebidos.',
               ),
             ),
           )
@@ -262,7 +263,7 @@ class _StatCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AC.card(context),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AC.border(context)),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -427,7 +428,7 @@ class _RestaurantProfileState extends State<_RestaurantProfile> {
                 height: 80,
                 decoration: BoxDecoration(
                     color: const Color(0xFFFFF3EE),
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(8)),
                 child: const Center(
                     child: Text('🍱', style: TextStyle(fontSize: 40))),
               ),
