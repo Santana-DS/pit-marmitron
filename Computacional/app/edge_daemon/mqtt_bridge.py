@@ -29,7 +29,7 @@ from typing import Optional
 import aiomqtt
 
 from .config import MQTTConfig
-from .state_machine import ActiveGoal, RobotState, RobotStateMachine
+from .state_machine import ActiveGoal, RobotState, RobotStateMachine, RouteNode
 from .topics import Topics
 
 
@@ -239,12 +239,19 @@ class MQTTBridge:
         """
         order_id  = data.get("order_id")
         issued_at = data.get("issued_at", 0)
-        pose      = data.get("pose", {})
-        map_frame = data.get("map_frame") or pose.get("frame") or "map"
+        route_id = data.get("route_id")
+        nodes = data.get("nodes")
         waypoint  = data.get("waypoint_name", "")
 
         if not order_id:
             logger.warning("Navigate payload missing order_id, ignoring")
+            return
+
+        if not isinstance(route_id, str) or not route_id.strip():
+            logger.error("Navigate payload for order %s missing route_id, ignoring", order_id)
+            return
+        if not isinstance(nodes, list) or not nodes:
+            logger.error("Navigate payload for order %s has no route nodes, ignoring", order_id)
             return
 
         age = time.time() - issued_at
@@ -255,50 +262,36 @@ class MQTTBridge:
             )
             return
 
-        # Validate pose fields.
-        x     = pose.get("x")
-        y     = pose.get("y")
-        theta = pose.get("theta", 0.0)
-
-        if x is None or y is None:
-            logger.error(
-                "Navigate payload for order %s missing pose.x/y, ignoring",
-                order_id,
-            )
-            return
-
-        try:
-            x = float(x)
-            y = float(y)
-            theta = float(theta)
-        except (TypeError, ValueError):
-            logger.error(
-                "Navigate payload for order %s has non-numeric pose fields, ignoring",
-                order_id,
-            )
-            return
-
-        if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(theta)):
-            logger.error(
-                "Navigate payload for order %s has non-finite pose fields, ignoring",
-                order_id,
-            )
-            return
+        route_nodes: list[RouteNode] = []
+        for expected_sequence, raw_node in enumerate(nodes):
+            if not isinstance(raw_node, dict) or raw_node.get("sequence") != expected_sequence:
+                logger.error("Route %s has unordered node %s, ignoring", route_id, expected_sequence)
+                return
+            try:
+                latitude = float(raw_node["latitude"])
+                longitude = float(raw_node["longitude"])
+                theta = float(raw_node.get("theta", 0.0))
+            except (KeyError, TypeError, ValueError):
+                logger.error("Route %s has invalid node %s, ignoring", route_id, expected_sequence)
+                return
+            if not (-90 <= latitude <= 90 and -180 <= longitude <= 180 and math.isfinite(theta)):
+                logger.error("Route %s has out-of-range node %s, ignoring", route_id, expected_sequence)
+                return
+            route_nodes.append(RouteNode(expected_sequence, latitude, longitude, theta))
 
         goal = ActiveGoal(
             order_id=order_id,
             waypoint_name=waypoint,
-            x=x,
-            y=y,
-            theta=theta,
-            map_frame=str(map_frame),
+            x=0.0, y=0.0, theta=0.0, map_frame="map",
             issued_at=time.monotonic(),
+            route_id=route_id,
+            route_nodes=route_nodes,
         )
 
         await self._nav_goal_queue.put(goal)
         logger.info(
-            "Nav goal queued: order=%s waypoint=%s x=%.2f y=%.2f theta=%.2f",
-            order_id, waypoint, x, y, theta,
+            "Route queued: order=%s route=%s nodes=%d",
+            order_id, route_id, len(route_nodes),
         )
 
     # ── Outbound publish loop ─────────────────────────────────────────────────

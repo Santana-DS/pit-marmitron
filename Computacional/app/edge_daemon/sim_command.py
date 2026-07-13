@@ -82,6 +82,15 @@ def build_estop_payload(args: argparse.Namespace) -> dict[str, Any]:
         "timestamp": int(time.time() * 1000),
     }
 
+def build_route_payload(args: argparse.Namespace) -> dict[str, Any]:
+    nodes = []
+    for sequence, raw in enumerate(args.node):
+        latitude, longitude, theta = map(float, raw.split(","))
+        nodes.append({"sequence": sequence, "latitude": latitude, "longitude": longitude, "theta": theta})
+    return {"order_id": args.order_id, "route_id": args.route_id,
+            "waypoint_name": args.destination_point_key, "nodes": nodes,
+            "issued_at": int(time.time())}
+
 
 async def _publish(topic: str, payload: dict[str, Any], qos: int) -> None:
     encoded = json.dumps(payload, separators=(",", ":"))
@@ -134,6 +143,13 @@ def _parser() -> argparse.ArgumentParser:
     nav.add_argument("--waypoint", default="SIM_POINT")
     nav.add_argument("--qos", type=int, default=1)
 
+    route = sub.add_parser("route", help="publish ordered GPS route")
+    route.add_argument("--order-id", default="SIM-ROUTE-001")
+    route.add_argument("--route-id", default="SIM_ONLY_UNB_V1")
+    route.add_argument("--destination-point-key", default="SIM_ONLY")
+    route.add_argument("--node", action="append", required=True, help="latitude,longitude,theta; repeat in order")
+    route.add_argument("--qos", type=int, default=1)
+
     estop = sub.add_parser("estop", help="publish robot/commands/estop")
     estop.add_argument("--reason", default="validation_test")
     estop.add_argument("--source", default="validation_cli")
@@ -155,6 +171,8 @@ async def _amain(argv: list[str]) -> None:
     args = _parser().parse_args(argv)
     if args.command == "navigate":
         await _publish(Topics.NAVIGATE, build_navigate_payload(args), args.qos)
+    elif args.command == "route":
+        await _publish(Topics.NAVIGATE, build_route_payload(args), args.qos)
     elif args.command == "estop":
         await _publish(Topics.ESTOP, build_estop_payload(args), args.qos)
     elif args.command == "listen":

@@ -87,6 +87,22 @@ type WaypointResolver interface {
 	ResolveWaypoint(context.Context, string) (Waypoint, error)
 }
 
+type RouteNode struct {
+	Sequence  int     `json:"sequence"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	Theta     float64 `json:"theta"`
+}
+
+type NavigationRoute struct {
+	RouteID string      `json:"route_id"`
+	Nodes   []RouteNode `json:"nodes"`
+}
+
+type RouteResolver interface {
+	ResolveRoute(context.Context, string) (NavigationRoute, error)
+}
+
 // waypointRegistry is the campus waypoint lookup table.
 // Keys are stable string identifiers used by the Flutter client and
 // Go dispatch handler. Never change a key after it has been stored in an
@@ -200,11 +216,13 @@ type Destination struct {
 // The edge daemon extracts pose and map_frame to build a ROS 2 PoseStamped.
 // waypoint_name is included for logging on the daemon side.
 type NavigatePayload struct {
-	OrderID      string  `json:"order_id"`
-	MapFrame     string  `json:"map_frame"`
-	Pose         NavPose `json:"pose"`
-	WaypointName string  `json:"waypoint_name"`
-	IssuedAt     int64   `json:"issued_at"`
+	OrderID      string      `json:"order_id"`
+	MapFrame     string      `json:"map_frame"`
+	Pose         NavPose     `json:"pose"`
+	WaypointName string      `json:"waypoint_name"`
+	IssuedAt     int64       `json:"issued_at"`
+	RouteID      string      `json:"route_id"`
+	Nodes        []RouteNode `json:"nodes"`
 }
 
 // NavPose is the 2D pose component of NavigatePayload.
@@ -252,6 +270,7 @@ type OrderService struct {
 	publisher Publisher
 	log       *slog.Logger
 	waypoints WaypointResolver
+	routes    RouteResolver
 }
 
 func NewOrderService(
@@ -259,12 +278,14 @@ func NewOrderService(
 	publisher Publisher,
 	log *slog.Logger,
 	waypoints WaypointResolver,
+	routes RouteResolver,
 ) *OrderService {
 	return &OrderService{
 		otpSvc:    otpSvc,
 		publisher: publisher,
 		log:       log,
 		waypoints: waypoints,
+		routes:    routes,
 	}
 }
 
@@ -285,6 +306,7 @@ func (s *OrderService) Dispatch(
 ) (*DispatchResult, error) {
 	// ── Step 0: Resolve waypoint if named ────────────────────────────────
 	resolvedWaypointName := dest.WaypointName
+	var route NavigationRoute
 	if dest.WaypointName != "" {
 		if s.waypoints == nil {
 			return nil, fmt.Errorf("%w: delivery point source unavailable", ErrUnknownWaypoint)
@@ -309,6 +331,16 @@ func (s *OrderService) Dispatch(
 			"y", dest.Y,
 			"theta", dest.Theta,
 		)
+	}
+	if s.routes == nil {
+		return nil, fmt.Errorf("route source unavailable")
+	}
+	route, err := s.routes.ResolveRoute(ctx, dest.WaypointName)
+	if err != nil {
+		return nil, fmt.Errorf("approved route unavailable: %w", err)
+	}
+	if route.RouteID == "" || len(route.Nodes) == 0 {
+		return nil, fmt.Errorf("approved route unavailable: empty route")
 	}
 
 	// Default map_frame if caller omitted it (backwards-compat for direct coords).
@@ -338,6 +370,8 @@ func (s *OrderService) Dispatch(
 		},
 		WaypointName: resolvedWaypointName,
 		IssuedAt:     time.Now().Unix(),
+		RouteID:      route.RouteID,
+		Nodes:        route.Nodes,
 	})
 	if marshalErr != nil {
 		s.log.Error("navigate payload marshal failed", "order_id", orderID, "error", marshalErr)

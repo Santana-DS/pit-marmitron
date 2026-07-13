@@ -7,6 +7,7 @@
 #include "ControlePID.h"
 
 #include "webserver_module.h" 
+#include "lock_service.h"
 
 
 motor motorEsq(PIN_PWMR_ESQ, PIN_PWML_ESQ);
@@ -28,6 +29,9 @@ QueueHandle_t filaVelocidadeDir;
 // Identificadores das tarefas
 TaskHandle_t TaskEncoders;
 TaskHandle_t TaskMotores;
+TaskHandle_t TaskInterface;
+
+static LockService lockService;
 
 // ==========================================
 // TAREFA 1: MOTORES & PID (Rodando no CORE 1)
@@ -121,6 +125,17 @@ void codigoTaskMotores(void * parameter) {
   }
 }
 
+// Network, display and actuator work never run in the motor/PID task. This
+// keeps MQTT connection latency and SPI drawing away from the 50 Hz controller.
+void codigoTaskInterface(void * parameter) {
+  lockService.begin();
+
+  for (;;) {
+    lockService.tick();
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
+
 // ==========================================
 // SETUP PRINCIPAL (O MAESTRO)
 // ==========================================
@@ -145,6 +160,15 @@ void setup() {
     1,
     &TaskMotores, 
     1);                  /* Fixado no CORE 1 */
+
+  xTaskCreatePinnedToCore(
+    codigoTaskInterface,
+    "TaskInterface",
+    12288,
+    NULL,
+    1,
+    &TaskInterface,
+    0);                  /* Wi-Fi, MQTT e display no CORE 0 */
 
   Serial.println("Tarefas criadas. O FreeRTOS assumiu o controle.");
 }

@@ -30,6 +30,7 @@ try:
     from action_msgs.msg import GoalStatus
     from geometry_msgs.msg import PoseStamped
     from nav2_msgs.action import NavigateToPose
+    from robot_localization.srv import FromLL
 
     ROS2_AVAILABLE = True
 except ImportError:
@@ -72,6 +73,7 @@ class NavBridge:
 
         self._node: Optional[object] = None
         self._action_client: Optional[object] = None
+        self._fromll_client: Optional[object] = None
         self._ros2_ready = False
         self._current_goal_handle: Optional[object] = None
         self._goal_lock = threading.Lock()
@@ -164,6 +166,7 @@ class NavBridge:
             NavigateToPose,
             self._cfg.action_server,
         )
+        self._fromll_client = self._node.create_client(FromLL, "/fromLL")
 
         self._ros_executor = MultiThreadedExecutor(num_threads=2)
         self._ros_executor.add_node(self._node)
@@ -181,6 +184,8 @@ class NavBridge:
                 "Ensure nav2 is launched: ros2 launch nav2_bringup navigation_launch.py"
             )
         logger.info("Nav2 action server connected.")
+        if not self._fromll_client.wait_for_service(timeout_sec=30.0):
+            raise RuntimeError("navsat_transform service '/fromLL' unavailable")
 
     def _wait_for_rclpy_future(self, future, timeout_sec: Optional[float] = None):
         done_event = threading.Event()
@@ -202,6 +207,29 @@ class NavBridge:
 
         self._cancel_requested.clear()
 
+        for node in goal.route_nodes:
+            if self._cancel_requested.is_set():
+                return
+            local = self._from_ll_sync(node.latitude, node.longitude)
+            goal.x, goal.y, goal.theta = local.x, local.y, node.theta
+            goal.current_node = node.sequence
+            if not self._execute_single_goal_sync(goal, loop):
+                return
+
+        loop.call_soon_threadsafe(asyncio.ensure_future, self._on_goal_succeeded(goal))
+
+    def _from_ll_sync(self, latitude: float, longitude: float):
+        request = FromLL.Request()
+        request.ll_point.latitude = latitude
+        request.ll_point.longitude = longitude
+        request.ll_point.altitude = 0.0
+        response = self._wait_for_rclpy_future(
+            self._fromll_client.call_async(request), timeout_sec=5.0
+        )
+        return response.map_point
+
+    def _execute_single_goal_sync(self, goal: ActiveGoal, loop: asyncio.AbstractEventLoop) -> bool:
+
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose = self._build_pose_stamped(goal)
 
@@ -217,7 +245,7 @@ class NavBridge:
                 asyncio.ensure_future,
                 self._state.trigger_fault("nav2_rejected_goal"),
             )
-            return
+            return False
 
         with self._goal_lock:
             self._current_goal_handle = goal_handle
@@ -229,11 +257,8 @@ class NavBridge:
             result = self._wait_for_rclpy_future(result_future)
 
             if result.status == GoalStatus.STATUS_SUCCEEDED:
-                logger.info("Nav2 goal succeeded for order %s", goal.order_id)
-                loop.call_soon_threadsafe(
-                    asyncio.ensure_future,
-                    self._on_goal_succeeded(goal),
-                )
+                logger.info("Nav2 node %d succeeded for order %s", goal.current_node, goal.order_id)
+                return True
             else:
                 logger.error(
                     "Nav2 goal failed for order %s (status=%d)",
@@ -244,6 +269,7 @@ class NavBridge:
                     asyncio.ensure_future,
                     self._state.trigger_fault(f"nav2_status_{result.status}"),
                 )
+                return False
         finally:
             with self._goal_lock:
                 if self._current_goal_handle is goal_handle:
@@ -368,6 +394,8 @@ class NavBridge:
             Topics.NAV_STATUS,
             {
                 "order_id": goal.order_id,
+                "route_id": goal.route_id,
+                "route_node": goal.current_node,
                 "waypoint_name": goal.waypoint_name,
                 "state": state,
                 "progress_pct": round(progress, 1),
