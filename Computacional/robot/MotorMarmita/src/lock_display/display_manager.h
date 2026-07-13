@@ -110,7 +110,8 @@ public:
     void showBooting();
     void showIdle();
     void showOffline();
-    void showNavigation(const char* state, const char* destination, float progress);
+    void showNavigation(const char* state, const char* destination, float progress,
+                        float remainingMeters = -1.0f);
     void showQrCode(const char* otp);
     void showUnlockSuccess(const char* orderId);
     void showError();

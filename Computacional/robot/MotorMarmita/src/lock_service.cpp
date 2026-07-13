@@ -50,12 +50,8 @@ void onMqttMessage(char* topic, uint8_t* payload, unsigned int length) {
   if (strcmp(topic, kNavStatusTopic) == 0) {
     const char* state = document["state"] | "NAVIGATING";
     const char* destination = document["waypoint_name"] | "";
-    if (strcmp(state, "FAULT") == 0 || strcmp(state, "FAILED") == 0 ||
-        strcmp(state, "CANCELLED") == 0 || strcmp(state, "REJECTED") == 0) {
-      display.showError();
-      return;
-    }
-    display.showNavigation(state, destination, document["progress_pct"] | 0.0f);
+    display.showNavigation(state, destination, document["progress_pct"] | 0.0f,
+                           document["remaining_m"] | -1.0f);
     return;
   }
   if (orderId[0] == '\0' || document["issued_at"].isNull()) {

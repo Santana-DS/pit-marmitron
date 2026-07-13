@@ -195,26 +195,89 @@ void DisplayManager::showOffline() {
     _tft.drawString("Aguardando Wi-Fi e MQTT", PANEL_W / 2, 195, 2);
 }
 
-void DisplayManager::showNavigation(const char* state, const char* destination, float progress) {
+void DisplayManager::showNavigation(const char* state, const char* destination,
+                                    float progress, float remainingMeters) {
     if (!_ready) return;
     _mode = ScreenMode::NAVIGATING;
     _sprMain.deleteSprite();
     _fullBlack();
     progress = constrain(progress, 0.0f, 100.0f);
 
-    _tft.setTextDatum(TC_DATUM);
-    _tft.setTextColor(C_CYAN, C_BLACK);
-    _tft.drawString("MARMITRON EM ROTA", PANEL_W / 2, 22, 4);
-    _tft.setTextColor(C_WHITE, C_BLACK);
-    _tft.drawString(state, PANEL_W / 2, 72, 4);
+    const char* title = "EM ROTA";
+    const char* detail = "Navegacao autonoma ativa";
+    uint16_t accent = C_CYAN;
+    uint16_t progressColor = C_UNB_GREEN;
+
+    if (strcmp(state, "ARRIVED") == 0) {
+        title = "CHEGOU";
+        detail = "Aguardando retirada";
+        accent = C_GREEN;
+        progress = 100.0f;
+    } else if (strcmp(state, "CANCELLED") == 0) {
+        title = "ROTA CANCELADA";
+        detail = "Aguardando novo comando";
+        accent = C_AMBER;
+        progressColor = C_AMBER;
+    } else if (strcmp(state, "REJECTED") == 0) {
+        title = "ROTA RECUSADA";
+        detail = "Verifique a rota no app";
+        accent = C_RED;
+        progressColor = C_RED;
+    } else if (strcmp(state, "FAULT") == 0 || strcmp(state, "FAILED") == 0) {
+        title = "NAVEGACAO PARADA";
+        detail = "Intervencao necessaria";
+        accent = C_RED;
+        progressColor = C_RED;
+    }
+
+    char destinationLabel[30];
+    const char* source = destination != nullptr && destination[0] != '\0'
+        ? destination : "Destino aprovado";
+    snprintf(destinationLabel, sizeof(destinationLabel), "%.27s", source);
+
+    // A colored status rail remains visible from the side of the robot.
+    _tft.fillRect(0, 0, PANEL_W, 8, accent);
+    _tft.setTextDatum(TL_DATUM);
     _tft.setTextColor(C_MIDGREY, C_BLACK);
-    _tft.drawString(destination[0] ? destination : "Destino aprovado", PANEL_W / 2, 112, 2);
-    _tft.drawRoundRect(30, 150, 260, 24, 4, C_GREY);
-    _tft.fillRoundRect(32, 152, (int16_t)(256 * progress / 100.0f), 20, 3, C_UNB_GREEN);
-    char percentage[12];
-    snprintf(percentage, sizeof(percentage), "%.0f%%", progress);
+    _tft.drawString("MISSAO", 18, 18, 2);
+    _tft.setTextDatum(TR_DATUM);
+    _tft.setTextColor(accent, C_BLACK);
+    _tft.drawString("MARMITRON 3000", PANEL_W - 18, 18, 2);
+
+    _tft.setTextDatum(TC_DATUM);
     _tft.setTextColor(C_WHITE, C_BLACK);
-    _tft.drawString(percentage, PANEL_W / 2, 190, 4);
+    _tft.drawString(title, PANEL_W / 2, 48, 4);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString(destinationLabel, PANEL_W / 2, 82, 2);
+
+    // Route line with a live position marker makes the progress meaningful.
+    const int16_t routeX = 34;
+    const int16_t routeY = 122;
+    const int16_t routeW = 252;
+    const int16_t markerX = routeX + (int16_t)(routeW * progress / 100.0f);
+    _tft.drawFastHLine(routeX, routeY, routeW, C_DKGREY);
+    _tft.drawFastHLine(routeX, routeY, markerX - routeX, progressColor);
+    _tft.fillCircle(routeX, routeY, 6, C_GREY);
+    _tft.fillCircle(routeX + routeW, routeY, 6, accent);
+    _tft.fillCircle(markerX, routeY, 9, progressColor);
+    _tft.drawCircle(markerX, routeY, 11, C_WHITE);
+
+    _tft.drawRoundRect(30, 151, 260, 22, 4, C_GREY);
+    const int16_t fillW = (int16_t)(256 * progress / 100.0f);
+    if (fillW > 0) {
+        _tft.fillRoundRect(32, 153, fillW, 18, 3, progressColor);
+    }
+
+    char progressLabel[24];
+    if (remainingMeters >= 0.0f && strcmp(state, "NAVIGATING") == 0) {
+        snprintf(progressLabel, sizeof(progressLabel), "%.0f%%  |  %.0f m", progress, remainingMeters);
+    } else {
+        snprintf(progressLabel, sizeof(progressLabel), "%.0f%%", progress);
+    }
+    _tft.setTextColor(C_WHITE, C_BLACK);
+    _tft.drawString(progressLabel, PANEL_W / 2, 184, 4);
+    _tft.setTextColor(C_MIDGREY, C_BLACK);
+    _tft.drawString(detail, PANEL_W / 2, 218, 2);
 }
 
 // =============================================================================
