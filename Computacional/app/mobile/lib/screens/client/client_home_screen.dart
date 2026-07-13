@@ -338,10 +338,15 @@ class _HomeTabState extends State<_HomeTab> {
           future: _restaurantsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return const SliverToBoxAdapter(
+              return SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Center(child: CircularProgressIndicator()),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  child: AppStatePanel(
+                    icon: Icons.storefront_outlined,
+                    title: 'Carregando restaurantes',
+                    message: 'Buscando opcoes disponiveis perto de voce.',
+                    loading: true,
+                  ),
                 ),
               );
             }
@@ -350,12 +355,10 @@ class _HomeTabState extends State<_HomeTab> {
               return SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  child: Text(
-                    'Não foi possível carregar os restaurantes.',
-                    style: GoogleFonts.dmSans(
-                      fontSize: 14,
-                      color: AC.muted(context),
-                    ),
+                  child: AppStatePanel(
+                    icon: Icons.cloud_off_outlined,
+                    title: 'Restaurantes indisponiveis',
+                    message: 'Nao foi possivel carregar os restaurantes agora. Verifique a conexao e tente novamente.',
                   ),
                 ),
               );
