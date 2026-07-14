@@ -46,8 +46,10 @@ val copyMarmitronReleaseApk by tasks.registering(Copy::class) {
     into(layout.buildDirectory.dir("outputs/flutter-apk"))
 }
 
-tasks.named("assembleRelease") {
-    finalizedBy(copyMarmitronReleaseApk)
+tasks.configureEach {
+    if (name == "assembleRelease") {
+        finalizedBy(copyMarmitronReleaseApk)
+    }
 }
 
 flutter {
