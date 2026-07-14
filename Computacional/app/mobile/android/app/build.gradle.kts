@@ -39,12 +39,15 @@ android {
     }
 }
 
-androidComponents {
-    onVariants(selector().all()) { variant ->
-        variant.outputs.forEach { output ->
-            output.outputFileName.set("MARMITRON_3000-${variant.name}.apk")
-        }
-    }
+val copyMarmitronReleaseApk by tasks.registering(Copy::class) {
+    from(layout.buildDirectory.dir("outputs/apk/release"))
+    include("app-release.apk")
+    rename("app-release.apk", "MARMITRON_3000-release.apk")
+    into(layout.buildDirectory.dir("outputs/flutter-apk"))
+}
+
+tasks.named("assembleRelease") {
+    finalizedBy(copyMarmitronReleaseApk)
 }
 
 flutter {
