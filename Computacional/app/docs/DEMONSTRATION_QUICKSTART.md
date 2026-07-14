@@ -1,16 +1,5 @@
 # Demonstracao Rapida
 
-## Publicar o APK
-
-Prefira anexar o arquivo em uma **GitHub Release**, nao em um commit:
-
-1. Gere `Computacional/app/mobile/build/app/outputs/flutter-apk/MARMITRON_3000-release.apk`.
-2. No GitHub, abra **Releases** > **Draft a new release**.
-3. Crie a tag `v1.0.0`, envie o APK como arquivo da release e publique.
-
-O Windows pode mostrar um icone generico para arquivos `.apk`. O icone
-MARMITRON 3000 aparece depois da instalacao no Android.
-
 ## Preparacao MQTT
 
 Os comandos abaixo precisam de `Computacional/app/edge_daemon/.env` com
