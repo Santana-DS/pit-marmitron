@@ -72,6 +72,8 @@ class RobotPose {
 
 /// Full snapshot published by the edge daemon at ~2 Hz on robot/telemetry.
 class RobotTelemetry {
+  static const freshnessWindow = Duration(seconds: 15);
+
   final RobotNavState navState;
   final String? activeOrderId;
   final RobotPose? pose;
@@ -113,8 +115,42 @@ class RobotTelemetry {
       etaSeconds: (json['eta_seconds'] as num?)?.toDouble() ?? 0.0,
       cpuPct: (json['cpu_pct'] as num?)?.toDouble() ?? 0.0,
       memPct: (json['mem_pct'] as num?)?.toDouble() ?? 0.0,
-      receivedAt: DateTime.now(),
+      receivedAt: _receivedAtFromJson(json['received_at']),
     );
+  }
+
+  static DateTime _receivedAtFromJson(dynamic value) {
+    if (value is num) {
+      return DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
+    }
+    return DateTime.now().toUtc();
+  }
+
+  bool isStaleAt(DateTime now) =>
+      now.toUtc().difference(receivedAt.toUtc()) > freshnessWindow;
+
+  bool get isStale => isStaleAt(DateTime.now());
+
+  /// A cached MQTT snapshot must never imply that the robot is still moving.
+  RobotNavState get displayedNavState =>
+      isStale ? RobotNavState.unknown : navState;
+
+  bool get hasCurrentMission {
+    if (isStale || activeOrderId?.trim().isEmpty != false) return false;
+    return navState == RobotNavState.navigating ||
+        navState == RobotNavState.arrived ||
+        navState == RobotNavState.offlineHold;
+  }
+
+  String get missionLabel {
+    switch (navState) {
+      case RobotNavState.arrived:
+        return 'Pedido no destino';
+      case RobotNavState.offlineHold:
+        return 'Pedido em retencao';
+      default:
+        return 'Pedido em execucao';
+    }
   }
 
   /// Converts speed from m/s to km/h for display.

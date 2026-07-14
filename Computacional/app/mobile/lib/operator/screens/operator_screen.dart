@@ -271,7 +271,7 @@ class _OperatorScreenState extends State<OperatorScreen>
                 const SizedBox(height: 14),
                 _buildPoseCard(),
                 const SizedBox(height: 14),
-                if (_telemetry?.activeOrderId != null) ...[
+                if (_telemetry?.hasCurrentMission == true) ...[
                   _buildOrderCard(),
                   const SizedBox(height: 14),
                 ],
@@ -405,7 +405,8 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── State Card ────────────────────────────────────────────────────────────
 
   Widget _buildStateCard() {
-    final navState = _telemetry?.navState ?? RobotNavState.unknown;
+    final navState =
+        _telemetry?.displayedNavState ?? RobotNavState.unknown;
     final cfg = _navStateConfig(navState);
 
     return AppCard(
@@ -708,7 +709,8 @@ class _OperatorScreenState extends State<OperatorScreen>
             ),
           ],
         ),
-        if (t != null && t.navState == RobotNavState.navigating) ...[
+        if (t != null &&
+            t.displayedNavState == RobotNavState.navigating) ...[
           const SizedBox(height: 10),
           _ProgressCard(progressPct: t.progressPct),
         ],
@@ -858,7 +860,7 @@ class _OperatorScreenState extends State<OperatorScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Pedido em execução',
+                  _telemetry!.missionLabel,
                   style: GoogleFonts.dmSans(
                     fontSize: 11,
                     color: AC.muted(context),
