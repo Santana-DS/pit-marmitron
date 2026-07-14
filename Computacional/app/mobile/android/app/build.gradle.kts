@@ -39,19 +39,6 @@ android {
     }
 }
 
-val copyMarmitronReleaseApk by tasks.registering(Copy::class) {
-    from(layout.buildDirectory.dir("outputs/apk/release"))
-    include("app-release.apk")
-    rename("app-release.apk", "MARMITRON_3000-release.apk")
-    into(layout.buildDirectory.dir("outputs/flutter-apk"))
-}
-
-tasks.configureEach {
-    if (name == "assembleRelease") {
-        finalizedBy(copyMarmitronReleaseApk)
-    }
-}
-
 flutter {
     source = "../.."
 }
