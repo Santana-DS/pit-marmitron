@@ -39,6 +39,14 @@ android {
     }
 }
 
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("MARMITRON_3000-${variant.name}.apk")
+        }
+    }
+}
+
 flutter {
     source = "../.."
 }
