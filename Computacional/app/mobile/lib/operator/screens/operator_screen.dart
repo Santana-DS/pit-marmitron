@@ -93,6 +93,9 @@ class _OperatorScreenState extends State<OperatorScreen>
     super.dispose();
   }
 
+  RobotTelemetry? get _freshTelemetry =>
+      _telemetry?.isStale == false ? _telemetry : null;
+
   // ── Data fetching ─────────────────────────────────────────────────────────
 
   Future<void> _fetchTelemetry() async {
@@ -463,7 +466,7 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── Telemetry Grid ────────────────────────────────────────────────────────
 
   Widget _buildIntegrationReadinessCard() {
-    final hasPose = _telemetry?.pose != null;
+    final hasPose = _freshTelemetry?.pose != null;
     final cameraReady = _cameraConfig?.available == true;
     final allReady = hasPose && cameraReady;
     final locationMessage = _errorMsg != null
@@ -653,7 +656,7 @@ class _OperatorScreenState extends State<OperatorScreen>
   }
 
   Widget _buildTelemetryGrid() {
-    final t = _telemetry;
+    final t = _freshTelemetry;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -721,7 +724,7 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── System Grid ───────────────────────────────────────────────────────────
 
   Widget _buildSystemGrid() {
-    final t = _telemetry;
+    final t = _freshTelemetry;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -756,9 +759,10 @@ class _OperatorScreenState extends State<OperatorScreen>
   // ── Pose Card ─────────────────────────────────────────────────────────────
 
   Widget _buildPoseCard() {
+    final telemetry = _freshTelemetry;
     final pose =
-        _telemetry?.pose ?? const RobotPose(x: 0, y: 0, theta: 0, frame: 'map');
-    final hasPose = _telemetry?.pose != null;
+        telemetry?.pose ?? const RobotPose(x: 0, y: 0, theta: 0, frame: 'map');
+    final hasPose = telemetry?.pose != null;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
