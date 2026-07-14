@@ -6,6 +6,8 @@
         android:label="MARMITRON 3000" 
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:logo="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
     
         <activity
